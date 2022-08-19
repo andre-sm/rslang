@@ -11,6 +11,7 @@ import { StatisticsComponent } from './pages/statistics/statistics.component';
 import { MainComponent } from './pages/main/main.component';
 import { AudioCallComponent } from './pages/games/audio-call/audio-call.component';
 import { SprintComponent } from './pages/games/sprint/sprint.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { SprintComponent } from './pages/games/sprint/sprint.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
