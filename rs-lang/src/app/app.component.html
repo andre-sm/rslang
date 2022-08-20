@@ -1,1 +1,39 @@
-<router-outlet></router-outlet>
+<header class="header">
+  <div class="header-container">
+    <h1>
+      <a routerLink="/" class="header-logo">RSLang</a>
+    </h1>
+    <nav class="navbar">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a routerLink="/" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/textbook" class="nav-link">Textbook</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/games" class="nav-link">Games</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/statistics" class="nav-link">Statistics</a>
+        </li>
+      </ul>
+      <ul *ngIf="!isLoggedIn" class="nav-list">
+        <li class="nav-item">
+          <a routerLink="/login" class="nav-link">Login</a>
+        </li>
+      </ul>
+      <ul *ngIf="isLoggedIn" class="nav-list">
+        <li class="nav-item">
+          <a routerLink="/profile" class="nav-link">{{ username }}</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="" class="nav-link" (click)="logout()">LogOut</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<main class="main">
+  <router-outlet></router-outlet>
+</main>
