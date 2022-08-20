@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { LoginUser } from 'src/app/models/user';
+import { ToastrService } from 'ngx-toastr';
+import { UserTokenResponse, LoginUser } from './../../models/user';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +20,7 @@ export class LoginComponent implements OnInit {
   isLoginFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, private storageService: StorageService, public router: Router) { }
+  constructor(private authService: AuthService, private storageService: StorageService, public router: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
@@ -29,7 +31,7 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     const { email, password } = this.form;
     this.authService.login({ email, password }).subscribe({
-      next: data => {
+      next: (data: UserTokenResponse) => {
         this.storageService.saveToken(data.token)
         this.storageService.saveRefreshToken(data.refreshToken)
         this.storageService.saveUser(data);
@@ -37,8 +39,13 @@ export class LoginComponent implements OnInit {
         this.isLoggedIn = true;
         this.navigateAndReload();
       },
-      error: err => {
-        this.errorMessage = err.error.message;
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = err.message;
+        if (err.status === 403) {
+          this.toastr.error('Incorrect e-mail or password');
+        } else {
+          this.toastr.error(this.errorMessage);
+        }
         this.isLoginFailed = true;
       }
     });
