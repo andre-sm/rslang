@@ -9,7 +9,13 @@ export class SprintComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.getWords();
+  }
+
+  async getWords(): Promise<void> {
+    const words = await fetch('https://rss-rslang-be.herokuapp.com/words?group=0&page=29');
+    console.log(await words.json());
   }
 
 }

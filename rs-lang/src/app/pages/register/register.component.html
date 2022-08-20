@@ -1,17 +1,37 @@
-<div class="login-container">
+<div class="register-container">
   <div class="title">
     <h1>RSLang</h1>
-    <span>Sign in to your account</span>
-    <span>Resume your adventure learning new</span>
+    <span>Join our community</span>
+    <span>Start your journey with our product</span>
   </div>
   <form
     class="form"
-    *ngIf="!isLoggedIn"
+    *ngIf="!isSuccessful"
     name="form"
     (ngSubmit)="f.form.valid && onSubmit()"
     #f="ngForm"
     novalidate
   >
+    <div class="form-group">
+      <label for="name">Username*</label>
+      <input
+        type="text"
+        class="form-control"
+        name="name"
+        [(ngModel)]="form.name"
+        required
+        minlength="3"
+        maxlength="20"
+        #name="ngModel"
+        [ngClass]="{ 'is-invalid': f.submitted && name.errors }"
+        placeholder="Username"
+      />
+      <div class="invalid-feedback" *ngIf="name.errors && f.submitted">
+        <div *ngIf="name.errors['required']">Username is required</div>
+        <div *ngIf="name.errors['minlength']">Username must be at least 3 characters</div>
+        <div *ngIf="name.errors['maxlength']">Username must be at most 20 characters</div>
+      </div>
+    </div>
     <div class="form-group">
       <label for="email">Email*</label>
       <input
@@ -53,10 +73,10 @@
       </div>
     </div>
     <div class="form-group">
-      <button class="form-btn">Login</button>
+      <button class="form-btn">Sign Up</button>
     </div>
   </form>
   <div class="bottom">
-    <span>Don't have an account?&nbsp;</span><a routerLink="/register">Sign Up</a>
+    <span>Already have an account?&nbsp;</span><a routerLink="/login">Sign In</a>
   </div>
 </div>
