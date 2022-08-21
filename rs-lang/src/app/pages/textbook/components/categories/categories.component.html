@@ -1,0 +1,8 @@
+<ul class="categories">
+  <li *ngFor="let category of categories">
+    <button mat-stroked-button type="button" [class.selected]="category === selectedCategory" (click)="onSelect(category)">
+      <span class="category__name">{{category.name}}</span>
+    </button>
+  </li>
+</ul>
+<app-category-detail [category]="selectedCategory"></app-category-detail>
