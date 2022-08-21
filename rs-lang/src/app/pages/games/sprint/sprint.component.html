@@ -1,1 +1,9 @@
-<p>sprint works!</p>
+<main>
+  <difficulty-form></difficulty-form>
+  <p class="english-word">{{ englishWord }}</p>
+  <p class="russian-word">{{ russianWord }}</p>
+  <div class="buttons-answer">
+  <button mat-raised-button color="green" (click)="checkAnswer('Yes');">Yes</button>
+  <button mat-raised-button color="warn" (click)="checkAnswer('No');">No</button>
+  </div>
+</main>

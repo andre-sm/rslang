@@ -12,7 +12,6 @@ import { RegisterComponent } from './pages/register/register.component';
 import { MainComponent } from './pages/main/main.component';
 import { AudioCallComponent } from './pages/games/audio-call/audio-call.component';
 import { SprintComponent } from './pages/games/sprint/sprint.component';
-import { MatButtonModule } from '@angular/material/button';
 import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
@@ -28,7 +27,6 @@ import { ProfileComponent } from './pages/profile/profile.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatButtonModule,
     ToastrModule.forRoot(),
     FormsModule,
     HttpClientModule
