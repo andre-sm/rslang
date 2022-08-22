@@ -7,6 +7,7 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { WordCardComponent } from './components/word-card/word-card.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     TextbookRoutingModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatPaginatorModule
   ]
 })
 export class TextbookModule { }

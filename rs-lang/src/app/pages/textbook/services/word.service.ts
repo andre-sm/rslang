@@ -12,8 +12,9 @@ export class WordService {
 
   constructor(private http: HttpClient) { }
 
-  getWords(group: number): Observable<Word[]> {
-    const url = `${this.wordsUrl}?group=${group}`;
+  getWords(group: number, page: number): Observable<Word[]> {
+    const queryParams = `?group=${group}&page=${page}`;
+    const url = `${this.wordsUrl}${queryParams}`;
     return this.http.get<Word[]>(url);
   }
 }
