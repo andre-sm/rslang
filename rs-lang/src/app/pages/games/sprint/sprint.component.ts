@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DifficultyService } from '../../../services/difficulty.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { lastValueFrom, Observable, timer } from 'rxjs';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 const COUNT_RANDOM_WORDS = 100;
 
@@ -42,6 +39,7 @@ export class SprintComponent implements OnInit {
   randomWordsPosition = 0;
   fakeTranslate = false;
   score = 0;
+  time = 60;
 
   constructor(private difficultyService: DifficultyService, private http: HttpClient) { }
 
@@ -51,77 +49,67 @@ export class SprintComponent implements OnInit {
     });
   }
 
-  getWords(difficulty: number) {
-    for (let i = 0; i <= 29; i++) {
-      this.http
-      .get<IWord[]>(`${BASE_URL}words?group=${difficulty}&page=${i}`, httpOptions)
-      .subscribe((data: IWord[]) => {
-        this.concatArrays(data, i);
-      });
+  async getWords(difficulty: number) {
+    for (let i = 0; i <= 4; i++) {
+      const page = Math.floor(Math.random() * 29);
+      const data = this.getAllwords(difficulty, page);
+      const words = await lastValueFrom(data);
+      this.words = [...this.words, ...words];
     }
+    this.setWords();
   }
 
-  concatArrays(data: IWord[], calls: number) {
-    this.words = this.words.concat(data);
-    if (calls === 29) {
-      this.setWords();
-    }
+  getAllwords(difficulty: number, page: number): Observable<any> {
+    return this.http.get<IWord[]>(`${BASE_URL}words?group=${difficulty}&page=${page}`);
   }
 
   setWords() {
     this.createRandomWords();
+    this.setTimer();
     this.showWord();
   }
 
+  setTimer() {
+    const gameTimer = timer(1000, 1000).subscribe(() => this.time--);
+  }
+
   showWord() {
-    this.englishWord = this.randomWords[this.randomWordsPosition].word;
+    this.englishWord = this.words[this.randomWordsPosition].word;
     
-    if (this.randomWords[this.randomWordsPosition].fakeTranslate) {
-      this.russianWord = this.randomWords[this.randomWordsPosition].fakeTranslate;
+    if (this.words[this.randomWordsPosition].fakeTranslate) {
+      this.russianWord = this.words[this.randomWordsPosition].fakeTranslate;
       this.fakeTranslate = true;
     } else {
-      this.russianWord = this.randomWords[this.randomWordsPosition].wordTranslate;
+      this.russianWord = this.words[this.randomWordsPosition].wordTranslate;
       this.fakeTranslate = false;
     }
-    console.log(this.randomWords[this.randomWordsPosition]);
     this.randomWordsPosition++;
   }
 
-  createRandomWords() {
-    this.randomWords = [...this.words];
-    this.randomWords.sort( () => Math.random() - 0.5 );
-    this.randomWords = this.randomWords.slice(0, COUNT_RANDOM_WORDS);
+  async createRandomWords() {
+    this.words.sort( () => Math.random() - 0.5 );
+    this.words = this.words.slice(0, COUNT_RANDOM_WORDS);
 
-    this.randomWords.forEach(word => {
+    this.words.forEach( word => {
       const randomNumberFakeTranslate = Math.floor(Math.random() * 2);
 
       if (!randomNumberFakeTranslate) {
         const randomNumber = Math.floor(Math.random() * COUNT_RANDOM_WORDS - 1);
-        word.fakeTranslate = this.randomWords[randomNumber].wordTranslate;
+        word.fakeTranslate = this.words[randomNumber].wordTranslate;
       }
     });
   }
 
   checkAnswer(answer: string) {
     if (answer === 'Yes') {
-      if (this.fakeTranslate) {
-        if (this.score !== 0) {
-          this.score-=10;
-        }
-      } else {
-        this.score+=10;
+      if (!this.fakeTranslate) {
+        this.score += 10;
       }
     } else if (answer === 'No') {
-      if (!this.fakeTranslate) {
-        if (this.score !== 0) {
-          this.score-=10;
-        }
-      } else {
-        this.score+=10;
+      if (this.fakeTranslate) {
+        this.score += 10;
       }
     }
-
-    console.log(this.score);
     this.showWord();
   }
 
