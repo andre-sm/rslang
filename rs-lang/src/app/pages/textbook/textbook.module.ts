@@ -8,6 +8,7 @@ import { WordCardComponent } from './components/word-card/word-card.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     TextbookRoutingModule,
     MatButtonModule,
     MatCardModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatButtonToggleModule
   ]
 })
 export class TextbookModule { }

@@ -1,7 +1,5 @@
-import { Component, OnChanges, Input } from '@angular/core';
-import { Word } from 'src/app/models/word';
-import { WordService } from 'src/app/pages/textbook/services/word.service';
-import { PageEvent } from '@angular/material/paginator';
+import { Component, Input } from '@angular/core';
+import { Word } from 'src/app/pages/textbook/models/word';
 
 @Component({
   selector: 'app-word-card',
@@ -9,28 +7,9 @@ import { PageEvent } from '@angular/material/paginator';
   styleUrls: ['./word-card.component.scss']
 })
 
-export class WordCardComponent implements OnChanges {
+export class WordCardComponent {
 
-  @Input() group: number = 0;
-  page: number = 0;
-  words: Word[] = [];
-  totalWords = 600;
-  cardsPerPage = 20;
+  @Input() words?: Word[];
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
-
-  constructor(private wordService: WordService) { }
-
-  ngOnChanges(): void {
-    this.getWords();
-  }
-
-  getWords(): void {
-    this.wordService.getWords(this.group, this.page).subscribe(words => this.words = words);
-  }
-
-  onPageChanged(pageData: PageEvent) {
-    this.page = pageData.pageIndex;
-    this.getWords();
-  }
 
 }

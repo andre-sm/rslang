@@ -1,7 +1,5 @@
-<ul class="categories">
-  <li *ngFor="let category of categories">
-    <button mat-stroked-button type="button" [class.selected]="category === selectedCategory" (click)="onSelect(category)">
-      <span class="category__name">{{category.name}}</span>
-    </button>
-  </li>
-</ul>
+<mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+  <mat-button-toggle *ngFor="let category of categories" (click)="onSelect(category)">
+    {{category.name}}
+  </mat-button-toggle>
+</mat-button-toggle-group>

@@ -1,2 +1,9 @@
-<app-categories (onCategoryChange)="onCategoryChanged($event)"></app-categories>
-<app-word-card [group]="category"></app-word-card>
+<app-categories [categories]="categories" (categoryChange)="onCategoryChanged($event)"></app-categories>
+<app-word-card [words]="words"></app-word-card>
+<div class="pagination">
+  <mat-paginator [length]="totalWords"
+              [pageSize]="cardsPerPage"
+              hidePageSize="true"
+              (page)="onPageChanged($event)">
+  </mat-paginator>
+</div>

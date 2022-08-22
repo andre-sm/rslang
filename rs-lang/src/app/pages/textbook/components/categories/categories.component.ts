@@ -1,31 +1,18 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Category } from 'src/app/models/category';
-import { CategoryService } from 'src/app/pages/textbook/services/category.service';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Category } from 'src/app/pages/textbook/models/category';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss']
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent {
 
-  selectedCategory?: Category;
-  categories: Category[] = [];
-  @Output() onCategoryChange = new EventEmitter<number>();
-
-  constructor(private categoryService: CategoryService) { }
-
-  ngOnInit(): void {
-    this.getCategories();
-  }
+  @Input() categories?: Category[] = [];
+  @Output() categoryChange = new EventEmitter<number>();
 
   onSelect(category: Category): void {
-    this.selectedCategory = category;
-    this.onCategoryChange.emit(this.selectedCategory.group);
-  }
-
-  getCategories(): void {
-    this.categories = this.categoryService.getCategories();
+    this.categoryChange.emit(category.group);
   }
 
 }
