@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CategoryDetailComponent } from './category-detail.component';
+import { WordCardComponent } from './word-card.component';
 
 describe('CategoryDetailComponent', () => {
-  let component: CategoryDetailComponent;
-  let fixture: ComponentFixture<CategoryDetailComponent>;
+  let component: WordCardComponent;
+  let fixture: ComponentFixture<WordCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CategoryDetailComponent ]
+      declarations: [ WordCardComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CategoryDetailComponent);
+    fixture = TestBed.createComponent(WordCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

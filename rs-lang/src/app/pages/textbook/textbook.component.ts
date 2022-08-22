@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TextbookComponent implements OnInit {
 
+  public category: number = 0;
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  onCategoryChanged(category: number) {
+    this.category = category;
+  }
 }

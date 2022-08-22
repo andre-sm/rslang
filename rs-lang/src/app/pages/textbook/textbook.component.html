@@ -1,2 +1,2 @@
-<p>textbook works!</p>
-<app-categories></app-categories>
+<app-categories (onCategoryChange)="onCategoryChanged($event)"></app-categories>
+<app-word-card [group]="category"></app-word-card>

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Category } from 'src/app/models/category';
-import { CategoryService } from 'src/app/services/category.service';
+import { CategoryService } from 'src/app/pages/textbook/services/category.service';
 
 @Component({
   selector: 'app-categories',
@@ -11,6 +11,7 @@ export class CategoriesComponent implements OnInit {
 
   selectedCategory?: Category;
   categories: Category[] = [];
+  @Output() onCategoryChange = new EventEmitter<number>();
 
   constructor(private categoryService: CategoryService) { }
 
@@ -20,6 +21,7 @@ export class CategoriesComponent implements OnInit {
 
   onSelect(category: Category): void {
     this.selectedCategory = category;
+    this.onCategoryChange.emit(this.selectedCategory.group);
   }
 
   getCategories(): void {
