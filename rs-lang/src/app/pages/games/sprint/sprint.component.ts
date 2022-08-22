@@ -40,6 +40,8 @@ export class SprintComponent implements OnInit {
   words: IWord[] = [];
   randomWords: IWord[] = [];
   randomWordsPosition = 0;
+  fakeTranslate = false;
+  score = 0;
 
   constructor(private difficultyService: DifficultyService, private http: HttpClient) { }
 
@@ -73,12 +75,15 @@ export class SprintComponent implements OnInit {
 
   showWord() {
     this.englishWord = this.randomWords[this.randomWordsPosition].word;
+    
     if (this.randomWords[this.randomWordsPosition].fakeTranslate) {
       this.russianWord = this.randomWords[this.randomWordsPosition].fakeTranslate;
+      this.fakeTranslate = true;
     } else {
       this.russianWord = this.randomWords[this.randomWordsPosition].wordTranslate;
+      this.fakeTranslate = false;
     }
-    
+    console.log(this.randomWords[this.randomWordsPosition]);
     this.randomWordsPosition++;
   }
 
@@ -98,6 +103,25 @@ export class SprintComponent implements OnInit {
   }
 
   checkAnswer(answer: string) {
+    if (answer === 'Yes') {
+      if (this.fakeTranslate) {
+        if (this.score !== 0) {
+          this.score-=10;
+        }
+      } else {
+        this.score+=10;
+      }
+    } else if (answer === 'No') {
+      if (!this.fakeTranslate) {
+        if (this.score !== 0) {
+          this.score-=10;
+        }
+      } else {
+        this.score+=10;
+      }
+    }
+
+    console.log(this.score);
     this.showWord();
   }
 
