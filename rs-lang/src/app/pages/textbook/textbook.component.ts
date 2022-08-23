@@ -18,6 +18,8 @@ export class TextbookComponent implements OnInit {
   page: number = 0;
   totalWords = 600;
   cardsPerPage = 20;
+  audio = new Audio();
+  soundsToPlay?: Array<string>;
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
 
   constructor(private categoryService: CategoryService, private wordService: WordService) { }
@@ -42,6 +44,26 @@ export class TextbookComponent implements OnInit {
 
   onPageChanged(pageData: PageEvent) {
     this.page = pageData.pageIndex;
+    this.audio.pause();
     this.getWords();
+  }
+
+  onSoundIconClick(word: Word): void {
+    this.soundsToPlay = [`${this.baseUrl}${word.audio}`, `${this.baseUrl}${word.audioMeaning}`, `${this.baseUrl}${word.audioExample}`];
+    this.playSounds(this.soundsToPlay);
+  }
+
+  playSounds(sounds: Array<string>) {
+    let count = 1;
+    this.audio.src = sounds[0];
+    this.audio.play();
+
+    this.audio.onended = () => {
+      if (count < sounds.length) {
+        this.audio.src = sounds[count];
+        this.audio.play();
+        count++;
+      }
+    };
   }
 }

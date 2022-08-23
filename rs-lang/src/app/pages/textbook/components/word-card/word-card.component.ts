@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Word } from 'src/app/pages/textbook/models/word';
 
 @Component({
@@ -10,6 +10,11 @@ import { Word } from 'src/app/pages/textbook/models/word';
 export class WordCardComponent {
 
   @Input() words?: Word[];
+  @Output() soundIconClick = new EventEmitter<Word>();
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
+
+  onSoundIconClick(word: Word): void {
+    this.soundIconClick.emit(word);
+  }
 
 }

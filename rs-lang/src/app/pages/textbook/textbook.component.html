@@ -1,5 +1,5 @@
 <app-categories [categories]="categories" (categoryChange)="onCategoryChanged($event)"></app-categories>
-<app-word-card [words]="words"></app-word-card>
+<app-word-card [words]="words" (soundIconClick)="onSoundIconClick($event)"></app-word-card>
 <div class="pagination">
   <mat-paginator [length]="totalWords"
               [pageSize]="cardsPerPage"
