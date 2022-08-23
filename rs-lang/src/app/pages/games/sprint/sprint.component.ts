@@ -1,31 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { DifficultyService } from '../../../services/difficulty.service';
+import { SprintGameService } from '../../../services/sprintgame.service';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ResultFormComponent } from './result-form/result-form.component';
+import { Word } from 'src/app/models/words';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 5;
-
-interface IWord {
-  id: string,
-  group: number,
-  page: number,
-  word: string,
-  image: string,
-  audio: string,
-  audioMeaning: string,
-  audioExample: string,
-  textMeaning: string,
-  textExample: string,
-  transcription: string,
-  textExampleTranslate: string,
-  textMeaningTranslate: string,
-  wordTranslate: string,
-  fakeTranslate?: string,
-  answer?: boolean
-}
 
 @Component({
   selector: 'app-sprint',
@@ -36,18 +18,18 @@ interface IWord {
 export class SprintComponent implements OnInit {
   englishWord: string = '';
   russianWord: string | undefined = '';
-  words: IWord[] = [];
+  words: Word[] = [];
   fakeTranslate = false;
   score = 0;
   time = GAME_TIME;
   difficulty = 0;
   audio = '';
-  results: IWord[] = [];
+  results: Word[] = [];
 
-  constructor(private difficultyService: DifficultyService, private http: HttpClient, public dialog: MatDialog) { }
+  constructor(private sprintGameService: SprintGameService, private http: HttpClient, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.difficultyService.difficulty$.subscribe((difficulty) => {
+    this.sprintGameService.difficulty$.subscribe((difficulty) => {
       this.difficulty = difficulty;
       this.showWord();
       this.setGameTimer();
@@ -56,7 +38,7 @@ export class SprintComponent implements OnInit {
 
   async getWord() {
     const page = Math.floor(Math.random() * 29);
-    const data = this.http.get<IWord[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
+    const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
     const words = await lastValueFrom(data);
     const word = Math.floor(Math.random() * 19);
 
@@ -65,7 +47,7 @@ export class SprintComponent implements OnInit {
     if (!fakeTranslate) {
       // TODO check if right translate
       const page = Math.floor(Math.random() * 29);
-      const data = this.http.get<IWord[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
+      const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
       const fakeWords = await lastValueFrom(data);
       const fakeWord = Math.floor(Math.random() * 19);
       words[word].fakeTranslate = fakeWords[fakeWord].wordTranslate;
@@ -119,7 +101,7 @@ export class SprintComponent implements OnInit {
   }
 
   showResult() {
-    this.difficultyService.sendResult(this.results);
+    this.sprintGameService.sendResult(this.results);
     this.openDialog('0ms', '0ms');
   }
 
@@ -130,7 +112,7 @@ export class SprintComponent implements OnInit {
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(ResultFormComponent, {
-      width: '480px',
+      width: '600px',
       enterAnimationDuration,
       exitAnimationDuration,
     });

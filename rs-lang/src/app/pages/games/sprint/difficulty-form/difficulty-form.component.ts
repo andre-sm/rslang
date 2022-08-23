@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { DifficultyService } from '../../../../services/difficulty.service';
+import { SprintGameService } from '../../../../services/sprintgame.service';
 
 let dialogRef;
 
@@ -37,10 +37,10 @@ export class DifficultyFormComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DifficultyFormComponent>, 
-    private difficultyService: DifficultyService
+    private sprintGameService: SprintGameService
   ) {}
 
   public closeDialog(number: number) {
-    this.difficultyService.changeDifficulty(number);
+    this.sprintGameService.changeDifficulty(number);
   }
 }
