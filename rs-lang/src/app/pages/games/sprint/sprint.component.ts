@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { DifficultyService } from '../../../services/difficulty.service';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, timer } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ResultFormComponent } from './result-form/result-form.component';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 60
+const GAME_TIME = 5;
 
 interface IWord {
   id: string,
@@ -21,7 +23,8 @@ interface IWord {
   textExampleTranslate: string,
   textMeaningTranslate: string,
   wordTranslate: string,
-  fakeTranslate?: string
+  fakeTranslate?: string,
+  answer?: boolean
 }
 
 @Component({
@@ -39,8 +42,9 @@ export class SprintComponent implements OnInit {
   time = GAME_TIME;
   difficulty = 0;
   audio = '';
+  results: IWord[] = [];
 
-  constructor(private difficultyService: DifficultyService, private http: HttpClient) { }
+  constructor(private difficultyService: DifficultyService, private http: HttpClient, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.difficultyService.difficulty$.subscribe((difficulty) => {
@@ -74,12 +78,16 @@ export class SprintComponent implements OnInit {
     const gameTimer = timer(1000, 1000).subscribe(() => {
       if (this.time) {
         this.time--;
+      } else {
+        gameTimer.unsubscribe();
+        this.showResult();
       }
     });
   }
 
   async showWord() {
     const word = await this.getWord();
+    this.results.push(word);
     this.audio = `${BASE_URL}${word.audio}`;
 
     this.englishWord = word.word;
@@ -98,22 +106,34 @@ export class SprintComponent implements OnInit {
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
         this.score += 10;
+        this.results[this.results.length - 1].answer = true;
       }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
         this.score += 10;
+        this.results[this.results.length - 1].answer = true;
       }
     }
     this.showWord();
+    
   }
 
   showResult() {
-
+    this.difficultyService.sendResult(this.results);
+    this.openDialog('0ms', '0ms');
   }
 
   getSound() {
-    const sound = new Audio(this.audio)
+    const sound = new Audio(this.audio);
     sound.play();
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(ResultFormComponent, {
+      width: '480px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 
 }
