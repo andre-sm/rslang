@@ -1,4 +1,11 @@
-<app-categories [categories]="categories" [selectedCategory]="category" (categoryChange)="onCategoryChanged($event)"></app-categories>
+<div class="category-container">
+  <app-categories [categories]="categories" [selectedCategory]="category" (categoryChange)="onCategoryChanged($event)"></app-categories>
+  <p class="badge-container">
+    <span matBadge="{{cardsPerPage - learnedWords}}" matBadgeOverlap="false">
+      {{cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!'}}
+    </span>
+  </p>  
+</div>
 <div class="word-cards">
   <app-word-card
     *ngFor="let word of words"

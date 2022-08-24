@@ -3,3 +3,10 @@
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   grid-gap: 12px;
 }
+
+.category-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}

@@ -26,6 +26,7 @@ export class TextbookComponent implements OnInit {
   soundsToPlay?: Array<string>;
   isLogged: boolean = false;
   userId: string = '';
+  learnedWords: number = 0;
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
 
   constructor(
@@ -67,6 +68,7 @@ export class TextbookComponent implements OnInit {
     this.wordService
       .getUserAggregatedWords(this.userId, this.category, this.page, this.cardsPerPage)
       .subscribe((words) => {
+        this.calculateLearnedWords(words[0].paginatedResults);
         this.words = words[0].paginatedResults;
       });
   }
@@ -111,13 +113,15 @@ export class TextbookComponent implements OnInit {
   }
 
   addHardWord(word: UserAggregatedWord): void {
-    if (word.userWord) { 
+    if (word.userWord) {
       this.wordService.updateUserWord(this.userId, word._id, { difficulty: 'hard' }).subscribe((data) => {
         this.updateCurrentWordList(word, data, 'hard');
+        this.calculateLearnedWords(this.words);
       });
     } else {
       this.wordService.addToHard(this.userId, word._id, { difficulty: 'hard' }).subscribe((data) => {
         this.updateCurrentWordList(word, data, 'hard');
+        this.calculateLearnedWords(this.words);
       });
     }
   }
@@ -126,10 +130,12 @@ export class TextbookComponent implements OnInit {
     if (word.userWord) {
       this.wordService.updateUserWord(this.userId, word._id, { difficulty: 'easy' }).subscribe((data) => {
         this.updateCurrentWordList(word, data, 'easy');
+        this.calculateLearnedWords(this.words);
       });
     } else {
       this.wordService.addToLearned(this.userId, word._id, { difficulty: 'easy' }).subscribe((data) => {
         this.updateCurrentWordList(word, data, 'easy');
+        this.calculateLearnedWords(this.words);
       });
     }
   }
@@ -138,7 +144,11 @@ export class TextbookComponent implements OnInit {
     const learnedWordNewData = { ...word, userWord: { difficulty } };
     const wordsUpdated = this.words.map((word: UserAggregatedWord) => {
       return word._id === data.wordId ? learnedWordNewData : word;
-    }) 
+    });
     this.words = wordsUpdated;
+  }
+
+  calculateLearnedWords(words: UserAggregatedWord[]) {
+    this.learnedWords = words.filter((word) => word.userWord?.difficulty === 'easy').length;
   }
 }
