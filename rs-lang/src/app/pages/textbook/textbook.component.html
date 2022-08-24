@@ -1,9 +1,15 @@
-<app-categories [categories]="categories" (categoryChange)="onCategoryChanged($event)"></app-categories>
-<app-word-card [words]="words" (soundIconClick)="onSoundIconClick($event)"></app-word-card>
+<app-categories [categories]="categories" [selectedCategory]="category" (categoryChange)="onCategoryChanged($event)"></app-categories>
+<div class="word-cards">
+  <app-word-card
+    *ngFor="let word of words"
+    [word]="word"
+    [isLogged]="isLogged"
+    (soundIconClick)="onSoundIconClick($event)"
+    (hardWordClick)="addHardWord($event)"
+    (learnedWordClick)="addLearnedWord($event)"
+  ></app-word-card>
+</div>
 <div class="pagination">
-  <mat-paginator [length]="totalWords"
-              [pageSize]="cardsPerPage"
-              hidePageSize="true"
-              (page)="onPageChanged($event)">
+  <mat-paginator [length]="totalWords" [pageSize]="cardsPerPage" hidePageSize="true" (page)="onPageChanged($event)">
   </mat-paginator>
 </div>

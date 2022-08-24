@@ -1,31 +1,43 @@
-<div class="word-cards">
-  <mat-card *ngFor="let word of words">
+<div class="word-card">
+  <mat-card>
     <mat-card-header>
-      <mat-card-title>{{word.word}}</mat-card-title>
-      <mat-card-subtitle>{{word.transcription}}</mat-card-subtitle>
-      <mat-card-subtitle class="word-translation">{{word.wordTranslate}}</mat-card-subtitle>
-    </mat-card-header>
-    <img mat-card-image src={{baseUrl}}{{word.image}} alt={{word.word}}>
-    <mat-card-content>
-      <mat-card-subtitle>Значение</mat-card-subtitle>
-      <p>
-        {{word.textMeaning}}
-      </p>
-      <p>
-        {{word.textMeaningTranslate}}
-      </p>
-      <mat-card-subtitle>Пример</mat-card-subtitle>
-      <p>
-        {{word.textExample}}
-      </p>
-      <p>
-        {{word.textExampleTranslate}}
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button (click)="onSoundIconClick(word)">
+      <mat-card-title>{{ word?.word }}</mat-card-title>
+      <button mat-icon-button color="primary" aria-label="Sound icon" (click)="onSoundIconClick(word)">
         <mat-icon aria-hidden="false" aria-label="Volume icon" fontIcon="volume_up"></mat-icon>
       </button>
+      <mat-card-subtitle>{{ word?.transcription }}</mat-card-subtitle>
+      <mat-card-subtitle class="word-card__translation">{{ word?.wordTranslate }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <div class="word-card__buttons" *ngIf="isLogged">
+        <button
+          mat-stroked-button
+          [disabled]="word?.userWord?.difficulty === 'hard'"
+          [innerText]="word?.userWord?.difficulty === 'hard' ? 'Сложное' : 'В сложные!'"
+          color="warn"
+          (click)="onHardWordBtnClick(word)"
+        ></button>
+        <button
+          mat-stroked-button
+          [disabled]="word?.userWord?.difficulty === 'easy'"
+          [innerText]="word?.userWord?.difficulty === 'easy' ? 'Изученное' : 'Знаю!'"
+          color="accent"
+          (click)="onLearnedWordBtnClick(word)"
+        ></button>
+      </div>
     </mat-card-actions>
+    <!-- <img mat-card-image src={{baseUrl}}{{word.image}} alt={{word.word}}> -->
+    <mat-card-content>
+      <mat-card-subtitle>Значение</mat-card-subtitle>
+      <p [innerHtml]="word?.textMeaning"></p>
+      <p>
+        {{ word?.textMeaningTranslate }}
+      </p>
+      <mat-card-subtitle>Пример</mat-card-subtitle>
+      <p [innerHtml]="word?.textExample"></p>
+      <p>
+        {{ word?.textExampleTranslate }}
+      </p>
+    </mat-card-content>
   </mat-card>
 </div>

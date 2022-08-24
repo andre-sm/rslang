@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Category } from 'src/app/pages/textbook/models/category';
+import { Category } from 'src/app/pages/textbook/models/category.model';
 
 @Component({
   selector: 'app-categories',
@@ -9,6 +9,7 @@ import { Category } from 'src/app/pages/textbook/models/category';
 export class CategoriesComponent {
 
   @Input() categories?: Category[] = [];
+  @Input() selectedCategory?: number;
   @Output() categoryChange = new EventEmitter<number>();
 
   onSelect(category: Category): void {
