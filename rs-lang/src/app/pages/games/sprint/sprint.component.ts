@@ -7,7 +7,7 @@ import { ResultFormComponent } from './result-form/result-form.component';
 import { Word } from 'src/app/models/words';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 5;
+const GAME_TIME = 61;
 
 @Component({
   selector: 'app-sprint',

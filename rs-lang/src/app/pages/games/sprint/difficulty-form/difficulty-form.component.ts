@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SprintGameService } from '../../../../services/sprintgame.service';
 
 let dialogRef;
+const DELAY_FORM_CLOSE = 1000;
 
 @Component({
   selector: 'difficulty-form',
@@ -22,6 +23,7 @@ export class DifficultyForm implements OnInit {
       width: '480px',
       enterAnimationDuration,
       exitAnimationDuration,
+      disableClose: true
     });
   }
 
@@ -42,5 +44,8 @@ export class DifficultyFormComponent {
 
   public closeDialog(number: number) {
     this.sprintGameService.changeDifficulty(number);
+    setTimeout(() => {
+      this.dialogRef.close();
+    }, DELAY_FORM_CLOSE);
   }
 }
