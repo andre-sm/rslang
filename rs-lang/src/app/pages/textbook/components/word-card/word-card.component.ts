@@ -29,4 +29,8 @@ export class WordCardComponent {
     this.learnedWordClick.emit(word);
   }
 
+  getImagePath() {
+    return `${this.baseUrl}${this.word?.image}`;
+  }
+
 }
