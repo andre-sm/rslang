@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Category } from './models/category.model';
 import { Word } from './models/word.model';
 import { UserAggregatedWord } from './models/user-aggregated-word.model';
@@ -46,12 +46,17 @@ export class TextbookComponent implements OnInit {
     this.getCategories();
   }
 
+  ngOnDestroy(): void {
+    this.audio.pause();
+  }
+
   getCategories(): void {
     this.categories = this.categoryService.getCategories();
   }
 
   onCategoryChanged(category: number) {
     this.category = category;
+    this.audio.pause();
 
     if (this.userId) {
       this.getUserAggregatedWords();
