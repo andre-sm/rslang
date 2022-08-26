@@ -1,1 +1,30 @@
-<p>textbook works!</p>
+<div class="main-buttons">
+  <app-categories
+    [categories]="categories"
+    [isHardWordsChecked]="isHardWordsChecked"
+    [selectedCategory]="category"
+    (categoryChange)="onCategoryChanged($event)"
+  ></app-categories>
+  <mat-slide-toggle [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
+  <p class="badge-container">
+    <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
+      {{ cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!' }}
+    </span>
+  </p>
+</div>
+<div class="word-cards">
+  <app-word-card
+    *ngFor="let word of words"
+    [word]="word"
+    [isHardWordsChecked]="isHardWordsChecked"
+    [isLogged]="isLogged"
+    (soundIconClick)="onSoundIconClick($event)"
+    (hardWordClick)="addHardWord($event)"
+    (hardWordDeleteClick)="deleteUserWord($event)"
+    (learnedWordClick)="addLearnedWord($event)"
+  ></app-word-card>
+</div>
+<div class="pagination" *ngIf="!isHardWordsChecked">
+  <mat-paginator [pageIndex]="page" [length]="totalWords" [pageSize]="cardsPerPage" hidePageSize="true" (page)="onPageChanged($event)">
+  </mat-paginator>
+</div>

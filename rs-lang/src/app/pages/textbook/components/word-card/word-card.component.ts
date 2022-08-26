@@ -1,0 +1,42 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Word } from 'src/app/pages/textbook/models/word.model';
+import { UserAggregatedWord } from '../../models/user-aggregated-word.model';
+
+@Component({
+  selector: 'app-word-card',
+  templateUrl: './word-card.component.html',
+  styleUrls: ['./word-card.component.scss']
+})
+
+export class WordCardComponent {
+
+  @Input() word?: Word | UserAggregatedWord;
+  @Input() isLogged?: boolean;
+  @Input() isHardWordsChecked?: boolean;
+  @Output() soundIconClick = new EventEmitter<Word | UserAggregatedWord>();
+  @Output() hardWordClick = new EventEmitter<UserAggregatedWord>();
+  @Output() hardWordDeleteClick = new EventEmitter<UserAggregatedWord>();
+  @Output() learnedWordClick = new EventEmitter<UserAggregatedWord>();
+  baseUrl = 'https://rss-rslang-be.herokuapp.com/';
+
+  onSoundIconClick(word?: Word | UserAggregatedWord): void {
+    this.soundIconClick.emit(word);
+  }
+
+  onHardWordBtnAddClick(word?: UserAggregatedWord): void {
+    this.hardWordClick.emit(word);
+  }
+
+  onHardWordDeleteClick(word?: UserAggregatedWord): void {
+    this.hardWordDeleteClick.emit(word);
+  }
+
+  onLearnedWordBtnClick(word?: UserAggregatedWord): void {
+    this.learnedWordClick.emit(word);
+  }
+
+  getImagePath() {
+    return `${this.baseUrl}${this.word?.image}`;
+  }
+
+}
