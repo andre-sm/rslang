@@ -145,10 +145,15 @@ export class TextbookComponent implements OnInit {
   }
 
   addLearnedWord(word: UserAggregatedWord): void {
-    if (word.userWord) {
+    if (word.userWord?.difficulty) {
       this.wordService.updateUserWord(this.userId, word._id, { difficulty: 'easy' }).subscribe((data) => {
-        this.updateCurrentWordList(word, data, 'easy');
-        this.calculateLearnedWords(this.words);
+        if (this.isHardWordsChecked) {
+          const wordsUpdated = this.words.filter((item: UserAggregatedWord) => item._id !== word._id);
+          this.words = wordsUpdated;
+        } else {
+          this.updateCurrentWordList(word, data, 'easy');
+          this.calculateLearnedWords(this.words);
+        }
       });
     } else {
       this.wordService.addToLearned(this.userId, word._id, { difficulty: 'easy' }).subscribe((data) => {
@@ -158,10 +163,17 @@ export class TextbookComponent implements OnInit {
     }
   }
 
+  deleteUserWord(word: UserAggregatedWord): void {
+    this.wordService.deleteUserWord(this.userId, word._id).subscribe((data) => {
+      const wordsUpdated = this.words.filter((item: UserAggregatedWord) => item._id !== word._id);
+      this.words = wordsUpdated;
+    });
+  }
+
   updateCurrentWordList(word: UserAggregatedWord, data: UserWordResponse, difficulty: string) {
-    const learnedWordNewData = { ...word, userWord: { difficulty } };
+    const currentWordNewData = { ...word, userWord: { difficulty } };
     const wordsUpdated = this.words.map((word: UserAggregatedWord) => {
-      return word._id === data.wordId ? learnedWordNewData : word;
+      return word._id === data.wordId ? currentWordNewData : word;
     });
     this.words = wordsUpdated;
   }

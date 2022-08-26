@@ -1,3 +1,3 @@
 export interface UserWord {
-  difficulty: string;
+  difficulty?: string;
 }

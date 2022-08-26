@@ -16,9 +16,11 @@
   <app-word-card
     *ngFor="let word of words"
     [word]="word"
+    [isHardWordsChecked]="isHardWordsChecked"
     [isLogged]="isLogged"
     (soundIconClick)="onSoundIconClick($event)"
     (hardWordClick)="addHardWord($event)"
+    (hardWordDeleteClick)="deleteUserWord($event)"
     (learnedWordClick)="addLearnedWord($event)"
   ></app-word-card>
 </div>

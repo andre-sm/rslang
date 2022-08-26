@@ -61,4 +61,10 @@ export class WordService {
     const url = `${this.BASE_URL}${queryParams}`;
     return this.http.put<UserWordResponse>(url, params);
   }
+
+  deleteUserWord(userId: string, wordId: string | undefined): Observable<UserWordResponse> {
+    const queryParams = `users/${userId}/words/${wordId}`;
+    const url = `${this.BASE_URL}${queryParams}`;
+    return this.http.delete<UserWordResponse>(url);
+  }
 }
