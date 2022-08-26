@@ -1,0 +1,19 @@
+<table border="1">
+  <tr>
+    <td>Озвучивание</td>
+    <td>Слово</td>
+    <td>Транскрипция</td>
+    <td>Перевод</td>
+    <td>Ответ</td>
+  </tr>
+  <tr *ngFor="let item of result">
+    <td>
+      <button mat-raised-button color="warn" (click)="playSound(item.audio);">Прослушать</button>
+    </td>
+    <td>{{ item.word }}</td>
+    <td>{{ item.transcription }}</td>
+    <td>{{ item.wordTranslate }}</td>
+    <td *ngIf="item.answer">Верно</td>
+    <td *ngIf="!item.answer">Неверно</td>
+  </tr>
+</table>

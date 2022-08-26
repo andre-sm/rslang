@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GamesComponent } from './games.component';
 
+
 const routes: Routes = [
   { path: '', component: GamesComponent },
   { path: 'audio-call', loadChildren: () => import('./audio-call/audio-call.module').then(m => m.AudioCallModule) },
@@ -9,7 +10,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes)], 
   exports: [RouterModule]
 })
 export class GamesRoutingModule { }

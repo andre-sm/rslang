@@ -1,1 +1,12 @@
-<p>sprint works!</p>
+<main>
+  <difficulty-form></difficulty-form>
+  <p class="score"><strong>Time:</strong> {{ time }}</p>
+  <p class="score"><strong>Score:</strong> {{ score }}</p>
+  <button mat-raised-button color="warn" (click)="getSound();">Sound</button>
+  <p class="english-word">{{ englishWord }}</p>
+  <p class="russian-word">{{ russianWord }}</p>
+  <div class="buttons-answer">
+    <button mat-raised-button color="warn" (click)="checkAnswer('No');">No</button>
+    <button mat-raised-button color="green" (click)="checkAnswer('Yes');">Yes</button>
+  </div>
+</main>
