@@ -184,6 +184,7 @@ export class TextbookComponent implements OnInit {
 
   showHardWords($event: MatSlideToggleChange) {
     this.isHardWordsChecked = $event.checked;
+    this.audio.pause();
     localStorage.setItem('isHardWordsChecked', JSON.stringify(this.isHardWordsChecked));
     if (this.isHardWordsChecked) {
       this.getUserAggregatedHardWords();
