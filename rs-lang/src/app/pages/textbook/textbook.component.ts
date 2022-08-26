@@ -19,8 +19,8 @@ export class TextbookComponent implements OnInit {
   categories?: Category[];
   words: (Word | UserAggregatedWord)[] = [];
   userWords: UserWord[] = [];
-  category: number = 0;
-  page: number = 0;
+  category: number = Number(localStorage.getItem('textbookCategory')) || 0;
+  page: number = Number(localStorage.getItem('textbookPage')) || 0;
   totalWords = 600;
   cardsPerPage = 20;
   audio = new Audio();
@@ -28,7 +28,7 @@ export class TextbookComponent implements OnInit {
   isLogged: boolean = false;
   userId: string = '';
   learnedWords: number = 0;
-  isHardWordsChecked = false;
+  isHardWordsChecked = localStorage.getItem('isHardWordsChecked') === 'true' || false;
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
 
   constructor(
@@ -41,7 +41,7 @@ export class TextbookComponent implements OnInit {
     this.isLogged = this.storageService.isLoggedIn();
     this.userId = this.storageService.getUser()?.userId || '';
     if (this.userId) {
-      this.getUserAggregatedWords();
+      this.isHardWordsChecked ? this.getUserAggregatedHardWords() : this.getUserAggregatedWords();
     } else {
       this.getWords();
     }
@@ -58,6 +58,9 @@ export class TextbookComponent implements OnInit {
 
   onCategoryChanged(category: number) {
     this.category = category;
+    this.page = 0;
+    localStorage.setItem('textbookCategory', this.category.toString());
+    localStorage.setItem('textbookPage', this.page.toString());
     this.audio.pause();
 
     if (this.userId) {
@@ -80,9 +83,17 @@ export class TextbookComponent implements OnInit {
       });
   }
 
+  getUserAggregatedHardWords(): void {
+    this.wordService.getUserAggregatedHardWords(this.userId).subscribe((words) => {
+      this.calculateLearnedWords(words[0].paginatedResults);
+      this.words = words[0].paginatedResults;
+    });
+  }
+
   onPageChanged(pageData: PageEvent) {
     this.page = pageData.pageIndex;
     this.audio.pause();
+    localStorage.setItem('textbookPage', this.page.toString());
     if (this.userId) {
       this.getUserAggregatedWords();
     } else {
@@ -161,18 +172,11 @@ export class TextbookComponent implements OnInit {
 
   showHardWords($event: MatSlideToggleChange) {
     this.isHardWordsChecked = $event.checked;
+    localStorage.setItem('isHardWordsChecked', JSON.stringify(this.isHardWordsChecked));
     if (this.isHardWordsChecked) {
-      this.wordService.getUserAggregatedHardWords(this.userId).subscribe((words) => {
-        console.log(words[0].paginatedResults);
-        this.words = words[0].paginatedResults;
-      });
+      this.getUserAggregatedHardWords();
     } else {
-      this.wordService
-      .getUserAggregatedWords(this.userId, this.category, this.page, this.cardsPerPage)
-      .subscribe((words) => {
-        this.calculateLearnedWords(words[0].paginatedResults);
-        this.words = words[0].paginatedResults;
-      });
+      this.getUserAggregatedWords();
     }
   }
 }

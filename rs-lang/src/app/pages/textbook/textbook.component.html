@@ -5,7 +5,7 @@
     [selectedCategory]="category"
     (categoryChange)="onCategoryChanged($event)"
   ></app-categories>
-  <mat-slide-toggle (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
+  <mat-slide-toggle [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
   <p class="badge-container">
     <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
       {{ cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!' }}
@@ -23,6 +23,6 @@
   ></app-word-card>
 </div>
 <div class="pagination" *ngIf="!isHardWordsChecked">
-  <mat-paginator [length]="totalWords" [pageSize]="cardsPerPage" hidePageSize="true" (page)="onPageChanged($event)">
+  <mat-paginator [pageIndex]="page" [length]="totalWords" [pageSize]="cardsPerPage" hidePageSize="true" (page)="onPageChanged($event)">
   </mat-paginator>
 </div>
