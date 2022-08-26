@@ -38,6 +38,12 @@ export class WordService {
     return this.http.get<UserAggregatedWordResponse[]>(url);
   }
 
+  getUserAggregatedHardWords(userId: string): Observable<UserAggregatedWordResponse[]> {
+    const queryParams = `users/${userId}/aggregatedWords?filter={"userWord.difficulty":"hard"}`;
+    const url = `${this.BASE_URL}${queryParams}`;
+    return this.http.get<UserAggregatedWordResponse[]>(url);
+  }
+
   addToLearned(userId: string, wordId: string | undefined, params: UserWord): Observable<UserWordResponse> {
     const queryParams = `users/${userId}/words/${wordId}`;
     const url = `${this.BASE_URL}${queryParams}`;

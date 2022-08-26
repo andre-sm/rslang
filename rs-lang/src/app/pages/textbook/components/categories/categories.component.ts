@@ -10,6 +10,7 @@ export class CategoriesComponent {
 
   @Input() categories?: Category[] = [];
   @Input() selectedCategory?: number;
+  @Input() isHardWordsChecked?: boolean;
   @Output() categoryChange = new EventEmitter<number>();
 
   onSelect(category: Category): void {

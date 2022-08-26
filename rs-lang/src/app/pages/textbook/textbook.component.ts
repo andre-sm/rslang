@@ -8,6 +8,7 @@ import { CategoryService } from './services/category.service';
 import { WordService } from './services/word.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-textbook',
@@ -27,6 +28,7 @@ export class TextbookComponent implements OnInit {
   isLogged: boolean = false;
   userId: string = '';
   learnedWords: number = 0;
+  isHardWordsChecked = false;
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
 
   constructor(
@@ -155,5 +157,22 @@ export class TextbookComponent implements OnInit {
 
   calculateLearnedWords(words: UserAggregatedWord[]) {
     this.learnedWords = words.filter((word) => word.userWord?.difficulty === 'easy').length;
+  }
+
+  showHardWords($event: MatSlideToggleChange) {
+    this.isHardWordsChecked = $event.checked;
+    if (this.isHardWordsChecked) {
+      this.wordService.getUserAggregatedHardWords(this.userId).subscribe((words) => {
+        console.log(words[0].paginatedResults);
+        this.words = words[0].paginatedResults;
+      });
+    } else {
+      this.wordService
+      .getUserAggregatedWords(this.userId, this.category, this.page, this.cardsPerPage)
+      .subscribe((words) => {
+        this.calculateLearnedWords(words[0].paginatedResults);
+        this.words = words[0].paginatedResults;
+      });
+    }
   }
 }

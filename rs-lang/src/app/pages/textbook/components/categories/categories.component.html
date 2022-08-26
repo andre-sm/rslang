@@ -1,4 +1,4 @@
-<mat-button-toggle-group name="fontStyle" aria-label="Font Style" [value]="selectedCategory">
+<mat-button-toggle-group [disabled]="isHardWordsChecked" name="fontStyle" aria-label="Font Style" [value]="selectedCategory">
   <mat-button-toggle *ngFor="let category of categories" [value]="category.group" (click)="onSelect(category)">
     {{category.name}}
   </mat-button-toggle>

@@ -11,6 +11,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatPaginatorModule,
     MatButtonToggleModule,
     MatIconModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatSlideToggleModule
   ]
 })
 export class TextbookModule { }
