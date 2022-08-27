@@ -3,7 +3,7 @@ import { SprintGameService } from '../../../services/sprintgame.service';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { ResultFormComponent } from './result-form/result-form.component';
+import { ResultFormComponent } from '../result-form/result-form.component';
 import { Word } from 'src/app/models/words';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
