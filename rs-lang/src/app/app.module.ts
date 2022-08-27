@@ -9,19 +9,18 @@ import { authInterceptorProviders } from './helpers/auth.interceptor';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { MainComponent } from './pages/main/main.component';
 import { AudioCallComponent } from './pages/games/audio-call/audio-call.component';
 import { SprintComponent } from './pages/games/sprint/sprint.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { HeaderComponent } from './pages/components/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    MainComponent,
     ProfileComponent,
-    MainComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

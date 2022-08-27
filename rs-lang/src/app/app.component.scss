@@ -1,50 +1,5 @@
-.header {
-  width: 100%;
-  background: #22C55E;
-  .header-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-    gap: 2rem;
-    h1 {
-      margin: 0;
-      font-weight: bold;
-      font-size: 2em;
-      .header-logo {
-        color: #000;
-        font-size: 2rem;
-        font-weight: 900;
-        text-decoration: none;
-      }
-    }
-    .navbar {
-      display: flex;
-      flex-direction: row;
-      gap: 2.5rem;
-      .nav-list {
-        display: flex;
-        flex-direction: row;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        gap: 1rem;
-        .nav-item {
-          a {
-            text-decoration: none;
-            color: #000;
-            font-size: 1.25em;
-          }
-          &:hover {
-            transition: .3s ease-in-out;
-            text-decoration: underline;
-          }
-        }
-      }
-    }
-  }
-}
-.main {
-  padding: 20px 40px;
+.header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 30px;
 }

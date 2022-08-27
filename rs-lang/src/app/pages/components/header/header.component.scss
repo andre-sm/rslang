@@ -1,0 +1,63 @@
+@import "../../../shared/css/variables";
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.nav {
+  &__list {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    align-items: center;
+    font-size: 1.25em;
+    transition: all 0.35s ease;
+  }
+
+  &__item {
+    list-style: none;
+  }
+
+  &__link {
+    padding: 0.4em 0;
+    color: $color-black;
+    position: relative;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  &__link:before,
+  &__link:after {
+    height: 2px;
+    position: absolute;
+    content: '';
+    -webkit-transition: all 0.35s ease;
+    transition: all 0.35s ease;
+    background-color: $color-violet-light;
+    width: 0;
+  }
+
+  &__link:before {
+    top: 0;
+    left: 0;
+  }
+
+  &__link:after {
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.nav__link:hover,
+.nav__list .active .nav__link {
+  color: $color-violet-dark;
+}
+.nav__list .nav__link:hover:before,
+.nav__list .active .nav__link:before,
+.nav__list .nav__link:hover:after,
+.nav__list .active .nav__link:after {
+  width: 100%;
+}
