@@ -4,22 +4,18 @@ import { SprintRoutingModule } from './sprint-routing.module';
 import { SprintComponent } from './sprint.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { DifficultyForm, DifficultyFormComponent } from '../difficulty-form/difficulty-form.component';
-import { ResultFormComponent } from '../result-form/result-form.component';
+import { GamesModule } from '../games.module';
 
 @NgModule({
   declarations: [
-    DifficultyFormComponent,
-    DifficultyForm,
-    SprintComponent,
-    ResultFormComponent
-    
+    SprintComponent
   ],
   imports: [
     CommonModule,
     SprintRoutingModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    GamesModule
   ]
 })
 export class SprintModule { }
