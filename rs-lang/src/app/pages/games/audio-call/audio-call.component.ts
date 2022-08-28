@@ -48,7 +48,13 @@ export class AudioCallComponent implements OnInit {
     const word = Math.floor(Math.random() * 19);
 
     for (const property in this.answersText) {
-      this.answersText[property as keyof typeof this.answersText] = await this.getWrongAnswer();
+      let answer = '';
+
+      while (answer === words[word].wordTranslate || !answer) {
+        answer = await this.getWrongAnswer();
+      }
+
+      this.answersText[property as keyof typeof this.answersText] = answer;
     }
 
     this.answer = Math.floor(1 + Math.random() * (4 + 1 - 1));
@@ -65,7 +71,6 @@ export class AudioCallComponent implements OnInit {
   }
 
   async showWord() {
-
     if (this.life) {
       const word = await this.getWord();
       this.results.push(word);
@@ -73,7 +78,6 @@ export class AudioCallComponent implements OnInit {
       this.englishWord = word.word;
       this.russianWord = word.wordTranslate;
       this.setGameTimer();
-
       return
     }
     this.showResult();
@@ -107,10 +111,8 @@ export class AudioCallComponent implements OnInit {
     }
     this.gameTimer?.unsubscribe();
     this.time = GAME_TIME;
-
     this.showWord();
   }
-
 
   showResult() {
     this.sprintGameService.sendResult(this.results);
