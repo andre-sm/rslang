@@ -1,1 +1,12 @@
-<p>audio-call works!</p>
+<main>
+  <difficulty-form></difficulty-form>
+  <p class="score"><strong>Time:</strong> {{ time }}</p>
+  <p class="score"><strong>Life:</strong> {{ life }}</p>
+
+  <div class="buttons-answer">
+    <button mat-raised-button color="green" (click)="checkAnswer(1);">{{ answersText.firstAnswer }}</button>
+    <button mat-raised-button color="green" (click)="checkAnswer(2);">{{ answersText.secondAnswer }}</button>
+    <button mat-raised-button color="green" (click)="checkAnswer(3);">{{ answersText.thirdAnswer }}</button>
+    <button mat-raised-button color="green" (click)="checkAnswer(4);">{{ answersText.forthAnswer }}</button>
+  </div>
+</main>
