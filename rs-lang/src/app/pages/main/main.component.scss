@@ -1,0 +1,141 @@
+@import "../../shared/css/variables";
+
+.welcom {
+  background: url(../../../assets/img/background.jpg);
+  background-size: 100%;
+  background-position: center top;
+  background-repeat: no-repeat;
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 70px;
+
+  &__text-container {
+    font-family: 'Raleway', sans-serif;
+    max-width: 495px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__image-container {
+    background: url(../../../assets/img/main-image.png);
+    background-size: 100%;
+    background-position: center top;
+    background-repeat: no-repeat;
+    width: 460px;
+    height: 400px;
+  }
+
+  &__title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 40px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  &__text {
+    color: $color-black-light;
+    font-size: 20px;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+  }
+}
+
+.btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background-color: $color-violet-light;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 32px;
+  box-shadow: inset 2px 2px 2px 0px rgb(255 255 255 / 50%);
+  outline: none;
+  position: relative;
+  display: inline-block;
+  transition: all .3s ease;
+  cursor: pointer;
+}
+
+.btn:hover { 
+  background-color: $color-violet-darker;
+}
+
+.btn:active {
+  top: 2px;
+}
+
+.welcom-btn {
+  margin-top: 15px;
+}
+
+.advantage-section,
+.about-us-section {
+  font-family: 'Raleway', sans-serif;
+  margin-top: 100px;
+
+  &__items {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 100px;
+  }
+}
+
+.advantage-item,
+.about-us-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 40px 20px 40px;
+  max-width: 240px;
+  text-align: center;
+  border: 1px solid $color-violet-light;
+  border-radius: 16px;
+
+  &__title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  &__text {
+    font-size: 18px;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+}
+
+.games-section {
+  background: url(../../../assets/img/background.jpg);
+  background-size: 100%;
+  background-position: center top;
+  background-repeat: no-repeat;
+  height: 100%;
+  border-radius: 20px;
+  margin-top: 100px;
+  height: 450px;
+  transform: scaleX(-1);
+}
+
+.games {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+
+  &__game-preview {
+    background-color: $color-white;
+    border-radius: 8px;
+    width: 410px;
+    height: 260px;
+  }
+}
+
+.about-us {
+  margin-top: 100px;
+}

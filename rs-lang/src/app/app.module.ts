@@ -13,6 +13,7 @@ import { AudioCallComponent } from './pages/games/audio-call/audio-call.componen
 import { SprintComponent } from './pages/games/sprint/sprint.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { HeaderComponent } from './pages/components/header/header.component';
+import { FooterComponent } from './pages/components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { HeaderComponent } from './pages/components/header/header.component';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

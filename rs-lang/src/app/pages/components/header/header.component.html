@@ -1,6 +1,6 @@
 <div class="header">
   <h1 class="header__logo">
-    <a routerLink="/" class="header-logo">RSLang</a>
+    <a routerLink="/" class="logo-link">Learning English</a>
   </h1>
   <nav class="header__navbar nav">
     <ul class="nav__list">
@@ -17,7 +17,7 @@
         <a routerLink="/statistics" class="nav__link">Статистика</a>
       </li>
       <li class="nav__item" *ngIf="!isLoggedIn; else userLinks" routerLinkActive="active">
-        <a routerLink="/login" class="nav__link">Логин</a>
+        <a routerLink="/login" class="nav__link">Войти</a>
       </li>
       <ng-template #userLinks>
         <li class="nav__item" routerLinkActive="active">

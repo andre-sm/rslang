@@ -1,0 +1,43 @@
+@import "../../../shared/css/variables";
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  min-height: 100px;
+  max-width: 1280px;
+  padding: 0 60px;
+
+  &__github-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    align-items: center;
+    font-size: 1.3em;
+    font-weight: 300;
+    list-style: none;
+    transition: all 0.35s ease;
+    padding: 0;
+  }
+
+  &__github-link {
+    text-decoration: none;
+    transition: all 0.35s ease;
+    color: $color-black;
+  }
+
+  &__github-link:hover {
+    color: $color-white;
+  }
+
+  &__rss-logo {
+      display: block;
+      content: "";
+      background-image: url(../../../../assets/img/rs-school.svg);
+      width: 86px;
+      height: 32px;
+      cursor: pointer;
+  }
+
+}

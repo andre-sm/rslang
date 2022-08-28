@@ -1,5 +1,20 @@
+@import "./shared/css/variables";
+
 .header-container {
   max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 30px;
+  padding: 0 60px;
+}
+
+.main-container {
+  flex-grow: 1;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.footer-container {
+  background-color: $color-violet-lighter;
+  margin-top: 100px;
 }
