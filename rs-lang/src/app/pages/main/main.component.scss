@@ -2,7 +2,6 @@
 
 .welcom {
   background: url(../../../assets/img/background.jpg);
-  background-size: 100%;
   background-position: center top;
   background-repeat: no-repeat;
   height: 100%;
@@ -10,23 +9,46 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 80px 70px;
+  gap: 20px;
+  padding: 70px 60px;
 
   &__text-container {
     font-family: 'Raleway', sans-serif;
     max-width: 495px;
+    flex: 0.8;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
 
+  @media screen and (max-width: 1024px) {
+    &__text-container {
+      max-width: 700px;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
   &__image-container {
+    flex: 1;
     background: url(../../../assets/img/main-image.png);
-    background-size: 100%;
     background-position: center top;
     background-repeat: no-repeat;
-    width: 460px;
-    height: 400px;
+    width: 480px;
+    height: 420px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    &__image-container {
+      flex: 0 1 auto;
+      background-size: 100%;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    &__image-container {
+      display: none;
+    }
   }
 
   &__title {
@@ -41,6 +63,13 @@
     font-size: 20px;
     line-height: 1.1;
     letter-spacing: 0.5px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .welcom {
+    flex-direction: column;
+    gap: 40px;
   }
 }
 
@@ -84,6 +113,21 @@
     align-items: stretch;
     gap: 100px;
   }
+
+  @media screen and (max-width: 1024px) {
+    &__items {
+      gap: 50px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    &__items {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+  }
+
 }
 
 .advantage-item,
@@ -91,10 +135,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 40px 20px 40px;
-  max-width: 240px;
+  padding: 40px 30px 20px 30px;
+  max-width: 260px;
+  min-height: 280px;
   text-align: center;
-  border: 1px solid $color-violet-light;
+  border: 2px solid $color-violet-light;
   border-radius: 16px;
 
   &__title {
@@ -110,15 +155,58 @@
   }
 }
 
-.games-section {
-  background: url(../../../assets/img/background.jpg);
-  background-size: 100%;
+.about-us-item {
+  background: url(../../../assets/img/card-bg.png);
   background-position: center top;
   background-repeat: no-repeat;
+
+  &__avatar {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    border: 2px solid $color-violet-light;
+    margin-bottom: 15px;
+  }
+
+  &__link {
+    font-size: 16px;
+    text-decoration: none;
+    color: $color-violet-light;
+    margin-bottom: 15px;
+    transition: all 0.35s ease;
+  }
+
+  &__link:hover {
+    color: $color-black;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .advantage-item,
+  .about-us-item {
+    max-width: 205px;
+    padding: 40px 20px 20px 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .advantage-item,
+  .about-us-item {
+    padding: 40px 30px 20px 30px;
+    max-width: 240px;
+  }
+}
+
+.games-section {
+  background: url(../../../assets/img/background.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
   height: 100%;
+  min-height: 460px;
   border-radius: 20px;
   margin-top: 100px;
-  height: 450px;
+  padding: 40px;
   transform: scaleX(-1);
 }
 
@@ -133,6 +221,20 @@
     border-radius: 8px;
     width: 410px;
     height: 260px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .games {
+    gap: 50px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .games {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
   }
 }
 
