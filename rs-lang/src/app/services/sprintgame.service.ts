@@ -38,4 +38,5 @@ export class SprintGameService {
     const url = `${this.BASE_URL}${queryParams}`;
     return this.http.put<UserWordResponse>(url, params);
   }
+
 }
