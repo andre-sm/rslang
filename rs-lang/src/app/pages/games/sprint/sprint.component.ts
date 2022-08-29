@@ -4,10 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ResultFormComponent } from './result-form/result-form.component';
-import { Word } from 'src/app/models/words';
+import { Word } from '../../../models/words';
+import { StorageService } from '../../../services/storage.service';
+import { StatisticsService } from '../../../services/statistics.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 61;
+const GAME_TIME = 11;
 
 @Component({
   selector: 'app-sprint',
@@ -26,7 +28,21 @@ export class SprintComponent implements OnInit {
   audio = '';
   results: Word[] = [];
 
-  constructor(private sprintGameService: SprintGameService, private http: HttpClient, public dialog: MatDialog) { }
+  userId: string | undefined = '';
+  rightAnswers: Word[] = [];
+  rightAnswersPercent = 0;
+  wrongAnswers: Word[] = [];
+  streak = 0;
+  bestStreak = 0;
+  newWordsCount = 0;
+
+  constructor(
+    private http: HttpClient,
+    public dialog: MatDialog,
+    private sprintGameService: SprintGameService,
+    private statisticsService: StatisticsService,
+    private storageService: StorageService
+  ) { }
 
   ngOnInit() {
     this.sprintGameService.difficulty$.subscribe((difficulty) => {
@@ -62,6 +78,15 @@ export class SprintComponent implements OnInit {
         this.time--;
       } else {
         gameTimer.unsubscribe();
+        this.results.forEach((word) => {
+          if (word.hasOwnProperty('answer') && word.answer === true) {
+            this.rightAnswers.push(word)
+          } else if (!word.hasOwnProperty('answer')) {
+            this.wrongAnswers.push(word)
+          }
+        })
+        this.rightAnswersPercent = (this.rightAnswers.length * 100) / this.results.length;
+        this.statisticsService.setUserStatistics(this.rightAnswers, this.wrongAnswers);
         this.showResult();
       }
     });
@@ -81,23 +106,29 @@ export class SprintComponent implements OnInit {
       this.russianWord = word.wordTranslate;
       this.fakeTranslate = false;
     }
-    
   }
 
   checkAnswer(answer: string) {
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
         this.score += 10;
+        this.streak += 1;
+        if (this.bestStreak < this.streak) this.bestStreak = this.streak
         this.results[this.results.length - 1].answer = true;
+      } else {
+        this.streak = 0;
       }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
         this.score += 10;
+        this.streak += 1;
+        if (this.bestStreak < this.streak) this.bestStreak = this.streak
         this.results[this.results.length - 1].answer = true;
+      } else {
+        this.streak = 0;
       }
     }
     this.showWord();
-    
   }
 
   showResult() {

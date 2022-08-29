@@ -11,7 +11,7 @@ export class AppComponent {
   isLoggedIn = false;
   username?: string;
 
-  constructor(private storageService: StorageService, public router: Router) { }
+  constructor(private storageService: StorageService, private router: Router) { }
 
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();

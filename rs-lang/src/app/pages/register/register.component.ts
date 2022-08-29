@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { ToastrService } from 'ngx-toastr';
-import { User } from 'src/app/models/user';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-register',
@@ -20,9 +21,17 @@ export class RegisterComponent implements OnInit {
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, public router: Router, private toastr: ToastrService) { }
+  constructor(
+    private authService: AuthService,
+    private storageService: StorageService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
+    if (this.storageService.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
   }
 
   onSubmit(): void {
