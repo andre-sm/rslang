@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SprintGameService } from '../../../services/sprintgame.service';
-import { StorageService } from 'src/app/services/storage.service';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { lastValueFrom, timer } from 'rxjs';
+import { SprintGameService } from '../../../services/sprintgame.service';
+import { StorageService } from '../../../services/storage.service';
+import { StatisticsService } from '../../../services/statistics.service';
 import { ResultFormComponent } from '../result-form/result-form.component';
-import { Word } from 'src/app/models/words';
-import { UserWord } from 'src/app/models/user-word.model';
-import { UserAggregatedWord } from 'src/app/models/user-aggregated-word.model';
-import { UserAggregatedWordResponse } from 'src/app/models/user-aggregated-word-response.model';
+import { Word } from '../../../models/words';
+import { UserWord } from '../../../models/user-word.model';
+import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
+import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 61;
@@ -30,6 +31,7 @@ export class SprintComponent implements OnInit {
   fakeTranslate = false;
   score = 0;
   time = GAME_TIME;
+  gameName = 'sprint';
   difficulty = 0;
   page = 0;
   cardsPerPage = 20;
@@ -43,13 +45,16 @@ export class SprintComponent implements OnInit {
   newWordCount = 0;
   correctSeries = 0;
   bestSeries: Array<number> = [];
+  rightAnswers: (Word | UserAggregatedWord)[] = [];
+  wrongAnswers: (Word | UserAggregatedWord)[] = [];
 
   constructor(
     private sprintGameService: SprintGameService,
     private http: HttpClient,
     public dialog: MatDialog,
     private storageService: StorageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private statisticsService: StatisticsService
   ) {}
 
   ngOnInit() {
@@ -121,8 +126,11 @@ export class SprintComponent implements OnInit {
         gameTimer.unsubscribe();
         this.bestSeries.push(this.correctSeries);
         this.results.pop();
-        this.prepareGameStats();
         this.showResult();
+
+        if (this.userId) {
+          this.saveGameStats();
+        }
       }
     });
   }
@@ -144,16 +152,19 @@ export class SprintComponent implements OnInit {
   }
 
   checkAnswer(answer: string) {
+    const currentWord = this.currentWord as UserAggregatedWord;
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
         this.score += 10;
         this.results[this.results.length - 1].answer = true;
         this.isMistake = false;
         this.correctSeries++;
+        this.rightAnswers.push(currentWord);
       } else {
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.isMistake = true;
+        this.wrongAnswers.push(currentWord);
       }
       if (this.userId) {
         this.saveWordStats();
@@ -164,10 +175,12 @@ export class SprintComponent implements OnInit {
         this.results[this.results.length - 1].answer = true;
         this.isMistake = false;
         this.correctSeries++;
+        this.rightAnswers.push(currentWord);
       } else {
         this.isMistake = true;
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
+        this.wrongAnswers.push(currentWord);
       }
 
       if (this.userId) {
@@ -219,10 +232,16 @@ export class SprintComponent implements OnInit {
     });
   }
 
-  prepareGameStats() {
-    const successAnswers = this.bestSeries.reduce((acc, cur) => acc + cur, 0);
+  saveGameStats() {
     const bestSeries = Math.max(...this.bestSeries);
-    const wordsNumber = this.results.length;
-    const successPercentage = Math.round(successAnswers * 100 / wordsNumber);
+    const successPercentage = Math.round(this.rightAnswers.length * 100 / this.results.length);
+
+    // this.statisticsService.setUserStatistics(
+    //   this.rightAnswers,
+    //   this.wrongAnswers,
+    //   bestSeries,
+    //   successPercentage,
+    //   this.gameName
+    // );
   }
 }
