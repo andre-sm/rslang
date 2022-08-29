@@ -231,7 +231,7 @@ export class SprintComponent implements OnInit {
       exitAnimationDuration,
     });
   }
-
+  
   saveGameStats() {
     const bestSeries = Math.max(...this.bestSeries);
     const successPercentage = Math.round(this.rightAnswers.length * 100 / this.results.length);
