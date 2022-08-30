@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Category } from './models/category.model';
 import { Word } from './models/word.model';
 import { UserAggregatedWord } from './models/user-aggregated-word.model';
@@ -34,7 +35,8 @@ export class TextbookComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private wordService: WordService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -191,5 +193,13 @@ export class TextbookComponent implements OnInit {
     } else {
       this.getUserAggregatedWords();
     }
+  }
+
+  onSprintGameBtnClick() {
+    this.router.navigateByUrl(`/games/sprint?group=${this.category}&page=${this.page}`);
+
+  }
+  onAudioGameBtnClick() {
+    this.router.navigateByUrl(`/games/audio-call?group=${this.category}&page=${this.page}`);
   }
 }

@@ -1,48 +1,50 @@
 <div class="word-card">
   <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ word?.word }}</mat-card-title>
-      <button mat-icon-button color="primary" aria-label="Sound icon" (click)="onSoundIconClick(word)">
+    <div class="word-card__image">
+      <img mat-card-image [src]="getImagePath()" alt="{{ word?.word }}" />
+    </div>
+    <div class="word-card__title">
+      <div class="title-container">
+        <span class="title-word">{{ word?.word }}</span>
+        <span class="title-transcription">{{ word?.transcription }}</span>
+      </div>
+      <button class="word-card__sound-icon" mat-icon-button color="primary" aria-label="Sound icon" (click)="onSoundIconClick(word)">
         <mat-icon aria-hidden="false" aria-label="Volume icon" fontIcon="volume_up"></mat-icon>
       </button>
-      <mat-card-subtitle>{{ word?.transcription }}</mat-card-subtitle>
-      <mat-card-subtitle class="word-card__translation">{{ word?.wordTranslate }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-actions>
-      <div class="word-card__buttons" *ngIf="isLogged">
-        <button
-          *ngIf="isHardWordsChecked; else deleteHardWord"
-          mat-stroked-button
-          color="warn"
-          (click)="onHardWordDeleteClick(word)"
-          >Удалить</button>
-          <ng-template #deleteHardWord>
-            <button
-              mat-stroked-button
-              [disabled]="word?.userWord?.difficulty === 'hard'"
-              [innerText]="word?.userWord?.difficulty === 'hard' ? 'Сложное' : 'В сложные!'"
-              color="warn"
-              (click)="onHardWordBtnAddClick(word)"
-            ></button>
-          </ng-template>
-        <button
-          mat-stroked-button
-          [disabled]="word?.userWord?.difficulty === 'easy'"
-          [innerText]="word?.userWord?.difficulty === 'easy' ? 'Изученное' : 'Знаю!'"
-          color="accent"
-          (click)="onLearnedWordBtnClick(word)"
-        ></button>
-      </div>
-    </mat-card-actions>
-    <img mat-card-image [src]="getImagePath()" alt="{{ word?.word }}" />
+      <span class="word-card__translation">{{ word?.wordTranslate }}</span>
+    </div>
+    <div class="word-card__buttons" *ngIf="isLogged">
+      <button class="hard-word-btn btn"
+        *ngIf="isHardWordsChecked; else deleteHardWord"
+        mat-stroked-button
+        color="warn"
+        (click)="onHardWordDeleteClick(word)"
+        >Удалить</button>
+        <ng-template #deleteHardWord>
+          <button class="hard-word-btn btn"
+            [disabled]="word?.userWord?.difficulty === 'hard'"
+            [innerText]="word?.userWord?.difficulty === 'hard' ? 'Сложное' : 'В сложные!'"
+            mat-stroked-button
+            color="accent"
+            (click)="onHardWordBtnAddClick(word)"
+          ></button>
+        </ng-template>
+      <button class="learned-btn btn"
+        mat-stroked-button
+        [disabled]="word?.userWord?.difficulty === 'easy'"
+        [innerText]="word?.userWord?.difficulty === 'easy' ? 'Изученное' : 'Знаю!'"
+        color="accent"
+        (click)="onLearnedWordBtnClick(word)"
+      ></button>
+    </div>
     <mat-card-content>
-      <mat-card-subtitle>Значение</mat-card-subtitle>
-      <p [innerHtml]="word?.textMeaning"></p>
-      <p>
+      <mat-card-subtitle class="word-card__meaning-title">Значение</mat-card-subtitle>
+      <p class="word-card__meaning" [innerHtml]="word?.textMeaning"></p>
+      <p class="word-card__meaning-translate">
         {{ word?.textMeaningTranslate }}
       </p>
-      <mat-card-subtitle>Пример</mat-card-subtitle>
-      <p [innerHtml]="word?.textExample"></p>
+      <mat-card-subtitle class="word-card__example-title">Пример</mat-card-subtitle>
+      <p class="word-card__example" [innerHtml]="word?.textExample"></p>
       <p>
         {{ word?.textExampleTranslate }}
       </p>

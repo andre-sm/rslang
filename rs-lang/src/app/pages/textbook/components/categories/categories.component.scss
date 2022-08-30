@@ -1,5 +1,58 @@
+@import "../../../../shared/css/variables";
+
 .categories {
   display: flex;
   gap: 20px;
   list-style: none;
 }
+
+.mat-button-toggle-group {
+  border: none;
+}
+
+.categories-buttons[aria-disabled="true"] #mat-button-toggle-1,
+.categories-buttons[aria-disabled="true"] #mat-button-toggle-2,
+.categories-buttons[aria-disabled="true"] #mat-button-toggle-3,
+.categories-buttons[aria-disabled="true"] #mat-button-toggle-4,
+.categories-buttons[aria-disabled="true"] #mat-button-toggle-5,
+.categories-buttons[aria-disabled="true"] #mat-button-toggle-6 {
+  background-color: $color-grey; 
+  color: $color-grey-darker;
+}
+
+.mat-button-toggle-group-appearance-standard {
+  border-radius: 8px;
+}
+
+.mat-button-toggle-group-appearance-standard .mat-button-toggle+.mat-button-toggle {
+  border-left: none;
+}
+
+.mat-button-toggle {
+  min-width: 80px;
+}
+
+#mat-button-toggle-1 {
+  background-color: #D4C7FC;
+}
+
+#mat-button-toggle-2 {
+  background-color: #F7C5FC;
+}
+
+#mat-button-toggle-3 {
+  background-color: #C5DCFC;
+}
+
+#mat-button-toggle-4 {
+  background-color: #fef8b3;
+}
+
+#mat-button-toggle-5 {
+  background-color: #d7ffba;
+}
+
+#mat-button-toggle-6 {
+  background-color: #cdfff2;
+}
+
