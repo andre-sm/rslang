@@ -15,6 +15,12 @@
   padding: 0 40px;
 }
 
+@media screen and (max-width: 800px) {
+  .main-container {
+    padding: 0px;
+  }
+}
+
 .footer-container {
   background-color: $color-violet-lighter;
   margin-top: 100px;

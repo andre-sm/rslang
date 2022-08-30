@@ -1,21 +1,25 @@
-<div class="textbook">
+<div class="textbook" [ngClass]="{ 'learned-page': cardsPerPage - learnedWords === 0 }">
   <div class="textbook__buttons-container">
-    <app-categories
-      [categories]="categories"
-      [isHardWordsChecked]="isHardWordsChecked"
-      [selectedCategory]="category"
-      (categoryChange)="onCategoryChanged($event)"
-    ></app-categories>
-    <mat-slide-toggle color="primary" [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
-    <div class="games-buttons" *ngIf="!isHardWordsChecked">
-      <button class="sprint-btn btn" (click)="onSprintGameBtnClick()"><span class="sprint-btn-text">Спринт</span></button>
-      <button class="audio-call-btn btn" (click)="onAudioGameBtnClick()"><span class="audio-call-btn-text">Аудио вызов</span></button>
+    <div class="buttons-wrapper-left">
+      <app-categories
+        [categories]="categories"
+        [isHardWordsChecked]="isHardWordsChecked"
+        [selectedCategory]="category"
+        (categoryChange)="onCategoryChanged($event)"
+      ></app-categories>
+      <mat-slide-toggle color="primary" [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
+    </div>  
+    <div class="buttons-wrapper-right">
+      <div class="games-buttons" *ngIf="!isHardWordsChecked" [ngClass]="{ 'disabled': cardsPerPage - learnedWords === 0 }">
+        <button class="sprint-btn btn" (click)="onSprintGameBtnClick()"><span class="sprint-btn-text">Спринт</span></button>
+        <button class="audio-call-btn btn" (click)="onAudioGameBtnClick()"><span class="audio-call-btn-text">Аудио вызов</span></button>
+      </div>
+      <p class="badge-container">
+        <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
+          {{ cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!' }}
+        </span>
+      </p>
     </div>
-    <p class="badge-container">
-      <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
-        {{ cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!' }}
-      </span>
-    </p>
   </div>
   <div class="word-cards">
     <app-word-card

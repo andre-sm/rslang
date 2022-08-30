@@ -1,12 +1,12 @@
 @import "../../../../shared/css/variables";
 
-mat-card {
-  border-radius: 8px;
+.word-card-container {
+  height: 100%;
 }
 
 .word-card {
-  height: 100%;
- 
+  border-radius: 8px;
+
   &__image {
     border-radius: 8px;
     padding: 10px 10px 0 10px;
@@ -49,6 +49,14 @@ mat-card {
   &__example {
     margin-bottom: 3px;
   }
+}
+
+.word-card.hard-word {
+  background-color: $color-pink-light;
+} 
+
+.word-card.learned-word {
+  background-color: $color-green-light;
 }
 
 .mat-card {

@@ -1,5 +1,11 @@
-<div class="word-card">
-  <mat-card>
+<div class="word-card-container">
+  <mat-card
+    class="word-card"
+    [ngClass]="{
+      'hard-word': word?.userWord?.difficulty === 'hard' && !isHardWordsChecked,
+      'learned-word': word?.userWord?.difficulty === 'easy'
+    }"
+  >
     <div class="word-card__image">
       <img mat-card-image [src]="getImagePath()" alt="{{ word?.word }}" />
     </div>
@@ -8,28 +14,39 @@
         <span class="title-word">{{ word?.word }}</span>
         <span class="title-transcription">{{ word?.transcription }}</span>
       </div>
-      <button class="word-card__sound-icon" mat-icon-button color="primary" aria-label="Sound icon" (click)="onSoundIconClick(word)">
+      <button
+        class="word-card__sound-icon"
+        mat-icon-button
+        color="primary"
+        aria-label="Sound icon"
+        (click)="onSoundIconClick(word)"
+      >
         <mat-icon aria-hidden="false" aria-label="Volume icon" fontIcon="volume_up"></mat-icon>
       </button>
       <span class="word-card__translation">{{ word?.wordTranslate }}</span>
     </div>
     <div class="word-card__buttons" *ngIf="isLogged">
-      <button class="hard-word-btn btn"
+      <button
+        class="hard-word-btn btn"
         *ngIf="isHardWordsChecked; else deleteHardWord"
         mat-stroked-button
         color="warn"
         (click)="onHardWordDeleteClick(word)"
-        >Удалить</button>
-        <ng-template #deleteHardWord>
-          <button class="hard-word-btn btn"
-            [disabled]="word?.userWord?.difficulty === 'hard'"
-            [innerText]="word?.userWord?.difficulty === 'hard' ? 'Сложное' : 'В сложные!'"
-            mat-stroked-button
-            color="accent"
-            (click)="onHardWordBtnAddClick(word)"
-          ></button>
-        </ng-template>
-      <button class="learned-btn btn"
+      >
+        Удалить
+      </button>
+      <ng-template #deleteHardWord>
+        <button
+          class="hard-word-btn btn"
+          [disabled]="word?.userWord?.difficulty === 'hard'"
+          [innerText]="word?.userWord?.difficulty === 'hard' ? 'Сложное' : 'В сложные!'"
+          mat-stroked-button
+          color="accent"
+          (click)="onHardWordBtnAddClick(word)"
+        ></button>
+      </ng-template>
+      <button
+        class="learned-btn btn"
         mat-stroked-button
         [disabled]="word?.userWord?.difficulty === 'easy'"
         [innerText]="word?.userWord?.difficulty === 'easy' ? 'Изученное' : 'Знаю!'"
