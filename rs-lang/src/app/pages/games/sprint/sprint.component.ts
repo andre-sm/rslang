@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { lastValueFrom, timer } from 'rxjs';
+import { lastValueFrom, Subscription, timer } from 'rxjs';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
@@ -20,7 +20,7 @@ const GAME_TIME = 61;
   templateUrl: './sprint.component.html',
   styleUrls: ['./sprint.component.scss'],
 })
-export class SprintComponent implements OnInit {
+export class SprintComponent implements OnInit, OnDestroy {
   englishWord: string = '';
   russianWord: string | undefined = '';
   words: (Word | UserAggregatedWord)[] = [];
@@ -47,6 +47,7 @@ export class SprintComponent implements OnInit {
   bestSeries: Array<number> = [];
   rightAnswers: (Word | UserAggregatedWord)[] = [];
   wrongAnswers: (Word | UserAggregatedWord)[] = [];
+  timerSub?: Subscription;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -80,6 +81,10 @@ export class SprintComponent implements OnInit {
         this.setGameTimer();
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.timerSub?.unsubscribe();
   }
 
   async getWord() {
@@ -119,11 +124,11 @@ export class SprintComponent implements OnInit {
   }
 
   setGameTimer() {
-    const gameTimer = timer(1000, 1000).subscribe(() => {
+    this.timerSub = timer(1000, 1000).subscribe(() => {
       if (this.time) {
         this.time--;
       } else {
-        gameTimer.unsubscribe();
+        this.timerSub?.unsubscribe();
         this.bestSeries.push(this.correctSeries);
         this.results.pop();
         this.showResult();
