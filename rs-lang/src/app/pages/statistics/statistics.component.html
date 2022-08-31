@@ -3,26 +3,26 @@
     <h1>Today Statistic</h1>
     <div class="today-statistics-general">
       <div class="words-learned">
-        <span>0</span>
+        <span>{{ todayStatistics.allNewWords }}</span>
         <span>words learned</span>
       </div>
       <div class="right-percent">
-        <span>0%</span>
+        <span>{{ todayStatistics.allGamesRightPercent }}%</span>
         <span>right answers</span>
       </div>
     </div>
     <div class="game-card-container">
       <div class="game-card">
-        <h3>GameName</h3>
-        <span>Words learned: 0</span>
-        <span>Right answers: 0%</span>
-        <span>Best series of right answers: 0</span>
+        <h3>Sprint</h3>
+        <span>Words learned: {{ todayStatisticsSprint.newWords }}</span>
+        <span>Right answers: {{ todayStatisticsSprint.rightPercent }}%</span>
+        <span>Best series of right answers: {{ todayStatisticsSprint.bestStreak }}</span>
       </div>
       <div class="game-card">
-        <h3>GameName</h3>
-        <span>Words learned: 0</span>
-        <span>Right answers: 0%</span>
-        <span>Best series of right answers: 0</span>
+        <h3>Audio Call</h3>
+        <span>Words learned: {{ todayStatisticsAudioCall.newWords }}</span>
+        <span>Right answers: {{ todayStatisticsAudioCall.rightPercent }}%</span>
+        <span>Best series of right answers: {{ todayStatisticsAudioCall.bestStreak }}</span>
       </div>
     </div>
   </div>

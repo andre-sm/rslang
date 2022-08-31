@@ -35,6 +35,7 @@ export class SprintComponent implements OnInit {
   streak = 0;
   bestStreak = 0;
   newWordsCount = 0;
+  gameName = 'sprint';
 
   constructor(
     private http: HttpClient,
@@ -78,15 +79,7 @@ export class SprintComponent implements OnInit {
         this.time--;
       } else {
         gameTimer.unsubscribe();
-        this.results.forEach((word) => {
-          if (word.hasOwnProperty('answer') && word.answer === true) {
-            this.rightAnswers.push(word)
-          } else if (!word.hasOwnProperty('answer')) {
-            this.wrongAnswers.push(word)
-          }
-        })
-        this.rightAnswersPercent = (this.rightAnswers.length * 100) / this.results.length;
-        this.statisticsService.setUserStatistics(this.rightAnswers, this.wrongAnswers);
+        this.setGameStatistics();
         this.showResult();
       }
     });
@@ -129,6 +122,24 @@ export class SprintComponent implements OnInit {
       }
     }
     this.showWord();
+  }
+
+  setGameStatistics() {
+    this.results.forEach((word) => {
+      if (word.hasOwnProperty('answer') && word.answer === true) {
+        this.rightAnswers.push(word)
+      } else if (!word.hasOwnProperty('answer')) {
+        this.wrongAnswers.push(word)
+      }
+    })
+    this.rightAnswersPercent = (this.rightAnswers.length * 100) / this.results.length;
+    this.statisticsService.setUserStatistics(
+      this.rightAnswers,
+      this.wrongAnswers,
+      this.bestStreak,
+      this.rightAnswersPercent,
+      this.gameName
+    );
   }
 
   showResult() {
