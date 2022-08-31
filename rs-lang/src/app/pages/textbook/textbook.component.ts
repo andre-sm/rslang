@@ -30,6 +30,7 @@ export class TextbookComponent implements OnInit {
   userId: string = '';
   learnedWords: number = 0;
   isHardWordsChecked = localStorage.getItem('isHardWordsChecked') === 'true' || false;
+  requestBody?: UserWord;
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
 
   constructor(
@@ -82,6 +83,7 @@ export class TextbookComponent implements OnInit {
       .subscribe((words) => {
         this.calculateLearnedWords(words[0].paginatedResults);
         this.words = words[0].paginatedResults;
+        console.log(this.words);
       });
   }
 
@@ -134,12 +136,14 @@ export class TextbookComponent implements OnInit {
 
   addHardWord(word: UserAggregatedWord): void {
     if (word.userWord) {
-      this.wordService.updateUserWord(this.userId, word._id, { difficulty: 'hard' }).subscribe((data) => {
+      this.requestBody = { ...word.userWord, difficulty: 'hard' };
+      this.wordService.updateUserWord(this.userId, word._id, this.requestBody).subscribe((data) => {
         this.updateCurrentWordList(word, data, 'hard');
         this.calculateLearnedWords(this.words);
       });
     } else {
-      this.wordService.addToHard(this.userId, word._id, { difficulty: 'hard' }).subscribe((data) => {
+      this.requestBody = { difficulty: 'hard' };
+      this.wordService.addToHard(this.userId, word._id, this.requestBody).subscribe((data) => {
         this.updateCurrentWordList(word, data, 'hard');
         this.calculateLearnedWords(this.words);
       });
@@ -147,8 +151,9 @@ export class TextbookComponent implements OnInit {
   }
 
   addLearnedWord(word: UserAggregatedWord): void {
-    if (word.userWord?.difficulty) {
-      this.wordService.updateUserWord(this.userId, word._id, { difficulty: 'easy' }).subscribe((data) => {
+    if (word.userWord) {
+      this.requestBody = { ...word.userWord, difficulty: 'easy' };
+      this.wordService.updateUserWord(this.userId, word._id, this.requestBody).subscribe((data) => {
         if (this.isHardWordsChecked) {
           const wordsUpdated = this.words.filter((item: UserAggregatedWord) => item._id !== word._id);
           this.words = wordsUpdated;
@@ -158,7 +163,8 @@ export class TextbookComponent implements OnInit {
         }
       });
     } else {
-      this.wordService.addToLearned(this.userId, word._id, { difficulty: 'easy' }).subscribe((data) => {
+      this.requestBody = { difficulty: 'easy' };
+      this.wordService.addToLearned(this.userId, word._id, this.requestBody).subscribe((data) => {
         this.updateCurrentWordList(word, data, 'easy');
         this.calculateLearnedWords(this.words);
       });
