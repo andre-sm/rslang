@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
-import { StorageService } from 'src/app/services/storage.service';
+import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserTokenResponse, LoginUser } from './../../models/user';
 
@@ -20,11 +20,17 @@ export class LoginComponent implements OnInit {
   isLoginFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, private storageService: StorageService, public router: Router, private toastr: ToastrService) { }
+  constructor(
+    private authService: AuthService,
+    private storageService: StorageService,
+    private router: Router,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
       this.isLoggedIn = true;
+      this.router.navigate(['/']);
     }
   }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SprintGameService } from '../../../services/sprintgame.service';
+import { StatisticsService } from '../../../services/statistics.service';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, of, Subscription, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';

@@ -37,12 +37,12 @@ export class StorageService {
     window.localStorage.setItem(REFRESHTOKEN_KEY, token);
   }
 
-  public getUser(): UserTokenResponse | undefined {
+  public getUser(): UserTokenResponse | null {
     const user = window.localStorage.getItem(USER_KEY);
     if (user) {
       return JSON.parse(user);
     }
-    return
+    return null
   }
 
   public saveUser(user: UserTokenResponse): void {

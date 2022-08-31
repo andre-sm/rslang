@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Word } from 'src/app/models/words';
+import { Word } from '../models/words';
 
 @Injectable({
   providedIn: 'root'
