@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SprintGameService } from '../../../../services/sprintgame.service';
-import { Word } from '../../../../models/words';
+import { SprintGameService } from '../../../services/sprintgame.service';
+import { Word } from '../../../models/words';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 

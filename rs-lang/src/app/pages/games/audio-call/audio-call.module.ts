@@ -1,17 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AudioCallRoutingModule } from './audio-call-routing.module';
 import { AudioCallComponent } from './audio-call.component';
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { GamesModule } from '../games.module';
 
 @NgModule({
   declarations: [
-    AudioCallComponent
+    AudioCallComponent,
   ],
   imports: [
     CommonModule,
-    AudioCallRoutingModule
+    AudioCallRoutingModule,
+    MatButtonModule,
+    MatDialogModule,
+    GamesModule
   ]
 })
 export class AudioCallModule { }

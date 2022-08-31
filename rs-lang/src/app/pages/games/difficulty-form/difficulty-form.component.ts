@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { SprintGameService } from '../../../../services/sprintgame.service';
+import { SprintGameService } from '../../../services/sprintgame.service';
 
 let dialogRef;
 const DELAY_FORM_CLOSE = 1000;

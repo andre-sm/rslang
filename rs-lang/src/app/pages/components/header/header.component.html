@@ -1,0 +1,32 @@
+<div class="header">
+  <h1 class="header__logo">
+    <a routerLink="/" class="logo-link">Learning English</a>
+  </h1>
+  <nav class="header__navbar nav">
+    <ul class="nav__list">
+      <li class="nav__item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <a routerLink="/" class="nav__link">Главная</a>
+      </li>
+      <li class="nav__item" routerLinkActive="active">
+        <a routerLink="/textbook" class="nav__link">Учебник</a>
+      </li>
+      <li class="nav__item" routerLinkActive="active">
+        <a routerLink="/games" class="nav__link">Игры</a>
+      </li>
+      <li class="nav__item" routerLinkActive="active">
+        <a routerLink="/statistics" class="nav__link">Статистика</a>
+      </li>
+      <li class="nav__item" *ngIf="!isLoggedIn; else userLinks" routerLinkActive="active">
+        <a routerLink="/login" class="nav__link">Войти</a>
+      </li>
+      <ng-template #userLinks>
+        <li class="nav__item" routerLinkActive="active">
+          <a routerLink="/profile" class="nav__link">{{ userName }}</a>
+        </li>
+        <li class="nav__item" routerLinkActive="active">
+          <a routerLink="#" class="nav__link" (click)="logout()">Выйти</a>
+        </li>
+      </ng-template>
+    </ul>
+  </nav>
+</div>

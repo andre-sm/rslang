@@ -3,9 +3,8 @@ import { SprintGameService } from '../../../services/sprintgame.service';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { ResultFormComponent } from './result-form/result-form.component';
+import { ResultFormComponent } from '../result-form/result-form.component';
 import { Word } from '../../../models/words';
-import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
@@ -41,8 +40,7 @@ export class SprintComponent implements OnInit {
     private http: HttpClient,
     public dialog: MatDialog,
     private sprintGameService: SprintGameService,
-    private statisticsService: StatisticsService,
-    private storageService: StorageService
+    private statisticsService: StatisticsService
   ) { }
 
   ngOnInit() {

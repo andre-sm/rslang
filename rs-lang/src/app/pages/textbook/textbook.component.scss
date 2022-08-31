@@ -1,0 +1,17 @@
+.word-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-gap: 12px;
+}
+
+.main-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.badge-container {
+  margin-left: auto;
+}
