@@ -9,7 +9,7 @@ import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 11;
+const GAME_TIME = 61;
 
 @Component({
   selector: 'app-sprint',
