@@ -1,5 +1,78 @@
+@import "../../../../shared/css/variables";
+
 .categories {
   display: flex;
   gap: 20px;
   list-style: none;
 }
+
+.mat-button-toggle-group {
+  display: flex;
+  gap: 5px;
+  border: none;
+}
+
+.categories-buttons[aria-disabled="true"] .category-btn-0,
+.categories-buttons[aria-disabled="true"] .category-btn-1,
+.categories-buttons[aria-disabled="true"] .category-btn-2,
+.categories-buttons[aria-disabled="true"] .category-btn-3,
+.categories-buttons[aria-disabled="true"] .category-btn-4,
+.categories-buttons[aria-disabled="true"] .category-btn-5 {
+  background-color: $color-grey; 
+  color: $color-grey-darker;
+}
+
+.mat-button-toggle-group-appearance-standard {
+  border-radius: 8px;
+}
+
+.mat-button-toggle {
+  min-width: 80px;
+}
+
+.category-btn-0 {
+  display: flex;
+  align-items: center;
+  background-color: #D4C7FC;
+}
+
+.category-btn-1 {
+  background-color: #F7C5FC;
+}
+
+.category-btn-2 {
+  background-color: #C5DCFC;
+}
+
+.category-btn-3 {
+  background-color: #fef8b3;
+}
+
+.category-btn-4 {
+  background-color: #d7ffba;
+}
+
+.category-btn-5 {
+  background-color: #cdfff2;
+}
+
+.category-btn-0,
+.category-btn-1,
+.category-btn-2,
+.category-btn-3,
+.category-btn-4,
+.category-btn-5 {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.category-btn-0.mat-button-toggle-checked,
+.category-btn-1.mat-button-toggle-checked,
+.category-btn-2.mat-button-toggle-checked,
+.category-btn-3.mat-button-toggle-checked,
+.category-btn-4.mat-button-toggle-checked,
+.category-btn-5.mat-button-toggle-checked {
+  border: 2px solid $color-violet-light;
+}
+

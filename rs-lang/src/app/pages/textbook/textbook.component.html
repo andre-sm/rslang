@@ -1,30 +1,40 @@
-<div class="main-buttons">
-  <app-categories
-    [categories]="categories"
-    [isHardWordsChecked]="isHardWordsChecked"
-    [selectedCategory]="category"
-    (categoryChange)="onCategoryChanged($event)"
-  ></app-categories>
-  <mat-slide-toggle [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
-  <p class="badge-container">
-    <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
-      {{ cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!' }}
-    </span>
-  </p>
-</div>
-<div class="word-cards">
-  <app-word-card
-    *ngFor="let word of words"
-    [word]="word"
-    [isHardWordsChecked]="isHardWordsChecked"
-    [isLogged]="isLogged"
-    (soundIconClick)="onSoundIconClick($event)"
-    (hardWordClick)="addHardWord($event)"
-    (hardWordDeleteClick)="deleteUserWord($event)"
-    (learnedWordClick)="addLearnedWord($event)"
-  ></app-word-card>
-</div>
-<div class="pagination" *ngIf="!isHardWordsChecked">
-  <mat-paginator [pageIndex]="page" [length]="totalWords" [pageSize]="cardsPerPage" hidePageSize="true" (page)="onPageChanged($event)">
-  </mat-paginator>
+<div class="textbook" [ngClass]="{ 'learned-page': cardsPerPage - learnedWords === 0 }">
+  <div class="textbook__buttons-container">
+    <div class="buttons-wrapper-left">
+      <app-categories
+        [categories]="categories"
+        [isHardWordsChecked]="isHardWordsChecked"
+        [selectedCategory]="category"
+        (categoryChange)="onCategoryChanged($event)"
+      ></app-categories>
+      <mat-slide-toggle color="primary" [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
+    </div>  
+    <div class="buttons-wrapper-right">
+      <div class="games-buttons" *ngIf="!isHardWordsChecked" [ngClass]="{ 'disabled': cardsPerPage - learnedWords === 0 }">
+        <button class="sprint-btn btn" (click)="onSprintGameBtnClick()"><span class="sprint-btn-text">Спринт</span></button>
+        <button class="audio-call-btn btn" (click)="onAudioGameBtnClick()"><span class="audio-call-btn-text">Аудио вызов</span></button>
+      </div>
+      <p class="badge-container">
+        <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
+          {{ cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!' }}
+        </span>
+      </p>
+    </div>
+  </div>
+  <div class="word-cards">
+    <app-word-card
+      *ngFor="let word of words"
+      [word]="word"
+      [isHardWordsChecked]="isHardWordsChecked"
+      [isLogged]="isLogged"
+      (soundIconClick)="onSoundIconClick($event)"
+      (hardWordClick)="addHardWord($event)"
+      (hardWordDeleteClick)="deleteUserWord($event)"
+      (learnedWordClick)="addLearnedWord($event)"
+    ></app-word-card>
+  </div>
+  <div class="pagination" *ngIf="!isHardWordsChecked">
+    <mat-paginator [pageIndex]="page" [length]="totalWords" [pageSize]="cardsPerPage" hidePageSize="true" (page)="onPageChanged($event)">
+    </mat-paginator>
+  </div>
 </div>
