@@ -131,3 +131,46 @@
   cursor: default;
   pointer-events: none;
 }
+
+.stats-table {
+  &__title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  &__header,
+  &__row {
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__header {
+    border-bottom: 1px solid $color-grey;
+  }
+
+  &__content {
+    margin: 0;
+    padding: 0;
+    border: 1px solid $color-violet-light;
+    border-radius: 8px;
+  }
+}
+
+.col:not(:last-child) {
+  border-right: 1px solid $color-grey;
+}
+
+.col-1,
+.col-2 {
+  flex-basis: 35%;
+}
+
+.col-3 {
+  flex-basis: 30%;
+}
