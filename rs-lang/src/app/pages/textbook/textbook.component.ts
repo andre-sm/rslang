@@ -83,7 +83,6 @@ export class TextbookComponent implements OnInit {
       .subscribe((words) => {
         this.calculateLearnedWords(words[0].paginatedResults);
         this.words = words[0].paginatedResults;
-        console.log(this.words);
       });
   }
 

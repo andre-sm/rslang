@@ -17,4 +17,8 @@ export class CategoriesComponent {
     this.categoryChange.emit(category.group);
   }
 
+  getClass(category: number): string {
+    return `category-btn-${category}`;
+  }
+
 }
