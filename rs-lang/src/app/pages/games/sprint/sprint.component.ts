@@ -209,7 +209,7 @@ export class SprintComponent implements OnInit {
         ...currentWord.userWord,
         optional: { total: ++currentTotal, success: this.isMistake ? currentSuccess : ++currentSuccess },
       };
-      
+
       this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody);
     }
   }
@@ -231,17 +231,17 @@ export class SprintComponent implements OnInit {
       exitAnimationDuration,
     });
   }
-  
+
   saveGameStats() {
     const bestSeries = Math.max(...this.bestSeries);
     const successPercentage = Math.round(this.rightAnswers.length * 100 / this.results.length);
 
-    // this.statisticsService.setUserStatistics(
-    //   this.rightAnswers,
-    //   this.wrongAnswers,
-    //   bestSeries,
-    //   successPercentage,
-    //   this.gameName
-    // );
+    this.statisticsService.setUserStatistics(
+      this.rightAnswers,
+      this.wrongAnswers,
+      bestSeries,
+      successPercentage,
+      this.gameName
+    );
   }
 }

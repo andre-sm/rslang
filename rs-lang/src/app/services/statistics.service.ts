@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 import { StatisticByDate, Statistics, defaultStatistics, stringifiedNewBody } from '../models/statistics';
-import { Word } from '../models/words';
+import { UserAggregatedWord } from '../models/user-aggregated-word.model';
 import { getUniqueWords, isToday } from '../utils/statistics';
 
 const STATISTICS_URL = 'https://rss-rslang-be.herokuapp.com/users/';
@@ -37,7 +37,7 @@ export class StatisticsService {
     })
   }
 
-  setUserStatistics(rightAnswers: Word[], wrongAnswers: Word[], bestStreak: number, rightPercent: number, gameName: string) {
+  setUserStatistics(rightAnswers: UserAggregatedWord[], wrongAnswers: UserAggregatedWord[], bestStreak: number, rightPercent: number, gameName: string) {
     const userId: string | undefined = this.storageService.getUser()?.userId;
     const token: string | null = this.storageService.getToken();
     if (userId && token) {
@@ -63,7 +63,7 @@ export class StatisticsService {
     }
   }
 
-  upsertUserStatistics(oldbody: Statistics, rightAnswers: Word[], wrongAnswers: Word[], bestStreak: number, rightPercent: number, gameName: string) {
+  upsertUserStatistics(oldbody: Statistics, rightAnswers: UserAggregatedWord[], wrongAnswers: UserAggregatedWord[], bestStreak: number, rightPercent: number, gameName: string) {
     const userId: string | undefined = this.storageService.getUser()?.userId;
     const token: string | null = this.storageService.getToken();
     if (userId && token) {
@@ -77,30 +77,30 @@ export class StatisticsService {
         newBody.optional.allStatisticsByDate[0].allGamesRight = rightAnswers.length;
         newBody.optional.allStatisticsByDate[0].allGamesRightPercent = rightPercent;
         newBody.optional.allStatisticsByDate[0].allGamesWrong = wrongAnswers.length;
-        newBody.optional.allStatisticsByDate[0].wordsList = allGameWords.map(item => item.id);
+        newBody.optional.allStatisticsByDate[0].wordsList = allGameWords.map(item => item._id as string);
         if (gameName === 'sprint') {
           newBody.optional.allStatisticsByDate[0].games.sprint.right = rightAnswers.length;
           newBody.optional.allStatisticsByDate[0].games.sprint.rightPercent = rightPercent;
           newBody.optional.allStatisticsByDate[0].games.sprint.wrong = wrongAnswers.length;
           newBody.optional.allStatisticsByDate[0].games.sprint.bestStreak = bestStreak;
           newBody.optional.allStatisticsByDate[0].games.sprint.newWords = allGameWords.length;
-          newBody.optional.allStatisticsByDate[0].games.sprint.wordsList = allGameWords.map(item => item.id);
+          newBody.optional.allStatisticsByDate[0].games.sprint.wordsList = allGameWords.map(item => item._id as string);
         } else if (gameName === 'audioCall') {
           newBody.optional.allStatisticsByDate[0].games.audioCall.right = rightAnswers.length;
           newBody.optional.allStatisticsByDate[0].games.audioCall.rightPercent = rightPercent;
           newBody.optional.allStatisticsByDate[0].games.audioCall.wrong = wrongAnswers.length;
           newBody.optional.allStatisticsByDate[0].games.audioCall.bestStreak = bestStreak;
           newBody.optional.allStatisticsByDate[0].games.audioCall.newWords = allGameWords.length;
-          newBody.optional.allStatisticsByDate[0].games.audioCall.wordsList = allGameWords.map(item => item.id);
+          newBody.optional.allStatisticsByDate[0].games.audioCall.wordsList = allGameWords.map(item => item._id as string);
         }
-        newBody.optional.wordsList = allGameWords.map(item => item.id);
+        newBody.optional.wordsList = allGameWords.map(item => item._id as string);
       } else { // if there is some statistics of user
         const lastAllStatisticsByDateItem = newBody.optional.allStatisticsByDate.length; // last user statistic
         if (isToday(new Date(newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].date))) {
           if (gameName === 'sprint') {
             const uniqueWordsArray = getUniqueWords(
               newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.wordsList,
-              allGameWords.map(item => item.id)
+              allGameWords.map(item => item._id as string)
             );
             if (uniqueWordsArray.length) {
               newBody.learnedWords += uniqueWordsArray.length;
@@ -149,7 +149,7 @@ export class StatisticsService {
           } else if (gameName === 'audioCall') {
             const uniqueWordsArray = getUniqueWords(
               newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.audioCall.wordsList,
-              allGameWords.map(item => item.id)
+              allGameWords.map(item => item._id as string)
             );
             if (uniqueWordsArray.length) {
               newBody.learnedWords += uniqueWordsArray.length;
@@ -200,7 +200,7 @@ export class StatisticsService {
         } else {
           const uniqueWordsArray = getUniqueWords(
             newBody.optional.wordsList,
-            allGameWords.map(item => item.id)
+            allGameWords.map(item => item._id as string)
           );
           if (uniqueWordsArray.length) {
             newBody.learnedWords += uniqueWordsArray.length;
