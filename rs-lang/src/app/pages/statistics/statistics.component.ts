@@ -47,7 +47,11 @@ export class StatisticsComponent implements OnInit {
 
   public barChartData: ChartDataset[] = [{
     label: 'Изучено слов',
-    data: []
+    data: [],
+    fill: true,
+    tension: 0.5,
+    borderColor: '#804399',
+    backgroundColor: '#cfc0fb'
   }];
   public barChartLabels: string[] = [];
   public barChartOptions: ChartOptions= {
@@ -64,7 +68,11 @@ export class StatisticsComponent implements OnInit {
 
   public lineChartData: ChartDataset[] = [{
     label: 'Всего изучено слов к этому дню',
-    data: []
+    data: [],
+    fill: true,
+    tension: 0.5,
+    borderColor: '#804399',
+    backgroundColor: '#cfc0fb'
   }];
   public lineChartLabels: string[] = [];
   public lineChartOptions: ChartOptions = {
