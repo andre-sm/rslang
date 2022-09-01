@@ -13,7 +13,7 @@ import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 61;
+const GAME_TIME = 11;
 
 @Component({
   selector: 'app-sprint',
@@ -118,12 +118,10 @@ export class SprintComponent implements OnInit, OnDestroy {
 
     const index = Math.floor(Math.random() * this.words.length);
 
-    //const word = Math.floor(Math.random() * 19);
     this.currentWord = this.words[index];
     const fakeTranslate = Math.floor(Math.random() * 2);
 
     if (!fakeTranslate) {
-      // TODO check if right translate
       const page = Math.floor(Math.random() * 29);
       const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
       const fakeWords = await lastValueFrom(data);
@@ -275,7 +273,8 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(ResultFormComponent, {
-      width: '600px',
+      width: '700px',
+      maxHeight: '85vh',
       enterAnimationDuration,
       exitAnimationDuration,
     });
@@ -305,5 +304,14 @@ export class SprintComponent implements OnInit, OnDestroy {
     this.resetData();
   }
 
-  resetData() {}
+  resetData() {
+    this.score = 0;
+    this.words = [];
+    this.results = [];
+    this.newWordCount = 0;
+    this.correctSeries = 0;
+    this.bestSeries = [];
+    this.rightAnswers = [];
+    this.wrongAnswers = [];
+  }
 }

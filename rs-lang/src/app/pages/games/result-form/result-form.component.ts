@@ -10,12 +10,12 @@ const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
   styleUrls: ['./result-form.component.scss']
 })
 export class ResultFormComponent implements OnInit {
-  result: Word[] = [];
+  results: Word[] = [];
   constructor(private sprintGameService: SprintGameService) { }
 
   ngOnInit(): void {
-    this.sprintGameService.result$.subscribe((result) => {
-      this.result = result;
+    this.sprintGameService.result$.subscribe((results) => {
+      this.results = results;
     });
   }
 
