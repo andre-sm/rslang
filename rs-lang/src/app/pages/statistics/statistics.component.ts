@@ -5,6 +5,7 @@ import { StatisticsService } from '../../services/statistics.service';
 import { StorageService } from '../../services/storage.service';
 import { Statistics, stringifiedNewBody, TodayStatistics, TodayStatisticsGame } from '../../models/statistics';
 import { isToday } from './../../utils/statistics';
+import { ChartDataset, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-statistics',
@@ -35,6 +36,56 @@ export class StatisticsComponent implements OnInit {
     rightPercent: 0,
     bestStreak: 0
   }
+  allTimeStatistics: {
+    date: Date,
+    allWords: number,
+    allNewWords: number,
+  }[] = [];
+  allTimeStatisticsDate: string[] = [];
+  allTimeStatisticsAllWords: number[] = [];
+  allTimeStatisticsAllNewWords: number[] = [];
+
+  public barChartData: ChartDataset[] = [{
+    label: 'Изучено слов',
+    data: [],
+    fill: true,
+    tension: 0.5,
+    borderColor: '#804399',
+    backgroundColor: '#cfc0fb'
+  }];
+  public barChartLabels: string[] = [];
+  public barChartOptions: ChartOptions= {
+    responsive: false,
+    scales: {
+      x: {},
+      y: {
+        beginAtZero: true
+      }
+    }
+  };
+  public barChartPlugins = [];
+  public barChartLegend = true;
+
+  public lineChartData: ChartDataset[] = [{
+    label: 'Всего изучено слов к этому дню',
+    data: [],
+    fill: true,
+    tension: 0.5,
+    borderColor: '#804399',
+    backgroundColor: '#cfc0fb'
+  }];
+  public lineChartLabels: string[] = [];
+  public lineChartOptions: ChartOptions = {
+    responsive: false,
+    scales: {
+      x: {},
+      y: {
+        beginAtZero: true
+      }
+    }
+  };
+  public lineChartLegend = true;
+
 
   constructor(
     private statisticsService: StatisticsService,
@@ -54,7 +105,24 @@ export class StatisticsComponent implements OnInit {
               wordsList: JSON.parse(data.optional.wordsList)
             }
           };
-          console.log(this.statisticsData);
+          this.allTimeStatistics = structuredClone(this.statisticsData.optional.allStatisticsByDate.map((item) => {
+            return {
+              date: item.date,
+              allWords: item.allWords,
+              allNewWords: item.allNewWords
+            };
+          }));
+
+          this.allTimeStatisticsDate = this.allTimeStatistics.map((item) => new Date(item.date).toLocaleDateString())
+          this.barChartLabels = this.allTimeStatisticsDate;
+          this.lineChartLabels = this.allTimeStatisticsDate;
+
+          this.allTimeStatisticsAllWords = this.allTimeStatistics.map((item) => item.allWords)
+          this.lineChartData[0].data = this.allTimeStatisticsAllWords;
+
+          this.allTimeStatisticsAllNewWords = this.allTimeStatistics.map((item) => item.allNewWords)
+          this.barChartData[0].data = this.allTimeStatisticsAllNewWords;
+
           if (
             isToday(new Date(
               this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].date
@@ -77,5 +145,4 @@ export class StatisticsComponent implements OnInit {
       })
     }
   }
-
 }

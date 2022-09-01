@@ -95,5 +95,5 @@ export interface TodayStatisticsGame {
 }
 
 export interface AllTimeStatistic {
-
+  
 }
