@@ -90,26 +90,36 @@ export class SprintComponent implements OnInit, OnDestroy {
   async getWord() {
     let wordsPage;
     if (this.isFromTextbook) {
-      wordsPage = Math.floor(Math.random() * this.page);
+      wordsPage = this.page;
     } else {
       wordsPage = Math.floor(Math.random() * 29);
     }
 
-    if (this.userId) {
-      const queryParams = `users/${this.userId}/aggregatedWords?group=${this.difficulty}&page=${wordsPage}&wordsPerPage=${this.cardsPerPage}`;
-      const url = `${BASE_URL}${queryParams}`;
-      const data = this.http.get<UserAggregatedWordResponse[]>(url);
-      const wordsReaponse = await lastValueFrom(data);
-      this.words = wordsReaponse[0].paginatedResults;
-    } else {
-      const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
-      const url = `${BASE_URL}words${queryParams}`;
-      const data = this.http.get<Word[]>(url);
-      this.words = await lastValueFrom(data);
+    if (this.words.length === 0) {
+      if (this.userId) {
+        const queryParams = `users/${this.userId}/aggregatedWords?group=${this.difficulty}&page=${wordsPage}&wordsPerPage=${this.cardsPerPage}`;
+        const url = `${BASE_URL}${queryParams}`;
+        const data = this.http.get<UserAggregatedWordResponse[]>(url);
+        const wordsReaponse = await lastValueFrom(data);
+
+        if (this.isFromTextbook) {
+          this.words = wordsReaponse[0].paginatedResults.filter((word) => word.userWord?.difficulty !== 'easy');
+        } else {
+          this.words = wordsReaponse[0].paginatedResults;
+        }
+      } else {
+        const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
+        const url = `${BASE_URL}words${queryParams}`;
+        const data = this.http.get<Word[]>(url);
+        this.words = await lastValueFrom(data);
+      }
+      this.page -= 1;
     }
 
-    const word = Math.floor(Math.random() * 19);
-    this.currentWord = this.words[word];
+    const index = Math.floor(Math.random() * this.words.length);
+
+    //const word = Math.floor(Math.random() * 19);
+    this.currentWord = this.words[index];
     const fakeTranslate = Math.floor(Math.random() * 2);
 
     if (!fakeTranslate) {
@@ -118,9 +128,11 @@ export class SprintComponent implements OnInit, OnDestroy {
       const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
       const fakeWords = await lastValueFrom(data);
       const fakeWord = Math.floor(Math.random() * 19);
-      this.words[word].fakeTranslate = fakeWords[fakeWord].wordTranslate;
+      this.words[index].fakeTranslate = fakeWords[fakeWord].wordTranslate;
     }
-    return this.words[word];
+    console.log(this.words, this.currentWord);
+    this.words.splice(index, 1);
+    return this.currentWord;
   }
 
   setGameTimer() {
@@ -128,14 +140,8 @@ export class SprintComponent implements OnInit, OnDestroy {
       if (this.time) {
         this.time--;
       } else {
-        this.timerSub?.unsubscribe();
-        this.bestSeries.push(this.correctSeries);
         this.results.pop();
-        this.showResult();
-
-        if (this.userId) {
-          this.saveGameStats();
-        }
+        this.gameOver();
       }
     });
   }
@@ -171,9 +177,6 @@ export class SprintComponent implements OnInit, OnDestroy {
         this.isMistake = true;
         this.wrongAnswers.push(currentWord);
       }
-      if (this.userId) {
-        this.saveWordStats();
-      }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
         this.score += 10;
@@ -187,35 +190,76 @@ export class SprintComponent implements OnInit, OnDestroy {
         this.correctSeries = 0;
         this.wrongAnswers.push(currentWord);
       }
-
-      if (this.userId) {
-        this.saveWordStats();
-      }
     }
-    this.showWord();
+
+    if (this.userId) {
+      this.saveWordStats();
+    }
+
+    if (this.page < 0 && this.words.length === 0 && this.isFromTextbook) {
+      this.gameOver();
+    } else {
+      this.showWord();
+    }
   }
 
   saveWordStats() {
     const currentWord = this.currentWord as UserAggregatedWord;
     this.isNewWord = !currentWord.userWord?.optional;
+
     if (this.isNewWord) {
       this.newWordCount++;
       if (currentWord.userWord?.difficulty) {
-        this.requestBody = { ...currentWord.userWord, optional: { total: 1, success: this.isMistake ? 0 : 1 } };
-        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody);
+        this.requestBody = {
+          ...currentWord.userWord,
+          optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 },
+        };
+
+        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe(() => {});
       } else {
-        this.requestBody = { optional: { total: 1, success: this.isMistake ? 0 : 1 } };
-        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody);
+        this.requestBody = { optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 } };
+        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody).subscribe(() => {});
       }
     } else {
       let currentTotal = currentWord.userWord?.optional?.total as number;
       let currentSuccess = currentWord.userWord?.optional?.success as number;
-      this.requestBody = {
-        ...currentWord.userWord,
-        optional: { total: ++currentTotal, success: this.isMistake ? currentSuccess : ++currentSuccess },
-      };
-      
-      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody);
+      let currentStrike = currentWord.userWord?.optional?.strike as number;
+
+      currentStrike = this.isMistake ? 0 : ++currentStrike;
+      if (
+        (currentStrike > 2 && currentWord.userWord?.difficulty !== 'hard') ||
+        (currentStrike > 4 && currentWord.userWord?.difficulty === 'hard')
+        ) {
+        this.requestBody = {
+          ...currentWord.userWord,
+          difficulty: 'easy',
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+        };
+      } else if (this.isMistake && currentWord.userWord?.difficulty === 'easy') {
+        this.requestBody = {
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+          difficulty: 'normal',
+        };
+      } else {
+        this.requestBody = {
+          ...currentWord.userWord,
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+        };
+       }
+
+      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe(() => {});;
     }
   }
 
@@ -236,12 +280,13 @@ export class SprintComponent implements OnInit, OnDestroy {
       exitAnimationDuration,
     });
   }
-  
+
   saveGameStats() {
     const bestSeries = Math.max(...this.bestSeries);
-    const successPercentage = Math.round(this.rightAnswers.length * 100 / this.results.length);
+    const successPercentage = Math.round((this.rightAnswers.length * 100) / this.results.length);
 
     // this.statisticsService.setUserStatistics(
+    //   this.newWordCount
     //   this.rightAnswers,
     //   this.wrongAnswers,
     //   bestSeries,
@@ -249,4 +294,16 @@ export class SprintComponent implements OnInit, OnDestroy {
     //   this.gameName
     // );
   }
+
+  gameOver() {
+    this.timerSub?.unsubscribe();
+    this.bestSeries.push(this.correctSeries);
+    this.showResult();
+    if (this.userId) {
+      this.saveGameStats();
+    }
+    this.resetData();
+  }
+
+  resetData() {}
 }
