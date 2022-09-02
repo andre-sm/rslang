@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { lastValueFrom, Subscription, timer } from 'rxjs';
+import { lastValueFrom, Subscription, timer, take } from 'rxjs';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
@@ -11,6 +11,7 @@ import { Word } from '../../../models/words';
 import { UserWord } from '../../../models/user-word.model';
 import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
+import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 11;
@@ -55,14 +56,15 @@ export class SprintComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private storageService: StorageService,
     private route: ActivatedRoute,
-    private statisticsService: StatisticsService
+    private statisticsService: StatisticsService,
+    private footerService: FooterService
   ) {}
 
   ngOnInit() {
     this.isLogged = this.storageService.isLoggedIn();
     this.userId = this.storageService.getUser()?.userId || '';
 
-    this.route.queryParams.subscribe((value) => {
+    this.route.queryParams.pipe(take(1)).subscribe((value) => {
       this.params = value as { group?: string; page?: string };
       if (this.params.group) {
         this.isFromTextbook = true;
@@ -75,16 +77,19 @@ export class SprintComponent implements OnInit, OnDestroy {
       this.showWord();
       this.setGameTimer();
     } else {
-      this.sprintGameService.difficulty$.subscribe((difficulty) => {
+      this.sprintGameService.difficulty$.pipe(take(1)).subscribe((difficulty) => {
         this.difficulty = difficulty;
         this.showWord();
         this.setGameTimer();
       });
     }
+
+    this.footerService.hide();
   }
 
   ngOnDestroy(): void {
     this.timerSub?.unsubscribe();
+    this.footerService.show();
   }
 
   async getWord() {
@@ -213,10 +218,10 @@ export class SprintComponent implements OnInit, OnDestroy {
           optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 },
         };
 
-        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe(() => {});
+        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
       } else {
         this.requestBody = { optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 } };
-        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody).subscribe(() => {});
+        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
       }
     } else {
       let currentTotal = currentWord.userWord?.optional?.total as number;
@@ -257,7 +262,7 @@ export class SprintComponent implements OnInit, OnDestroy {
         };
        }
 
-      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe(() => {});;
+      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();;
     }
   }
 

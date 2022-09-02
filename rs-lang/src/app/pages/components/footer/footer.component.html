@@ -1,4 +1,4 @@
-<div class="footer">
+<div class="footer" *ngIf="footerService.visible$ | async">
   <ul class="footer__github-links">
     <li><a href="https://github.com/andre-sm" class="footer__github-link">Andrei Smolich</a></li>
     <li><a href="https://github.com/andre-sm" class="footer__github-link">Andrei Smolich</a></li>
