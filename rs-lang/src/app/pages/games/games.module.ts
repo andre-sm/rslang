@@ -4,14 +4,12 @@ import { GamesRoutingModule } from './games-routing.module';
 import { GamesComponent } from './games.component';
 import { MatButtonModule } from '@angular/material/button';
 import { DifficultyForm, DifficultyFormComponent } from './difficulty-form/difficulty-form.component';
-import { ResultFormComponent } from './result-form/result-form.component';
 
 @NgModule({
   declarations: [
     GamesComponent,
     DifficultyFormComponent,
-    DifficultyForm,
-    ResultFormComponent
+    DifficultyForm
   ],
   imports: [
     CommonModule,
@@ -20,8 +18,7 @@ import { ResultFormComponent } from './result-form/result-form.component';
   ],
   exports: [
     DifficultyFormComponent,
-    DifficultyForm,
-    ResultFormComponent
+    DifficultyForm
   ]
 })
 export class GamesModule { }
