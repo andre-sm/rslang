@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { lastValueFrom, Subscription, timer, take } from 'rxjs';
+import { lastValueFrom, Subscription, timer, take, fromEvent } from 'rxjs';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
@@ -42,13 +42,13 @@ export class SprintComponent implements OnInit, OnDestroy {
   requestBody?: UserWord;
   isFromTextbook = false;
   isMistake = false;
-  isNewWord = true;
   newWordCount = 0;
   correctSeries = 0;
   bestSeries: Array<number> = [];
   rightAnswers: (Word | UserAggregatedWord)[] = [];
   wrongAnswers: (Word | UserAggregatedWord)[] = [];
   timerSub?: Subscription;
+  keyPressSub?: Subscription;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -84,11 +84,22 @@ export class SprintComponent implements OnInit, OnDestroy {
       });
     }
 
+    this.keyPressSub = fromEvent(document, 'keydown').subscribe((e) => {
+      if ((e as KeyboardEvent).key === "ArrowLeft") {
+        this.checkAnswer('No');
+      }
+
+      if ((e as KeyboardEvent).key === "ArrowRight") {
+        this.checkAnswer('Yes');
+      }
+    });
+
     this.footerService.hide();
   }
 
   ngOnDestroy(): void {
     this.timerSub?.unsubscribe();
+    this.keyPressSub?.unsubscribe();
     this.footerService.show();
   }
 
@@ -208,9 +219,9 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   saveWordStats() {
     const currentWord = this.currentWord as UserAggregatedWord;
-    this.isNewWord = !currentWord.userWord?.optional;
+    let isNewWord = !currentWord.userWord?.optional;
 
-    if (this.isNewWord) {
+    if (isNewWord) {
       this.newWordCount++;
       if (currentWord.userWord?.difficulty) {
         this.requestBody = {
@@ -282,7 +293,6 @@ export class SprintComponent implements OnInit, OnDestroy {
       maxHeight: '85vh',
       data: {score: this.score},
       disableClose: true,
-      autoFocus: false
     } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
       if(result) {
         console.log('repeat');
@@ -306,6 +316,7 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   gameOver() {
     this.timerSub?.unsubscribe();
+    this.keyPressSub?.unsubscribe();
     this.bestSeries.push(this.correctSeries);
     this.showResult();
     if (this.userId) {
