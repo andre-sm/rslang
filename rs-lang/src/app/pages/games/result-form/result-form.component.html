@@ -1,19 +1,36 @@
-<table border="1">
-  <tr>
-    <td>Озвучивание</td>
-    <td>Слово</td>
-    <td>Транскрипция</td>
-    <td>Перевод</td>
-    <td>Ответ</td>
-  </tr>
-  <tr *ngFor="let item of result">
-    <td>
-      <button mat-raised-button color="warn" (click)="playSound(item.audio);">Прослушать</button>
-    </td>
-    <td>{{ item.word }}</td>
-    <td>{{ item.transcription }}</td>
-    <td>{{ item.wordTranslate }}</td>
-    <td *ngIf="item.answer">Верно</td>
-    <td *ngIf="!item.answer">Неверно</td>
-  </tr>
-</table>
+<mat-dialog-content class="mat-typography">
+  <div class="stats-table">
+    <h2 class="stats-table__title" mat-dialog-title>Результат игры: {{data.score}} баллов</h2>
+    <ul class="stats-table__content">
+      <li class="stats-table__header">
+        <span class="col col-1"></span>
+        <span class="col col-2">Слово</span>
+        <span class="col col-3">Перевод</span>
+        <span class="col col-4">Результат</span>
+      </li>
+      <li class="stats-table__row" *ngFor="let result of results">
+        <span class="col col-1">
+          <button
+          mat-icon-button
+          color="primary"
+          aria-label="Sound icon"
+          (click)="playSound(result.audio)"
+        >
+          <mat-icon aria-hidden="false" aria-label="Volume icon" fontIcon="volume_up"></mat-icon>
+        </button>
+        </span>
+        <span class="col col-2">{{ result.word }}</span>
+        <span class="col col-3">{{ result.wordTranslate }}</span>
+        <span class="col col-4">
+          <mat-icon class="stats-table__right-icon" aria-hidden="false" aria-label="Volume icon" fontIcon="done" *ngIf="result.answer"></mat-icon>
+          <mat-icon class="stats-table__wrong-icon" aria-hidden="false" aria-label="Volume icon" fontIcon="close" *ngIf="!result.answer"></mat-icon>
+        </span>
+      </li>
+    </ul>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [matDialogClose]="true" class="result-btn btn" (keydown)="moveFocus($event)" cdkFocusInitial (click)="onRepeat()">Повторить!</button>
+  <button mat-button [matDialogClose]="true" class="result-btn btn" (keydown)="moveFocus($event)" cdkFocusInitial routerLink="/games">К играм</button>
+</mat-dialog-actions>

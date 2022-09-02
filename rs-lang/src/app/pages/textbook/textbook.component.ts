@@ -170,8 +170,11 @@ export class TextbookComponent implements OnInit {
     }
   }
 
-  deleteUserWord(word: UserAggregatedWord): void {
-    this.wordService.deleteUserWord(this.userId, word._id).subscribe((data) => {
+  deleteHardWord(word: UserAggregatedWord): void {
+    // console.log(word);
+    // const currentOptional = { ...word.userWord?.optional, strike: 0 };
+    this.requestBody = { optional: word.userWord?.optional, difficulty: 'normal' };
+    this.wordService.updateUserWord(this.userId, word._id, this.requestBody).subscribe(() => {
       const wordsUpdated = this.words.filter((item: UserAggregatedWord) => item._id !== word._id);
       this.words = wordsUpdated;
     });

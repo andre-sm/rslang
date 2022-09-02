@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
-import { lastValueFrom, timer } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { lastValueFrom, Subscription, timer, take, fromEvent } from 'rxjs';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
@@ -11,6 +11,7 @@ import { Word } from '../../../models/words';
 import { UserWord } from '../../../models/user-word.model';
 import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
+import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 61;
@@ -20,7 +21,7 @@ const GAME_TIME = 61;
   templateUrl: './sprint.component.html',
   styleUrls: ['./sprint.component.scss'],
 })
-export class SprintComponent implements OnInit {
+export class SprintComponent implements OnInit, OnDestroy {
   englishWord: string = '';
   russianWord: string | undefined = '';
   words: (Word | UserAggregatedWord)[] = [];
@@ -33,6 +34,7 @@ export class SprintComponent implements OnInit {
   time = GAME_TIME;
   gameName = 'sprint';
   difficulty = 0;
+  initialPage = 0;
   page = 0;
   cardsPerPage = 20;
   audio = '';
@@ -41,12 +43,13 @@ export class SprintComponent implements OnInit {
   requestBody?: UserWord;
   isFromTextbook = false;
   isMistake = false;
-  isNewWord = true;
   newWordCount = 0;
   correctSeries = 0;
   bestSeries: Array<number> = [];
-  rightAnswers: (Word | UserAggregatedWord)[] = [];
-  wrongAnswers: (Word | UserAggregatedWord)[] = [];
+  rightAnswers: UserAggregatedWord[] = [];
+  wrongAnswers: UserAggregatedWord[] = [];
+  timerSub?: Subscription;
+  keyPressSub?: Subscription;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -54,14 +57,15 @@ export class SprintComponent implements OnInit {
     public dialog: MatDialog,
     private storageService: StorageService,
     private route: ActivatedRoute,
-    private statisticsService: StatisticsService
+    private statisticsService: StatisticsService,
+    private footerService: FooterService
   ) {}
 
   ngOnInit() {
     this.isLogged = this.storageService.isLoggedIn();
     this.userId = this.storageService.getUser()?.userId || '';
 
-    this.route.queryParams.subscribe((value) => {
+    this.route.queryParams.pipe(take(1)).subscribe((value) => {
       this.params = value as { group?: string; page?: string };
       if (this.params.group) {
         this.isFromTextbook = true;
@@ -70,67 +74,94 @@ export class SprintComponent implements OnInit {
 
     if (this.isFromTextbook) {
       this.difficulty = Number(this.params?.group);
-      this.page = Number(this.params?.page);
-      this.showWord();
-      this.setGameTimer();
+      this.page = this.initialPage = Number(this.params?.page);
+      this.startGame();
     } else {
-      this.sprintGameService.difficulty$.subscribe((difficulty) => {
+      this.sprintGameService.difficulty$.pipe(take(1)).subscribe((difficulty) => {
         this.difficulty = difficulty;
-        this.showWord();
-        this.setGameTimer();
+        this.startGame();
       });
     }
+
+    this.footerService.hide();
+  }
+
+  startGame() {
+    this.showWord();
+    this.setGameTimer();
+    this.startKeyboardControl();
+  }
+
+  ngOnDestroy(): void {
+    this.timerSub?.unsubscribe();
+    this.keyPressSub?.unsubscribe();
+    this.footerService.show();
+  }
+
+  startKeyboardControl() {
+    this.keyPressSub = fromEvent(document, 'keydown').subscribe((e) => {
+      if ((e as KeyboardEvent).key === "ArrowLeft") {
+        this.checkAnswer('No');
+      }
+
+      if ((e as KeyboardEvent).key === "ArrowRight") {
+        this.checkAnswer('Yes');
+      }
+    });
   }
 
   async getWord() {
     let wordsPage;
     if (this.isFromTextbook) {
-      wordsPage = Math.floor(Math.random() * this.page);
+      wordsPage = this.page;
     } else {
       wordsPage = Math.floor(Math.random() * 29);
     }
 
-    if (this.userId) {
-      const queryParams = `users/${this.userId}/aggregatedWords?group=${this.difficulty}&page=${wordsPage}&wordsPerPage=${this.cardsPerPage}`;
-      const url = `${BASE_URL}${queryParams}`;
-      const data = this.http.get<UserAggregatedWordResponse[]>(url);
-      const wordsReaponse = await lastValueFrom(data);
-      this.words = wordsReaponse[0].paginatedResults;
-    } else {
-      const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
-      const url = `${BASE_URL}words${queryParams}`;
-      const data = this.http.get<Word[]>(url);
-      this.words = await lastValueFrom(data);
+    if (this.words.length === 0) {
+      if (this.userId) {
+        const queryParams = `users/${this.userId}/aggregatedWords?group=${this.difficulty}&page=${wordsPage}&wordsPerPage=${this.cardsPerPage}`;
+        const url = `${BASE_URL}${queryParams}`;
+        const data = this.http.get<UserAggregatedWordResponse[]>(url);
+        const wordsReaponse = await lastValueFrom(data);
+
+        if (this.isFromTextbook) {
+          this.words = wordsReaponse[0].paginatedResults.filter((word) => word.userWord?.difficulty !== 'easy');
+        } else {
+          this.words = wordsReaponse[0].paginatedResults;
+        }
+      } else {
+        const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
+        const url = `${BASE_URL}words${queryParams}`;
+        const data = this.http.get<Word[]>(url);
+        this.words = await lastValueFrom(data);
+      }
+      this.page -= 1;
     }
 
-    const word = Math.floor(Math.random() * 19);
-    this.currentWord = this.words[word];
+    const index = Math.floor(Math.random() * this.words.length);
+
+    this.currentWord = this.words[index];
     const fakeTranslate = Math.floor(Math.random() * 2);
 
     if (!fakeTranslate) {
-      // TODO check if right translate
       const page = Math.floor(Math.random() * 29);
       const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
       const fakeWords = await lastValueFrom(data);
       const fakeWord = Math.floor(Math.random() * 19);
-      this.words[word].fakeTranslate = fakeWords[fakeWord].wordTranslate;
+      this.words[index].fakeTranslate = fakeWords[fakeWord].wordTranslate;
     }
-    return this.words[word];
+    this.words.splice(index, 1);
+    return this.currentWord;
   }
 
   setGameTimer() {
-    const gameTimer = timer(1000, 1000).subscribe(() => {
+    this.timerSub = timer(1000, 1000).subscribe(() => {
       if (this.time) {
         this.time--;
       } else {
-        gameTimer.unsubscribe();
-        this.bestSeries.push(this.correctSeries);
         this.results.pop();
-        this.showResult();
-
-        if (this.userId) {
-          this.saveGameStats();
-        }
+        this.gameOver();
       }
     });
   }
@@ -166,9 +197,6 @@ export class SprintComponent implements OnInit {
         this.isMistake = true;
         this.wrongAnswers.push(currentWord);
       }
-      if (this.userId) {
-        this.saveWordStats();
-      }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
         this.score += 10;
@@ -182,41 +210,82 @@ export class SprintComponent implements OnInit {
         this.correctSeries = 0;
         this.wrongAnswers.push(currentWord);
       }
-
-      if (this.userId) {
-        this.saveWordStats();
-      }
     }
-    this.showWord();
+
+    if (this.userId) {
+      this.saveWordStats();
+    }
+
+    if (this.page < 0 && this.words.length === 0 && this.isFromTextbook) {
+      this.gameOver();
+    } else {
+      this.showWord();
+    }
   }
 
   saveWordStats() {
     const currentWord = this.currentWord as UserAggregatedWord;
-    this.isNewWord = !currentWord.userWord?.optional;
-    if (this.isNewWord) {
+    let isNewWord = !currentWord.userWord?.optional;
+
+    if (isNewWord) {
       this.newWordCount++;
       if (currentWord.userWord?.difficulty) {
-        this.requestBody = { ...currentWord.userWord, optional: { total: 1, success: this.isMistake ? 0 : 1 } };
-        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody);
+        this.requestBody = {
+          ...currentWord.userWord,
+          optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 },
+        };
+
+        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
       } else {
-        this.requestBody = { optional: { total: 1, success: this.isMistake ? 0 : 1 } };
-        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody);
+        this.requestBody = { optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 } };
+        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
       }
     } else {
       let currentTotal = currentWord.userWord?.optional?.total as number;
       let currentSuccess = currentWord.userWord?.optional?.success as number;
-      this.requestBody = {
-        ...currentWord.userWord,
-        optional: { total: ++currentTotal, success: this.isMistake ? currentSuccess : ++currentSuccess },
-      };
+      let currentStrike = currentWord.userWord?.optional?.strike as number;
 
-      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody);
+      currentStrike = this.isMistake ? 0 : ++currentStrike;
+      if (
+        (currentStrike > 2 && currentWord.userWord?.difficulty !== 'hard') ||
+        (currentStrike > 4 && currentWord.userWord?.difficulty === 'hard')
+        ) {
+        this.requestBody = {
+          ...currentWord.userWord,
+          difficulty: 'easy',
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+        };
+      } else if (this.isMistake && currentWord.userWord?.difficulty === 'easy') {
+        this.requestBody = {
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+          difficulty: 'normal',
+        };
+      } else {
+        this.requestBody = {
+          ...currentWord.userWord,
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+        };
+       }
+
+      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
     }
   }
 
   showResult() {
     this.sprintGameService.sendResult(this.results);
-    this.openDialog('0ms', '0ms');
+    this.openDialog();
   }
 
   getSound() {
@@ -224,17 +293,22 @@ export class SprintComponent implements OnInit {
     sound.play();
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openDialog(): void {
     this.dialog.open(ResultFormComponent, {
-      width: '600px',
-      enterAnimationDuration,
-      exitAnimationDuration,
+      width: '700px',
+      maxHeight: '85vh',
+      data: {score: this.score},
+      disableClose: true,
+    } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
+      if(result) {
+        this.startGame();
+      }
     });
   }
 
   saveGameStats() {
     const bestSeries = Math.max(...this.bestSeries);
-    const successPercentage = Math.round(this.rightAnswers.length * 100 / this.results.length);
+    const successPercentage = Math.round((this.rightAnswers.length * 100) / this.results.length);
 
     this.statisticsService.setUserStatistics(
       this.rightAnswers,
@@ -243,5 +317,29 @@ export class SprintComponent implements OnInit {
       successPercentage,
       this.gameName
     );
+  }
+
+  gameOver() {
+    this.timerSub?.unsubscribe();
+    this.keyPressSub?.unsubscribe();
+    this.bestSeries.push(this.correctSeries);
+    this.showResult();
+    if (this.userId) {
+      this.saveGameStats();
+    }
+    this.resetData();
+  }
+
+  resetData() {
+    this.page = this.initialPage;
+    this.time = GAME_TIME;
+    this.score = 0;
+    this.words = [];
+    this.results = [];
+    this.newWordCount = 0;
+    this.correctSeries = 0;
+    this.bestSeries = [];
+    this.rightAnswers = [];
+    this.wrongAnswers = [];
   }
 }
