@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { lastValueFrom, Subscription, timer, take } from 'rxjs';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
@@ -268,7 +268,7 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   showResult() {
     this.sprintGameService.sendResult(this.results);
-    this.openDialog('0ms', '0ms');
+    this.openDialog();
   }
 
   getSound() {
@@ -276,12 +276,17 @@ export class SprintComponent implements OnInit, OnDestroy {
     sound.play();
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openDialog(): void {
     this.dialog.open(ResultFormComponent, {
       width: '700px',
       maxHeight: '85vh',
-      enterAnimationDuration,
-      exitAnimationDuration,
+      data: {score: this.score},
+      disableClose: true,
+      autoFocus: false
+    } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
+      if(result) {
+        console.log('repeat');
+      }
     });
   }
 
