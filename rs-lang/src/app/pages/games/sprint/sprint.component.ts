@@ -14,7 +14,7 @@ import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 61;
+const GAME_TIME = 2210;
 
 @Component({
   selector: 'app-sprint',
