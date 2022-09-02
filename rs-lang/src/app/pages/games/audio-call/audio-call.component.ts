@@ -54,6 +54,7 @@ export class AudioCallComponent implements OnInit {
   correctSeries = 0;
   rightAnswers: (Word | UserAggregatedWord)[] = [];
   wrongAnswers: (Word | UserAggregatedWord)[] = [];
+  uniqueWords: Set<Word> = new Set();
 
   constructor(
     private sprintGameService: SprintGameService, 
@@ -111,9 +112,9 @@ export class AudioCallComponent implements OnInit {
       const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
       const url = `${BASE_URL}words${queryParams}`;
       const data = this.http.get<Word[]>(url);
-      this.words = await lastValueFrom(data);
+      const wordsReaponse = await lastValueFrom(data);
+      this.words = wordsReaponse;
     }
-
 
     const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${wordsPage}`);
     const words = await lastValueFrom(data);
