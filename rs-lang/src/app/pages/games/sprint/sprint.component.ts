@@ -46,8 +46,8 @@ export class SprintComponent implements OnInit, OnDestroy {
   newWordCount = 0;
   correctSeries = 0;
   bestSeries: Array<number> = [];
-  rightAnswers: (Word | UserAggregatedWord)[] = [];
-  wrongAnswers: (Word | UserAggregatedWord)[] = [];
+  rightAnswers: UserAggregatedWord[] = [];
+  wrongAnswers: UserAggregatedWord[] = [];
   timerSub?: Subscription;
   keyPressSub?: Subscription;
 
@@ -279,7 +279,7 @@ export class SprintComponent implements OnInit, OnDestroy {
         };
        }
 
-      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();;
+      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
     }
   }
 
@@ -310,14 +310,13 @@ export class SprintComponent implements OnInit, OnDestroy {
     const bestSeries = Math.max(...this.bestSeries);
     const successPercentage = Math.round((this.rightAnswers.length * 100) / this.results.length);
 
-    // this.statisticsService.setUserStatistics(
-    //   this.newWordCount
-    //   this.rightAnswers,
-    //   this.wrongAnswers,
-    //   bestSeries,
-    //   successPercentage,
-    //   this.gameName
-    // );
+    this.statisticsService.setUserStatistics(
+      this.rightAnswers,
+      this.wrongAnswers,
+      bestSeries,
+      successPercentage,
+      this.gameName
+    );
   }
 
   gameOver() {

@@ -1,32 +1,49 @@
 <div class="statistics-container">
   <div class="today-statistics">
-    <h1>Today Statistic</h1>
+    <h1>Статистика за сегодня</h1>
     <div class="today-statistics-general">
       <div class="words-learned">
-        <span>{{ todayStatistics.allNewWords }}</span>
-        <span>words learned</span>
+        <h3><b>{{ todayStatistics.allNewWords }}</b> слов изучено</h3>
       </div>
       <div class="right-percent">
-        <span>{{ todayStatistics.allGamesRightPercent }}%</span>
-        <span>right answers</span>
+        <h3><b>{{ todayStatistics.allGamesRightPercent }}%</b> правильных ответов</h3>
       </div>
     </div>
     <div class="game-card-container">
       <div class="game-card">
-        <h3>Sprint</h3>
-        <span>Words learned: {{ todayStatisticsSprint.newWords }}</span>
-        <span>Right answers: {{ todayStatisticsSprint.rightPercent }}%</span>
-        <span>Best series of right answers: {{ todayStatisticsSprint.bestStreak }}</span>
+        <h2>Спринт</h2>
+        <div class="game-card-statistic"><mat-icon>library_books</mat-icon> <span>Изучено слов: {{ todayStatisticsSprint.newWords }}</span></div>
+        <div class="game-card-statistic"><mat-icon>done_all</mat-icon> <span>Правильных ответов: {{ todayStatisticsSprint.rightPercent }}%</span></div>
+        <div class="game-card-statistic">	<mat-icon class="grade-icon">grade</mat-icon> <span>Лучшая серия правильных ответов: {{ todayStatisticsSprint.bestStreak }}</span></div>
       </div>
       <div class="game-card">
-        <h3>Audio Call</h3>
-        <span>Words learned: {{ todayStatisticsAudioCall.newWords }}</span>
-        <span>Right answers: {{ todayStatisticsAudioCall.rightPercent }}%</span>
-        <span>Best series of right answers: {{ todayStatisticsAudioCall.bestStreak }}</span>
+        <h2>Аудиовызов</h2>
+        <div class="game-card-statistic"><mat-icon>library_books</mat-icon> <span>Изучено слов: {{ todayStatisticsAudioCall.newWords }}</span></div>
+        <div class="game-card-statistic"><mat-icon>done_all</mat-icon> <span>Правильных ответов: {{ todayStatisticsAudioCall.rightPercent }}%</span></div>
+        <div class="game-card-statistic">	<mat-icon class="grade-icon">grade</mat-icon> <span>Лучшая серия правильных ответов: {{ todayStatisticsAudioCall.bestStreak }}</span></div>
       </div>
     </div>
   </div>
   <div class="all-time-statistics">
-    <h1>All-time Statistic</h1>
+    <h1>Статистика за всё время</h1>
+    <div class="charts">
+      <canvas baseChart
+        [labels]="barChartLabels"
+        [datasets]="barChartData"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [legend]="barChartLegend"
+        [type]="'bar'"
+      >
+      </canvas>
+      <canvas baseChart
+        [labels]="lineChartLabels"
+        [datasets]="lineChartData"
+        [options]="lineChartOptions"
+        [legend]="lineChartLegend"
+        [type]="'line'"
+      >
+      </canvas>
+    </div>
   </div>
 </div>

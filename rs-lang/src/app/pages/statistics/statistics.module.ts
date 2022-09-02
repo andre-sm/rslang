@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { NgChartsModule } from 'ng2-charts';
 
 import { StatisticsRoutingModule } from './statistics-routing.module';
 import { StatisticsComponent } from './statistics.component';
@@ -11,7 +13,9 @@ import { StatisticsComponent } from './statistics.component';
   ],
   imports: [
     CommonModule,
-    StatisticsRoutingModule
+    StatisticsRoutingModule,
+    MatIconModule,
+    NgChartsModule
   ]
 })
 export class StatisticsModule { }

@@ -33,7 +33,12 @@ export class AudioCallComponent implements OnInit {
   };
   gameTimer: Subscription | undefined;
 
-  constructor(private sprintGameService: SprintGameService, private http: HttpClient, public dialog: MatDialog) { }
+  constructor(
+    private http: HttpClient,
+    public dialog: MatDialog,
+    private sprintGameService: SprintGameService,
+    private statisticsService: StatisticsService
+  ) { }
 
   ngOnInit(): void {
     this.sprintGameService.difficulty$.subscribe((difficulty) => {
