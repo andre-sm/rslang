@@ -14,7 +14,7 @@ import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 11;
+const GAME_TIME = 61;
 
 @Component({
   selector: 'app-sprint',
@@ -34,6 +34,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   time = GAME_TIME;
   gameName = 'sprint';
   difficulty = 0;
+  initialPage = 0;
   page = 0;
   cardsPerPage = 20;
   audio = '';
@@ -73,17 +74,31 @@ export class SprintComponent implements OnInit, OnDestroy {
 
     if (this.isFromTextbook) {
       this.difficulty = Number(this.params?.group);
-      this.page = Number(this.params?.page);
-      this.showWord();
-      this.setGameTimer();
+      this.page = this.initialPage = Number(this.params?.page);
+      this.startGame();
     } else {
       this.sprintGameService.difficulty$.pipe(take(1)).subscribe((difficulty) => {
         this.difficulty = difficulty;
-        this.showWord();
-        this.setGameTimer();
+        this.startGame();
       });
     }
 
+    this.footerService.hide();
+  }
+
+  startGame() {
+    this.showWord();
+    this.setGameTimer();
+    this.startKeyboardControl();
+  }
+
+  ngOnDestroy(): void {
+    this.timerSub?.unsubscribe();
+    this.keyPressSub?.unsubscribe();
+    this.footerService.show();
+  }
+
+  startKeyboardControl() {
     this.keyPressSub = fromEvent(document, 'keydown').subscribe((e) => {
       if ((e as KeyboardEvent).key === "ArrowLeft") {
         this.checkAnswer('No');
@@ -93,14 +108,6 @@ export class SprintComponent implements OnInit, OnDestroy {
         this.checkAnswer('Yes');
       }
     });
-
-    this.footerService.hide();
-  }
-
-  ngOnDestroy(): void {
-    this.timerSub?.unsubscribe();
-    this.keyPressSub?.unsubscribe();
-    this.footerService.show();
   }
 
   async getWord() {
@@ -144,7 +151,6 @@ export class SprintComponent implements OnInit, OnDestroy {
       const fakeWord = Math.floor(Math.random() * 19);
       this.words[index].fakeTranslate = fakeWords[fakeWord].wordTranslate;
     }
-    console.log(this.words, this.currentWord);
     this.words.splice(index, 1);
     return this.currentWord;
   }
@@ -295,7 +301,7 @@ export class SprintComponent implements OnInit, OnDestroy {
       disableClose: true,
     } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
       if(result) {
-        console.log('repeat');
+        this.startGame();
       }
     });
   }
@@ -326,6 +332,8 @@ export class SprintComponent implements OnInit, OnDestroy {
   }
 
   resetData() {
+    this.page = this.initialPage;
+    this.time = GAME_TIME;
     this.score = 0;
     this.words = [];
     this.results = [];
