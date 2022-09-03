@@ -14,7 +14,7 @@ import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 2210;
+const GAME_TIME = 5;
 
 @Component({
   selector: 'app-sprint',
@@ -297,8 +297,13 @@ export class SprintComponent implements OnInit, OnDestroy {
     this.dialog.open(ResultFormComponent, {
       width: '700px',
       maxHeight: '85vh',
-      data: {score: this.score},
+      data: { 
+        score: this.score, 
+        wrong: this.wrongAnswers.length,
+        right: this.rightAnswers.length
+      },
       disableClose: true,
+      panelClass: 'results-dialog-class'
     } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
       if(result) {
         this.startGame();

@@ -16,7 +16,7 @@ export class ResultFormComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private sprintGameService: SprintGameService,
-    @Inject(MAT_DIALOG_DATA) public data: { score: number },
+    @Inject(MAT_DIALOG_DATA) public data: { score: number, wrong: number, right: number },
     private matDialogRef: MatDialogRef<ResultFormComponent>
   ) {}
 
