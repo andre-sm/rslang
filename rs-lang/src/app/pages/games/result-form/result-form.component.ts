@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject, AfterViewChecked } from '@angular/core';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { Word } from '../../../models/words';
+import { ResultData } from '../../../models/result-data.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
@@ -16,7 +17,7 @@ export class ResultFormComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private sprintGameService: SprintGameService,
-    @Inject(MAT_DIALOG_DATA) public data: { score: number, wrong: number, right: number },
+    @Inject(MAT_DIALOG_DATA) public data: ResultData,
     private matDialogRef: MatDialogRef<ResultFormComponent>
   ) {}
 

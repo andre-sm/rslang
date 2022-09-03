@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { HttpClient } from '@angular/common/http';
@@ -21,7 +21,7 @@ const GAME_TIME = 10;
   templateUrl: './audio-call.component.html',
   styleUrls: ['./audio-call.component.scss']
 })
-export class AudioCallComponent implements OnInit {
+export class AudioCallComponent implements OnInit, OnDestroy {
 
   difficulty = 0;
   time = GAME_TIME;
@@ -39,7 +39,7 @@ export class AudioCallComponent implements OnInit {
     thirdAnswer: '',
     forthAnswer: '',
   };
-  gameTimer: Subscription | undefined;
+  gameTimer?: Subscription;
   isLogged: boolean = false;
   page = 0;
   userId: string = '';
@@ -72,7 +72,7 @@ export class AudioCallComponent implements OnInit {
     this.isLogged = this.storageService.isLoggedIn();
     this.userId = this.storageService.getUser()?.userId || '';
 
-    this.route.queryParams.subscribe((value) => {
+    this.route.queryParams.pipe(take(1)).subscribe((value) => {
       this.params = value as { group?: string; page?: string };
       if (this.params.group) {
         this.isFromTextbook = true;
@@ -81,53 +81,63 @@ export class AudioCallComponent implements OnInit {
 
     if (this.isFromTextbook) {
       this.difficulty = Number(this.params?.group);
-      this.page = Number(this.params?.page);
-      this.showWord();
-      this.setGameTimer();
+      this.page = this.initialPage = Number(this.params?.page);
+      this.startGame();
     } else {
-      this.sprintGameService.difficulty$.subscribe((difficulty) => {
+      this.sprintGameService.difficulty$.pipe(take(1)).subscribe((difficulty) => {
         this.difficulty = difficulty;
-        this.showWord();
+        this.startGame();
       });
     }
   }
 
   ngOnDestroy(): void {
     this.gameTimer?.unsubscribe();
-    this.time = GAME_TIME;
+  }
+
+  startGame() {
+    this.showWord();
   }
 
   async getWord() {
 
     let wordsPage;
     if (this.isFromTextbook) {
-      wordsPage = Math.floor(Math.random() * this.page);
+      wordsPage = this.page;
     } else {
       wordsPage = Math.floor(Math.random() * 29);
     }
 
-    if (this.userId) {
-      const queryParams = `users/${this.userId}/aggregatedWords?group=${this.difficulty}&page=${wordsPage}&wordsPerPage=${this.cardsPerPage}`;
-      const url = `${BASE_URL}${queryParams}`;
-      const data = this.http.get<UserAggregatedWordResponse[]>(url);
-      const wordsReaponse = await lastValueFrom(data);
-      this.words = wordsReaponse[0].paginatedResults;
-    } else {
-      const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
-      const url = `${BASE_URL}words${queryParams}`;
-      const data = this.http.get<Word[]>(url);
-      const wordsReaponse = await lastValueFrom(data);
-      this.words = wordsReaponse;
+    if (this.words.length === 0) {
+      if (this.userId) {
+        const queryParams = `users/${this.userId}/aggregatedWords?group=${this.difficulty}&page=${wordsPage}&wordsPerPage=${this.cardsPerPage}`;
+        const url = `${BASE_URL}${queryParams}`;
+        const data = this.http.get<UserAggregatedWordResponse[]>(url);
+        const wordsReaponse = await lastValueFrom(data);
+
+        if (this.isFromTextbook) {
+          this.words = wordsReaponse[0].paginatedResults.filter((word) => word.userWord?.difficulty !== 'easy');
+        } else {
+          this.words = wordsReaponse[0].paginatedResults;
+        }
+
+      } else {
+        const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
+        const url = `${BASE_URL}words${queryParams}`;
+        const data = this.http.get<Word[]>(url);
+        const wordsReaponse = await lastValueFrom(data);
+        this.words = wordsReaponse;
+      }
+      this.page -= 1;
     }
 
-    const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${wordsPage}`);
-    const words = await lastValueFrom(data);
-    const word = Math.floor(Math.random() * 19);
+    const index = Math.floor(Math.random() * this.words.length);
+    this.currentWord = this.words[index];
 
     for (const property in this.answersText) {
       let answer = '';
 
-      while (answer === words[word].wordTranslate || !answer) {
+      while (answer === this.words[index].wordTranslate || !answer) {
         answer = await this.getWrongAnswer();
       }
 
@@ -136,13 +146,14 @@ export class AudioCallComponent implements OnInit {
 
     this.answer = Math.floor(1 + Math.random() * (4 + 1 - 1));
     const rightAnswerKey = Object.keys(this.answersText)[this.answer - 1];
-    this.answersText[rightAnswerKey as keyof typeof this.answersText] = words[word].wordTranslate;
+    this.answersText[rightAnswerKey as keyof typeof this.answersText] = this.words[index].wordTranslate;
 
-    this.getSound(words[word]);
-    return words[word];
+    this.getSound(this.words[index]);
+    this.words.splice(index, 1);
+    return this.currentWord;
   }
 
-  getSound(word: Word) {
+  getSound(word: Word | UserAggregatedWord) {
     const sound = new Audio(`${BASE_URL}${word.audio}`);
     sound.play();
   }
@@ -155,9 +166,9 @@ export class AudioCallComponent implements OnInit {
       this.englishWord = word.word;
       this.russianWord = word.wordTranslate;
       this.setGameTimer();
-      return
+    } else {
+     this.gameOver();
     }
-    this.showResult();
   }
 
   setGameTimer() {
@@ -168,7 +179,13 @@ export class AudioCallComponent implements OnInit {
         this.life--;
         this.gameTimer?.unsubscribe();
         this.bestSeries.push(this.correctSeries);
+        this.wrongAnswers.push(this.currentWord as UserAggregatedWord);
+        this.correctSeries = 0;
+        this.isMistake = true;
         this.time = GAME_TIME;
+        if (this.userId) {
+          this.saveWordStats();
+        }
         this.showWord();
       }
     });
@@ -184,22 +201,32 @@ export class AudioCallComponent implements OnInit {
   }
 
   checkAnswer(answer: number) {
+    const currentWord = this.currentWord as UserAggregatedWord;
     if (answer !== this.answer) {
       this.life--;
       this.isMistake = true;
       this.bestSeries.push(this.correctSeries);
+      this.wrongAnswers.push(currentWord);
       this.correctSeries = 0;
     } else {
       this.correctSeries++;
+      this.score += 10;
+      this.results[this.results.length - 1].answer = true;
+      this.rightAnswers.push(currentWord);
       this.isMistake = false;
     }
     
     this.gameTimer?.unsubscribe();
     this.time = GAME_TIME;
-    this.showWord();
 
     if (this.userId) {
       this.saveWordStats();
+    }
+
+    if (this.page < 0 && this.words.length === 0 && this.isFromTextbook) {
+      this.gameOver();
+    } else {
+      this.showWord();
     }
   }
 
@@ -263,34 +290,20 @@ export class AudioCallComponent implements OnInit {
     }
   }
 
-  saveGameStats() {
-    const bestSeries = Math.max(...this.bestSeries);
-    const successPercentage = Math.round((this.rightAnswers.length * 100) / this.results.length);
-
-    this.statisticsService.setUserStatistics(
-      this.rightAnswers,
-      this.wrongAnswers,
-      bestSeries,
-      successPercentage,
-      this.gameName
-    );
-  }
-
   showResult() {
     this.sprintGameService.sendResult(this.results);
     this.openDialog();
-  }
-
-  startGame() {
-    this.showWord();
-    this.setGameTimer();
   }
 
   openDialog(): void {
     this.dialog.open(ResultFormComponent, {
       width: '700px',
       maxHeight: '85vh',
-      data: {score: this.score},
+      data: { 
+        score: this.score, 
+        wrong: this.wrongAnswers.length,
+        right: this.rightAnswers.length
+      },
       disableClose: true,
     } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
       if(result) {
@@ -328,10 +341,24 @@ export class AudioCallComponent implements OnInit {
     this.resetData();
   }
 
+  saveGameStats() {
+    const bestSeries = Math.max(...this.bestSeries);
+    const successPercentage = Math.round((this.rightAnswers.length * 100) / this.results.length);
+
+    this.statisticsService.setUserStatistics(
+      this.rightAnswers,
+      this.wrongAnswers,
+      bestSeries,
+      successPercentage,
+      this.gameName
+    );
+  }
+
   resetData() {
     this.page = this.initialPage;
     this.time = GAME_TIME;
     this.score = 0;
+    this.life = 5;
     this.words = [];
     this.results = [];
     this.newWordCount = 0;
