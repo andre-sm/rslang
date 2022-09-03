@@ -2,9 +2,9 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { SprintGameService } from '../../../services/sprintgame.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, of, Subscription, timer } from 'rxjs';
+import { lastValueFrom, of, Subscription, take, timer } from 'rxjs';
 import { StorageService } from '../../../services/storage.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ResultFormComponent } from '../result-form/result-form.component';
 import { Word } from 'src/app/models/words';
 import { ActivatedRoute } from '@angular/router';
@@ -55,6 +55,9 @@ export class AudioCallComponent implements OnInit {
   rightAnswers: (Word | UserAggregatedWord)[] = [];
   wrongAnswers: (Word | UserAggregatedWord)[] = [];
   uniqueWords: Set<Word> = new Set();
+  gameName = 'audioCall';
+  score = 0;
+  initialPage = 0;
 
   constructor(
     private sprintGameService: SprintGameService, 
@@ -62,6 +65,7 @@ export class AudioCallComponent implements OnInit {
     public dialog: MatDialog,
     private storageService: StorageService,
     private route: ActivatedRoute,
+    private statisticsService: StatisticsService,
   ) {}
 
   ngOnInit(): void {
@@ -201,51 +205,97 @@ export class AudioCallComponent implements OnInit {
 
   saveWordStats() {
     const currentWord = this.currentWord as UserAggregatedWord;
-    this.isNewWord = !currentWord.userWord?.optional;
-    if (this.isNewWord) {
+    let isNewWord = !currentWord.userWord?.optional;
+
+    if (isNewWord) {
       this.newWordCount++;
       if (currentWord.userWord?.difficulty) {
-        this.requestBody = { ...currentWord.userWord, optional: { total: 1, success: this.isMistake ? 0 : 1 } };
-        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody);
+        this.requestBody = {
+          ...currentWord.userWord,
+          optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 },
+        };
+
+        this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
       } else {
-        this.requestBody = { optional: { total: 1, success: this.isMistake ? 0 : 1 } };
-        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody);
+        this.requestBody = { optional: { total: 1, success: this.isMistake ? 0 : 1, strike: this.isMistake ? 0 : 1 } };
+        this.sprintGameService.createUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
       }
     } else {
       let currentTotal = currentWord.userWord?.optional?.total as number;
       let currentSuccess = currentWord.userWord?.optional?.success as number;
-      this.requestBody = {
-        ...currentWord.userWord,
-        optional: { total: ++currentTotal, success: this.isMistake ? currentSuccess : ++currentSuccess },
-      };
-      
-      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody);
+      let currentStrike = currentWord.userWord?.optional?.strike as number;
+
+      currentStrike = this.isMistake ? 0 : ++currentStrike;
+      if (
+        (currentStrike > 2 && currentWord.userWord?.difficulty !== 'hard') ||
+        (currentStrike > 4 && currentWord.userWord?.difficulty === 'hard')
+        ) {
+        this.requestBody = {
+          ...currentWord.userWord,
+          difficulty: 'easy',
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+        };
+      } else if (this.isMistake && currentWord.userWord?.difficulty === 'easy') {
+        this.requestBody = {
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+          difficulty: 'normal',
+        };
+      } else {
+        this.requestBody = {
+          ...currentWord.userWord,
+          optional: {
+            total: ++currentTotal,
+            success: this.isMistake ? currentSuccess : ++currentSuccess,
+            strike: currentStrike,
+          },
+        };
+       }
+
+      this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
     }
   }
 
   saveGameStats() {
     const bestSeries = Math.max(...this.bestSeries);
-    const successPercentage = Math.round(this.rightAnswers.length * 100 / this.results.length);
+    const successPercentage = Math.round((this.rightAnswers.length * 100) / this.results.length);
 
-    // this.statisticsService.setUserStatistics(
-    //   this.rightAnswers,
-    //   this.wrongAnswers,
-    //   bestSeries,
-    //   successPercentage,
-    //   this.gameName
-    // );
+    this.statisticsService.setUserStatistics(
+      this.rightAnswers,
+      this.wrongAnswers,
+      bestSeries,
+      successPercentage,
+      this.gameName
+    );
   }
 
   showResult() {
     this.sprintGameService.sendResult(this.results);
-    this.openDialog('0ms', '0ms');
+    this.openDialog();
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  startGame() {
+    this.showWord();
+    this.setGameTimer();
+  }
+
+  openDialog(): void {
     this.dialog.open(ResultFormComponent, {
-      width: '600px',
-      enterAnimationDuration,
-      exitAnimationDuration,
+      width: '700px',
+      maxHeight: '85vh',
+      data: {score: this.score},
+      disableClose: true,
+    } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
+      if(result) {
+        this.startGame();
+      }
     });
   }
 
@@ -266,6 +316,29 @@ export class AudioCallComponent implements OnInit {
       default:
         break;
     }
+  }
+
+  gameOver() {
+    this.gameTimer?.unsubscribe();
+    this.bestSeries.push(this.correctSeries);
+    this.showResult();
+    if (this.userId) {
+      this.saveGameStats();
+    }
+    this.resetData();
+  }
+
+  resetData() {
+    this.page = this.initialPage;
+    this.time = GAME_TIME;
+    this.score = 0;
+    this.words = [];
+    this.results = [];
+    this.newWordCount = 0;
+    this.correctSeries = 0;
+    this.bestSeries = [];
+    this.rightAnswers = [];
+    this.wrongAnswers = [];
   }
 
   @HostListener('window:keydown', ['$event'])
