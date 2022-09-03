@@ -19,11 +19,11 @@ export class StatisticsComponent implements OnInit {
     learnedWords: 0,
     optional: {
       allStatisticsByDate: [],
-      wordsList: []
     }
   }
   todayStatistics: TodayStatistics = {
     allNewWords: 0,
+    allWords: 0,
     allGamesRightPercent: 0
   }
   todayStatisticsSprint: TodayStatisticsGame = {
@@ -46,7 +46,7 @@ export class StatisticsComponent implements OnInit {
   allTimeStatisticsAllNewWords: number[] = [];
 
   public barChartData: ChartDataset[] = [{
-    label: 'Изучено слов',
+    label: 'Новых слов',
     data: [],
     fill: true,
     tension: 0.5,
@@ -102,7 +102,6 @@ export class StatisticsComponent implements OnInit {
             learnedWords: data.learnedWords,
             optional: {
               allStatisticsByDate: JSON.parse(data.optional.allStatisticsByDate),
-              wordsList: JSON.parse(data.optional.wordsList)
             }
           };
           this.allTimeStatistics = structuredClone(this.statisticsData.optional.allStatisticsByDate.map((item) => {
@@ -129,6 +128,7 @@ export class StatisticsComponent implements OnInit {
             ))
           ) {
             this.todayStatistics.allNewWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allNewWords;
+            this.todayStatistics.allWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allWords;
             this.todayStatistics.allGamesRightPercent = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allGamesRightPercent;
             this.todayStatisticsSprint.newWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].games.sprint.newWords;
             this.todayStatisticsSprint.rightPercent = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].games.sprint.rightPercent;

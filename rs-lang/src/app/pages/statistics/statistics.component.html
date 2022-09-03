@@ -3,8 +3,11 @@
     <h1>Статистика за сегодня</h1>
     <h2 *ngIf="!userId" class="today-statistics-warn">Доступно только авторизованным пользователям</h2>
     <div class="today-statistics-general" [ngClass]="!userId ? 'statistics-blurred' : ''">
+      <div class="new-words">
+        <h3><b>{{ todayStatistics.allNewWords}}</b> новых слов</h3>
+      </div>
       <div class="words-learned">
-        <h3><b>{{ todayStatistics.allNewWords }}</b> слов изучено</h3>
+        <h3><b>{{ todayStatistics.allWords }}</b> слов изучено</h3>
       </div>
       <div class="right-percent">
         <h3><b>{{ todayStatistics.allGamesRightPercent }}%</b> правильных ответов</h3>
@@ -15,7 +18,7 @@
         <h2>Спринт</h2>
         <div class="game-card-statistic">
           <mat-icon>library_books</mat-icon>
-          <span>Изучено слов: {{ todayStatisticsSprint.newWords }}</span>
+          <span>Новых слов: {{ todayStatisticsSprint.newWords }}</span>
         </div>
         <div class="game-card-statistic">
           <mat-icon>done_all</mat-icon>
@@ -30,7 +33,7 @@
         <h2>Аудиовызов</h2>
         <div class="game-card-statistic">
           <mat-icon>library_books</mat-icon>
-          <span>Изучено слов: {{ todayStatisticsAudioCall.newWords }}</span>
+          <span>Новых слов: {{ todayStatisticsAudioCall.newWords }}</span>
         </div>
         <div class="game-card-statistic">
           <mat-icon>done_all</mat-icon>
