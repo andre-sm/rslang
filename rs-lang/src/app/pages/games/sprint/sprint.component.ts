@@ -198,9 +198,20 @@ export class SprintComponent implements OnInit, OnDestroy {
       if (!this.fakeTranslate) {
         const sound = new Audio(rightAnswerSound);
         sound.play();
-        this.score += 10;
+        
         this.results[this.results.length - 1].answer = true;
         this.isMistake = false;
+
+        if (this.correctSeries <= 2) {
+          this.score += 10;
+        } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
+          this.score += 30;
+        } else if (this.correctSeries > 4 && this.correctSeries <= 6) {
+          this.score += 50;
+        } else if (this.correctSeries > 6) {
+          this.score += 70;
+        }
+
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
       } else {
@@ -213,7 +224,17 @@ export class SprintComponent implements OnInit, OnDestroy {
       }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
-        this.score += 10;
+
+        if (this.correctSeries <= 2) {
+          this.score += 10;
+        } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
+          this.score += 30;
+        } else if (this.correctSeries > 4 && this.correctSeries <= 6) {
+          this.score += 50;
+        } else if (this.correctSeries > 6) {
+          this.score += 70;
+        }
+        
         this.results[this.results.length - 1].answer = true;
         const sound = new Audio(rightAnswerSound);
         sound.play();
