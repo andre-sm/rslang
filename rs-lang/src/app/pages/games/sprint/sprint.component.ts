@@ -7,7 +7,7 @@ import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { ResultFormComponent } from '../result-form/result-form.component';
-import { Word } from '../../../models/words';
+import { Word } from '../../../models/words.model';
 import { UserWord } from '../../../models/user-word.model';
 import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
@@ -297,8 +297,8 @@ export class SprintComponent implements OnInit, OnDestroy {
     this.dialog.open(ResultFormComponent, {
       width: '700px',
       maxHeight: '85vh',
-      data: { 
-        score: this.score, 
+      data: {
+        score: this.score,
         wrong: this.wrongAnswers.length,
         right: this.rightAnswers.length
       },
@@ -320,6 +320,7 @@ export class SprintComponent implements OnInit, OnDestroy {
       this.wrongAnswers,
       bestSeries,
       successPercentage,
+      this.newWordCount,
       this.gameName
     );
   }

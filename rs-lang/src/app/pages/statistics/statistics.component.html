@@ -1,32 +1,55 @@
 <div class="statistics-container">
   <div class="today-statistics">
     <h1>Статистика за сегодня</h1>
-    <div class="today-statistics-general">
+    <h2 *ngIf="!userId" class="today-statistics-warn">Доступно только авторизованным пользователям</h2>
+    <div class="today-statistics-general" [ngClass]="!userId ? 'statistics-blurred' : ''">
+      <div class="new-words">
+        <h3><b>{{ todayStatistics.allNewWords}}</b> новых слов</h3>
+      </div>
       <div class="words-learned">
-        <h3><b>{{ todayStatistics.allNewWords }}</b> слов изучено</h3>
+        <h3><b>{{ todayStatistics.allWords }}</b> слов изучено</h3>
       </div>
       <div class="right-percent">
         <h3><b>{{ todayStatistics.allGamesRightPercent }}%</b> правильных ответов</h3>
       </div>
     </div>
-    <div class="game-card-container">
+    <div class="game-card-container" [ngClass]="!userId ? 'statistics-blurred' : ''">
       <div class="game-card">
         <h2>Спринт</h2>
-        <div class="game-card-statistic"><mat-icon>library_books</mat-icon> <span>Изучено слов: {{ todayStatisticsSprint.newWords }}</span></div>
-        <div class="game-card-statistic"><mat-icon>done_all</mat-icon> <span>Правильных ответов: {{ todayStatisticsSprint.rightPercent }}%</span></div>
-        <div class="game-card-statistic">	<mat-icon class="grade-icon">grade</mat-icon> <span>Лучшая серия правильных ответов: {{ todayStatisticsSprint.bestStreak }}</span></div>
+        <div class="game-card-statistic">
+          <mat-icon>library_books</mat-icon>
+          <span>Новых слов: {{ todayStatisticsSprint.newWords }}</span>
+        </div>
+        <div class="game-card-statistic">
+          <mat-icon>done_all</mat-icon>
+          <span>Правильных ответов: {{ todayStatisticsSprint.rightPercent }}%</span>
+        </div>
+        <div class="game-card-statistic">
+          <mat-icon class="grade-icon">grade</mat-icon>
+          <span>Лучшая серия правильных ответов: {{ todayStatisticsSprint.bestStreak }}</span>
+        </div>
       </div>
       <div class="game-card">
         <h2>Аудиовызов</h2>
-        <div class="game-card-statistic"><mat-icon>library_books</mat-icon> <span>Изучено слов: {{ todayStatisticsAudioCall.newWords }}</span></div>
-        <div class="game-card-statistic"><mat-icon>done_all</mat-icon> <span>Правильных ответов: {{ todayStatisticsAudioCall.rightPercent }}%</span></div>
-        <div class="game-card-statistic">	<mat-icon class="grade-icon">grade</mat-icon> <span>Лучшая серия правильных ответов: {{ todayStatisticsAudioCall.bestStreak }}</span></div>
+        <div class="game-card-statistic">
+          <mat-icon>library_books</mat-icon>
+          <span>Новых слов: {{ todayStatisticsAudioCall.newWords }}</span>
+        </div>
+        <div class="game-card-statistic">
+          <mat-icon>done_all</mat-icon>
+          <span>Правильных ответов: {{ todayStatisticsAudioCall.rightPercent }}%</span>
+        </div>
+        <div class="game-card-statistic">
+          <mat-icon class="grade-icon">grade</mat-icon>
+          <span>Лучшая серия правильных ответов: {{ todayStatisticsAudioCall.bestStreak }}</span>
+        </div>
       </div>
     </div>
   </div>
   <div class="all-time-statistics">
     <h1>Статистика за всё время</h1>
-    <div class="charts">
+    <h2 *ngIf="!userId" class="all-time-statistics-warn">Доступно только авторизованным пользователям</h2>
+    <div class="charts" [ngClass]="!userId ? 'statistics-blurred' : ''">
       <canvas baseChart
         [labels]="barChartLabels"
         [datasets]="barChartData"

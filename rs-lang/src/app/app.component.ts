@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { StorageService } from './services/storage.service';
+import { EventBusService } from './shared/event-bus.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +12,13 @@ import { StorageService } from './services/storage.service';
 export class AppComponent {
   isLoggedIn = false;
   username?: string;
+  eventBusSub?: Subscription;
 
-  constructor(private storageService: StorageService, private router: Router) { }
+  constructor(
+    private router: Router,
+    private storageService: StorageService,
+    private eventBusService: EventBusService
+  ) { }
 
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
@@ -21,6 +28,14 @@ export class AppComponent {
         this.username = user.name;
       }
     }
+    this.eventBusSub = this.eventBusService.on('logout', () => {
+      this.logout();
+    })
+  }
+
+  ngOnDestroy(): void {
+    if (this.eventBusSub)
+      this.eventBusSub.unsubscribe();
   }
 
   logout(): void {

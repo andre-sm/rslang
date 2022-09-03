@@ -6,7 +6,7 @@ import { lastValueFrom, of, Subscription, take, timer } from 'rxjs';
 import { StorageService } from '../../../services/storage.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ResultFormComponent } from '../result-form/result-form.component';
-import { Word } from 'src/app/models/words';
+import { Word } from '../../../models/words.model';
 import { ActivatedRoute } from '@angular/router';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
 import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
@@ -53,16 +53,16 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   requestBody?: UserWord;
   bestSeries: Array<number> = [];
   correctSeries = 0;
-  rightAnswers: (Word | UserAggregatedWord)[] = [];
-  wrongAnswers: (Word | UserAggregatedWord)[] = [];
+  rightAnswers: UserAggregatedWord[] = [];
+  wrongAnswers: UserAggregatedWord[] = [];
   uniqueWords: Set<Word> = new Set();
   gameName = 'audioCall';
   score = 0;
   initialPage = 0;
 
   constructor(
-    private sprintGameService: SprintGameService, 
-    private http: HttpClient, 
+    private sprintGameService: SprintGameService,
+    private http: HttpClient,
     public dialog: MatDialog,
     private storageService: StorageService,
     private route: ActivatedRoute,
@@ -219,7 +219,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
       this.rightAnswers.push(currentWord);
       this.isMistake = false;
     }
-    
+
     this.gameTimer?.unsubscribe();
     this.time = GAME_TIME;
 
@@ -354,6 +354,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
       this.wrongAnswers,
       bestSeries,
       successPercentage,
+      this.newWordCount,
       this.gameName
     );
   }
