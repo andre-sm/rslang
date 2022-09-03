@@ -22,7 +22,7 @@
       </button>
     </div>
       <span class="game__word">{{ englishWord }}</span>
-      <span class="game__question">?</span>
+      <span class="game__question" [ngClass]="{'green-color': answerIcon === 'V', 'red-color' : answerIcon === 'X' }">{{ answerIcon }}</span>
       <span class="game__translate">{{ russianWord }}</span>
     </div>
 

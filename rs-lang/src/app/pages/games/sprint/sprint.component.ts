@@ -17,6 +17,11 @@ const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 60;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
+enum AnswerIcons { 
+  wrong = 'X', 
+  correct = 'V', 
+  question = '?' 
+};
 
 @Component({
   selector: 'app-sprint',
@@ -52,6 +57,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   wrongAnswers: UserAggregatedWord[] = [];
   timerSub?: Subscription;
   keyPressSub?: Subscription;
+  answerIcon = AnswerIcons.question;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -196,6 +202,7 @@ export class SprintComponent implements OnInit, OnDestroy {
 
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
+        this.answerIcon = AnswerIcons.correct;
         const sound = new Audio(rightAnswerSound);
         sound.play();
         
@@ -214,16 +221,20 @@ export class SprintComponent implements OnInit, OnDestroy {
 
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
+        this.answerIcon = AnswerIcons.wrong;
         const sound = new Audio(wrongAnswerSound);
         sound.play();
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.isMistake = true;
         this.wrongAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
+        this.answerIcon = AnswerIcons.correct;
 
         if (this.correctSeries <= 2) {
           this.score += 10;
@@ -241,13 +252,16 @@ export class SprintComponent implements OnInit, OnDestroy {
         this.isMistake = false;
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
+        this.answerIcon = AnswerIcons.wrong;
         const sound = new Audio(wrongAnswerSound);
         sound.play();
         this.isMistake = true;
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.wrongAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     }
 
