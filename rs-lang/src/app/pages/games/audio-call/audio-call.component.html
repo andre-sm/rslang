@@ -1,12 +1,12 @@
 <main>
-  <difficulty-form></difficulty-form>
+  <difficulty-form *ngIf="!isFromTextbook"></difficulty-form>
   <p class="score"><strong>Time:</strong> {{ time }}</p>
   <p class="score"><strong>Life:</strong> {{ life }}</p>
 
-  <div class="buttons-answer">
-    <button mat-raised-button color="green" (click)="checkAnswer(1);">{{ answersText.firstAnswer }}</button>
-    <button mat-raised-button color="green" (click)="checkAnswer(2);">{{ answersText.secondAnswer }}</button>
-    <button mat-raised-button color="green" (click)="checkAnswer(3);">{{ answersText.thirdAnswer }}</button>
-    <button mat-raised-button color="green" (click)="checkAnswer(4);">{{ answersText.forthAnswer }}</button>
+  <div class="buttons-answer" (keydown)="checkKey($event)">
+    <label><button mat-raised-button color="green" (click)="checkAnswer(1);">{{ answersText.firstAnswer }}</button> <span>1</span></label>
+    <label><button mat-raised-button color="green" (click)="checkAnswer(2);">{{ answersText.secondAnswer }}</button> <span>2</span></label>
+    <label><button mat-raised-button color="green" (click)="checkAnswer(3);">{{ answersText.thirdAnswer }}</button> <span>3</span></label>
+    <label><button mat-raised-button color="green" (click)="checkAnswer(4);">{{ answersText.forthAnswer }}</button> <span>4</span></label>
   </div>
 </main>
