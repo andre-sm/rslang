@@ -129,7 +129,7 @@ export class StatisticsComponent implements OnInit {
             ))
           ) {
             this.todayStatistics.allNewWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allNewWords;
-            this.todayStatistics.allWordsLearned = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allWords;
+            this.todayStatistics.allWordsLearned = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allWordsLearned;
             this.todayStatistics.allGamesRightPercent = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allGamesRightPercent;
             this.todayStatisticsSprint.newWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].games.sprint.newWords;
             this.todayStatisticsSprint.rightPercent = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].games.sprint.rightPercent;
