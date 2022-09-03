@@ -17,15 +17,14 @@ export class DifficultyForm implements OnInit {
   constructor(public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.openDialog('0ms', '0ms');
+    this.openDialog();
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openDialog(): void {
     dialogRef = this.dialog.open(DifficultyFormComponent, {
-      width: '480px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-      disableClose: true
+      width: '400px',
+      disableClose: true,
+      panelClass: 'difficulty-dialog-class'
     });
   }
 

@@ -1,13 +1,171 @@
-main {
-  flex-direction: column;
+@import '../../../shared/css/variables';
+
+.game-container {
+  display: flex;
   align-items: center;
   justify-content: center;
-  display: flex;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  margin-top: 25px;
 }
 
-.buttons-answer {
+.game {
   display: flex;
-  justify-content: center;
-  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  background-color: $color-violet-lighter;
+  background-image: url('../../../../assets/img/lines.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  min-height: 740px;
+  width: 100%;
+  border-radius: 40px;
+  box-shadow: inset 0px -7px 10px rgba(152, 119, 248, 0.5), inset 0px 7px 10px rgba(225, 220, 255, 1),
+    inset 5px 0 10px rgba(152, 119, 248, 0.3), inset -5px 0 10px rgba(152, 119, 248, 0.3);
+
+  &__time-board {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 0 20px;
+    width: 100%;
+    margin-top: 20px;
+    cursor: default;
+  }
+
+  &__time {
+    font-size: 40px;
+    letter-spacing: 1px;
+    margin-left: 50px;
+    font-weight: 700;
+    color: $color-yellow-bright;
+    text-shadow: -0.0075em 0.0075em 0 #bb532b, 0.005em 0.005em 0 #bb532b, 0.01em 0.01em 0 #bb532b,
+      0.015em 0.015em #bb532b, 0.02em 0.02em 0 #bb532b, 0.025em 0.025em 0 #bb532b, 0.03em 0.03em 0 #bb532b,
+      0.035em 0.035em 0 #bb532b;
+  }
+
+  &__score {
+    min-width: 185px;
+    font-size: 40px;
+    letter-spacing: 1px;
+    margin-right: 35px;
+    font-weight: 700;
+    color: $color-yellow-bright;
+    text-align: left;
+    text-shadow: -0.0075em 0.0075em 0 #bb532b, 0.005em 0.005em 0 #bb532b, 0.01em 0.01em 0 #bb532b,
+      0.015em 0.015em #bb532b, 0.02em 0.02em 0 #bb532b, 0.025em 0.025em 0 #bb532b, 0.03em 0.03em 0 #bb532b,
+      0.035em 0.035em 0 #bb532b;
+  }
+
+  &__stars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  &__star {
+    background-image: url(../../../../assets/img/star.png);
+    background-size: cover;
+    width: 100px;
+    height: 95px;
+  }
+
+  &__star.disabled {
+    background-image: url(../../../../assets/img/star-grey.png);
+  }
+
+  &__question {
+    font-size: 46px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: $color-yellow-bright;
+    text-shadow: -0.0075em 0.0075em 0 #bb8d2b, 0.005em 0.005em 0 #bb8d2b, 0.01em 0.01em 0 #bb8d2b,
+      0.015em 0.015em #bb8d2b, 0.02em 0.02em 0 #bb8d2b, 0.025em 0.025em 0 #bb8d2b, 0.03em 0.03em 0 #bb8d2b,
+      0.035em 0.035em 0 #bb8d2b;
+  }
+
+  &__words {
+    color: $color-black-light;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    min-width: 500px;
+    min-height: 300px;
+    border-radius: 40px;
+    background-color: $color-orange-light;
+    box-shadow: inset 0px -5px 10px rgb(224 164 0 / 30%), inset 0px 5px 10px rgb(255 241 203 / 80%),
+      inset 3px 0 7px rgb(224 164 0 / 30%), inset -3px 0 7px rgb(224 164 0 / 30%);
+    margin-top: 40px;
+  }
+
+  &__sound {
+    align-self: flex-end;
+    margin: 10px 16px 0 0;
+  }
+
+  &__word {
+    font-family: 'Raleway', sans-serif;
+    font-size: 40px;
+    font-weight: 500;
+  }
+
+  &__translate {
+    font-family: 'Raleway', sans-serif;
+    font-size: 36px;
+  }
+
+  &__answer-btns {
+    display: flex;
+    justify-content: center;
+    gap: 140px;
+    margin-top: 80px;
+  }
+}
+
+.star-one {
+  width: 85px;
+  height: 81px;
+}
+
+.star-two {
+  width: 100px;
+  height: 95px;
+}
+
+.star-three {
+  width: 115px;
+  height: 110px;
+}
+
+.btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 18px 28px;
+  min-width: 180px;
+  box-shadow: inset 2px 2px 2px 0px rgb(255 255 255 / 50%);
+  outline: none;
+  position: relative;
+  display: inline-block;
+  transition: all .3s ease;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.btn:active {
+  top: 2px;
+}
+
+.wrong-answer-btn {
+  background-color: $color-violet;
+}
+
+.right-answer-btn {
+  background-color: $color-pink-darker;
 }
