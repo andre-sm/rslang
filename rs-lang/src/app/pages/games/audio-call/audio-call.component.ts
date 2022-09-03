@@ -272,6 +272,7 @@ export class AudioCallComponent implements OnInit {
       this.wrongAnswers,
       bestSeries,
       successPercentage,
+      this.newWordCount,
       this.gameName
     );
   }

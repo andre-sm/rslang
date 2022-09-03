@@ -297,8 +297,8 @@ export class SprintComponent implements OnInit, OnDestroy {
     this.dialog.open(ResultFormComponent, {
       width: '700px',
       maxHeight: '85vh',
-      data: { 
-        score: this.score, 
+      data: {
+        score: this.score,
         wrong: this.wrongAnswers.length,
         right: this.rightAnswers.length
       },
@@ -320,6 +320,7 @@ export class SprintComponent implements OnInit, OnDestroy {
       this.wrongAnswers,
       bestSeries,
       successPercentage,
+      this.newWordCount,
       this.gameName
     );
   }
