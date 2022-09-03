@@ -12,7 +12,7 @@
       <span class="game__heart heart-four"></span>
       <span class="game__heart heart-five"></span>
     </div>
-    <div class="game__words">
+    <div class="game__words" [ngClass]="{ right: isAnswer && !this.isMistake, wrong: isAnswer && this.isMistake }">
       <div class="game__sound">
         <button class="game__sound-button" mat-icon-button color="primary" aria-label="Sound icon" (click)="getSound()">
           <mat-icon

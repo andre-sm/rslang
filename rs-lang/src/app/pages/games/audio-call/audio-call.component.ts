@@ -59,6 +59,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   gameName = 'audioCall';
   score = 0;
   initialPage = 0;
+  isAnswer = false;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -205,6 +206,9 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   }
 
   checkAnswer(answer: number) {
+    this.isAnswer = true;
+    setTimeout(() => this.isAnswer = false, 300);
+
     const currentWord = this.currentWord as UserAggregatedWord;
     if (answer !== this.answer) {
       this.life--;
