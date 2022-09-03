@@ -23,7 +23,7 @@ export class StatisticsComponent implements OnInit {
   }
   todayStatistics: TodayStatistics = {
     allNewWords: 0,
-    allWords: 0,
+    allWordsLearned: 0,
     allGamesRightPercent: 0
   }
   todayStatisticsSprint: TodayStatisticsGame = {
@@ -104,6 +104,7 @@ export class StatisticsComponent implements OnInit {
               allStatisticsByDate: JSON.parse(data.optional.allStatisticsByDate),
             }
           };
+          console.log(this.statisticsData);
           this.allTimeStatistics = structuredClone(this.statisticsData.optional.allStatisticsByDate.map((item) => {
             return {
               date: item.date,
@@ -128,7 +129,7 @@ export class StatisticsComponent implements OnInit {
             ))
           ) {
             this.todayStatistics.allNewWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allNewWords;
-            this.todayStatistics.allWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allWords;
+            this.todayStatistics.allWordsLearned = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allWords;
             this.todayStatistics.allGamesRightPercent = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].allGamesRightPercent;
             this.todayStatisticsSprint.newWords = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].games.sprint.newWords;
             this.todayStatisticsSprint.rightPercent = this.statisticsData.optional.allStatisticsByDate[this.statisticsData.optional.allStatisticsByDate.length - 1].games.sprint.rightPercent;
