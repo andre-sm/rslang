@@ -2,6 +2,7 @@ export type StatisticByDate = {
   date: Date,
   allWords: number,
   allNewWords: number,
+  allWordsLearned: number,
   allGamesRight: number,
   allGamesRightPercent: number,
   allGamesWrong: number,
@@ -34,6 +35,7 @@ export const defaultStatisticByDate: StatisticByDate = {
   date: new Date(),
   allWords: 0,
   allNewWords: 0,
+  allWordsLearned: 0,
   allGamesRight: 0,
   allGamesRightPercent: 0,
   allGamesWrong: 0,
@@ -76,7 +78,7 @@ export enum GameNames {
 
 export interface TodayStatistics {
   allNewWords: number,
-  allWords: number,
+  allWordsLearned: number,
   allGamesRightPercent: number,
 }
 

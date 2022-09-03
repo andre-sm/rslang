@@ -104,6 +104,7 @@ export class StatisticsService {
         newBody.optional.allStatisticsByDate[0].date = new Date();
         newBody.optional.allStatisticsByDate[0].allWords = allGameWords.length;
         newBody.optional.allStatisticsByDate[0].allNewWords = newWordCount;
+        newBody.optional.allStatisticsByDate[0].allWordsLearned = allGameWords.length;
         newBody.optional.allStatisticsByDate[0].allGamesRight = rightAnswers.length;
         newBody.optional.allStatisticsByDate[0].allGamesRightPercent = rightPercent;
         newBody.optional.allStatisticsByDate[0].allGamesWrong = wrongAnswers.length;
@@ -128,6 +129,7 @@ export class StatisticsService {
 
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allWords += allGameWords.length;
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allNewWords += newWordCount;
+            newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allWordsLearned += allGameWords.length;
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allGamesRight += rightAnswers.length;
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allGamesRightPercent =
               Number(
@@ -158,6 +160,7 @@ export class StatisticsService {
 
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allWords += allGameWords.length;
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allNewWords += newWordCount;
+            newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allWordsLearned += allGameWords.length;
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allGamesRight += rightAnswers.length;
             newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allGamesRightPercent =
               Number(
@@ -187,11 +190,11 @@ export class StatisticsService {
         } else {
           newBody.learnedWords += allGameWords.length;
           const lastAllWords = newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].allWords;
-          const lastAllNewWords = newWordCount;
           const newStatisticByDateItem: StatisticByDate = {
             date: new Date(),
             allWords: lastAllWords + allGameWords.length,
-            allNewWords: lastAllNewWords,
+            allNewWords: newWordCount,
+            allWordsLearned: allGameWords.length,
             allGamesRight: rightAnswers.length,
             allGamesRightPercent: rightPercent,
             allGamesWrong: wrongAnswers.length,
