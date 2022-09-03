@@ -14,7 +14,7 @@ import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 5;
+const GAME_TIME = 60;
 
 @Component({
   selector: 'app-sprint',
@@ -145,11 +145,18 @@ export class SprintComponent implements OnInit, OnDestroy {
     const fakeTranslate = Math.floor(Math.random() * 2);
 
     if (!fakeTranslate) {
-      const page = Math.floor(Math.random() * 29);
-      const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
-      const fakeWords = await lastValueFrom(data);
-      const fakeWord = Math.floor(Math.random() * 19);
-      this.words[index].fakeTranslate = fakeWords[fakeWord].wordTranslate;
+
+      let answer = '';
+
+      while (answer === this.currentWord.wordTranslate || !answer) {
+        const page = Math.floor(Math.random() * 29);
+        const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
+        const fakeWords = await lastValueFrom(data);
+        const fakeWord = Math.floor(Math.random() * 19);
+        answer = fakeWords[fakeWord].wordTranslate;
+        this.currentWord.fakeTranslate = answer;
+      }
+
     }
     this.words.splice(index, 1);
     return this.currentWord;
