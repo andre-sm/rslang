@@ -39,4 +39,10 @@ export class WordCardComponent {
     return `${this.baseUrl}${this.word?.image}`;
   }
 
+  getWrongAnswers() {
+    const totalAnswers = this.word?.userWord?.optional?.total ?? 0;
+    const rightAnswers = this.word?.userWord?.optional?.success ?? 0;
+    return  totalAnswers - rightAnswers;
+  }
+
 }

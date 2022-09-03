@@ -74,9 +74,9 @@
             <span class="col col-3">Всего</span>
           </li>
           <li class="stats-table__row">
-            <span class="col col-1">0</span>
-            <span class="col col-2">0</span>
-            <span class="col col-3">0</span>
+            <span class="col col-1">{{ word?.userWord?.optional?.success ?? 0 }}</span>
+            <span class="col col-2">{{ getWrongAnswers() }}</span>
+            <span class="col col-3">{{ word?.userWord?.optional?.total ?? 0 }}</span>
           </li>
         </ul>
       </div>
