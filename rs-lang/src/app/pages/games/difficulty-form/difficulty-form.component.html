@@ -1,6 +1,7 @@
-<h1 mat-dialog-title>Выберите уровень сложности:</h1>
+<h1 mat-dialog-title class="difficulty-title">Выберите уровень сложности:</h1>
 <div mat-dialog-actions>
   <button
+    class="difficulty-btn"
     mat-button
     [ngClass]="'category-btn'"
     *ngFor="let category of categories"

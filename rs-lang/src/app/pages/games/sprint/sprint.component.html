@@ -1,12 +1,34 @@
-<main>
-  <difficulty-form *ngIf="!isFromTextbook"></difficulty-form>
-  <p class="score"><strong>Time:</strong> {{ time }}</p>
-  <p class="score"><strong>Score:</strong> {{ score }}</p>
-  <button mat-raised-button color="warn" (click)="getSound();">Sound</button>
-  <p class="english-word">{{ englishWord }}</p>
-  <p class="russian-word">{{ russianWord }}</p>
-  <div class="buttons-answer">
-    <button mat-raised-button color="warn" (click)="checkAnswer('No');">No</button>
-    <button mat-raised-button color="green" (click)="checkAnswer('Yes');">Yes</button>
+<div class="game-container">
+  <div class="game">
+    <difficulty-form *ngIf="!isFromTextbook"></difficulty-form>
+    <div class="game__time-board">
+      <span class="game__time">Time: {{ time }}</span>
+      <span class="game__score">Score: {{ score }}</span>
+    </div>
+    <div class="game__stars">
+      <span class="game__star star-one"></span>
+      <span class="game__star star-two disabled"></span>
+      <span class="game__star star-three disabled"></span>
+    </div>
+    <div class="game__words">
+      <div class="game__sound">
+        <button
+        mat-icon-button
+        color="primary"
+        aria-label="Sound icon"
+        (click)="getSound()"
+      >
+        <mat-icon aria-hidden="false" aria-label="Volume icon" fontIcon="volume_up"></mat-icon>
+      </button>
+    </div>
+      <span class="game__word">{{ englishWord }}</span>
+      <span class="game__question">?</span>
+      <span class="game__translate">{{ russianWord }}</span>
+    </div>
+
+    <div class="game__answer-btns">
+      <button class="wrong-answer-btn btn" (click)="checkAnswer('No')">Неправильно</button>
+      <button class="right-answer-btn btn" (click)="checkAnswer('Yes')">Правильно</button>
+    </div>
   </div>
-</main>
+</div>
