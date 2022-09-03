@@ -1,12 +1,46 @@
-<main>
-  <difficulty-form *ngIf="!isFromTextbook"></difficulty-form>
-  <p class="score"><strong>Time:</strong> {{ time }}</p>
-  <p class="score"><strong>Life:</strong> {{ life }}</p>
-
-  <div class="buttons-answer" (keydown)="checkKey($event)">
-    <label><button mat-raised-button color="green" (click)="checkAnswer(1);">{{ answersText.firstAnswer }}</button> <span>1</span></label>
-    <label><button mat-raised-button color="green" (click)="checkAnswer(2);">{{ answersText.secondAnswer }}</button> <span>2</span></label>
-    <label><button mat-raised-button color="green" (click)="checkAnswer(3);">{{ answersText.thirdAnswer }}</button> <span>3</span></label>
-    <label><button mat-raised-button color="green" (click)="checkAnswer(4);">{{ answersText.forthAnswer }}</button> <span>4</span></label>
+<div class="game-container">
+  <div class="game">
+    <difficulty-form *ngIf="!isFromTextbook"></difficulty-form>
+    <div class="game__time-board">
+      <span class="game__time">Time: {{ time }}</span>
+      <span class="game__score">Score: {{ score }}</span>
+    </div>
+    <div class="game__hearts">
+      <span class="game__heart heart-one"></span>
+      <span class="game__heart heart-two disabled"></span>
+      <span class="game__heart heart-three"></span>
+      <span class="game__heart heart-four"></span>
+      <span class="game__heart heart-five"></span>
+    </div>
+    <div class="game__words">
+      <div class="game__sound">
+        <button class="game__sound-button" mat-icon-button color="primary" aria-label="Sound icon" (click)="getSound()">
+          <mat-icon
+            class="game__sound-icon"
+            aria-hidden="false"
+            aria-label="Volume icon"
+            fontIcon="volume_up"
+          ></mat-icon>
+        </button>
+      </div>
+      <div class="game__answers" (keydown)="checkKey($event)">
+        <div class="btn-wrapper">
+          <button class="answer-btn btn" (click)="checkAnswer(1)">{{ answersText.firstAnswer }}</button>
+          <span class="key">1</span>
+        </div>
+        <div class="btn-wrapper">
+          <button class="answer-btn btn" (click)="checkAnswer(2)">{{ answersText.secondAnswer }}</button>
+          <span class="key">2</span>
+        </div>
+        <div class="btn-wrapper">
+          <button class="answer-btn btn" (click)="checkAnswer(3)">{{ answersText.thirdAnswer }}</button>
+          <span class="key">3</span>
+        </div>
+        <div class="btn-wrapper">
+          <button class="answer-btn btn" (click)="checkAnswer(4)">{{ answersText.forthAnswer }}</button>
+          <span class="key">4</span>
+        </div>
+      </div>
+    </div>
   </div>
-</main>
+</div>
