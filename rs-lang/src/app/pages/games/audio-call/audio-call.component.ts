@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
 import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
 import { UserWord } from '../../../models/user-word.model';
+import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 10;
@@ -66,6 +67,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private route: ActivatedRoute,
     private statisticsService: StatisticsService,
+    private footerService: FooterService
   ) {}
 
   ngOnInit(): void {
@@ -89,10 +91,12 @@ export class AudioCallComponent implements OnInit, OnDestroy {
         this.startGame();
       });
     }
+    this.footerService.hide();
   }
 
   ngOnDestroy(): void {
     this.gameTimer?.unsubscribe();
+        this.footerService.show();
   }
 
   startGame() {
