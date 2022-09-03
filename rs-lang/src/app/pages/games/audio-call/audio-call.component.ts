@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, of, Subscription, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ResultFormComponent } from '../result-form/result-form.component';
-import { Word } from 'src/app/models/words';
+import { Word } from 'src/app/models/words.model';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 10;

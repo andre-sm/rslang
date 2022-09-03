@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoginUser, User } from '../models/user';
+import { LoginUser, User } from '../models/user.model';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const httpOptions = {

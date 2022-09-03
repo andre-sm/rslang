@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
-import { StatisticByDate, Statistics, defaultStatistics, stringifiedNewBody } from '../models/statistics';
+import { StatisticByDate, Statistics, defaultStatistics, stringifiedNewBody } from '../models/statistics.model';
 import { UserAggregatedWord } from '../models/user-aggregated-word.model';
 import { getUniqueWords, isToday } from '../utils/statistics';
 
@@ -131,11 +131,11 @@ export class StatisticsService {
                     + (newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.wrong + wrongAnswers.length)
                   ) * 100).toFixed(0)
                 );
-              newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.wrong += wrongAnswers.length ;
+              newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.wrong += wrongAnswers.length;
               newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.bestStreak =
                 newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.bestStreak < bestStreak
                 ? bestStreak : newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.bestStreak;
-              newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.newWords += uniqueWordsArray.length ;
+              newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.newWords += uniqueWordsArray.length;
               newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.wordsList = [
                 ...newBody.optional.allStatisticsByDate[lastAllStatisticsByDateItem - 1].games.sprint.wordsList,
                 ...uniqueWordsArray

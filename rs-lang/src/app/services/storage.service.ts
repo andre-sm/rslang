@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserTokenResponse } from '../models/user';
+import { UserTokenResponse } from '../models/user.model';
 
 const USER_KEY = 'auth-user';
 const TOKEN_KEY = 'auth-token';
@@ -15,6 +15,10 @@ export class StorageService {
     window.localStorage.clear();
   }
 
+  public getToken(): string | null {
+    return window.localStorage.getItem(TOKEN_KEY);
+  }
+
   public saveToken(token: string): void {
     window.localStorage.removeItem(TOKEN_KEY);
     window.localStorage.setItem(TOKEN_KEY, token);
@@ -22,10 +26,6 @@ export class StorageService {
     if (user) {
       this.saveUser({ ...user, token: token });
     }
-  }
-
-  public getToken(): string | null {
-    return window.localStorage.getItem(TOKEN_KEY);
   }
 
   public getRefreshToken(): string | null {

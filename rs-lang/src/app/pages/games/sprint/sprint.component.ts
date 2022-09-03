@@ -7,7 +7,7 @@ import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { ResultFormComponent } from '../result-form/result-form.component';
-import { Word } from '../../../models/words';
+import { Word } from '../../../models/words.model';
 import { UserWord } from '../../../models/user-word.model';
 import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
