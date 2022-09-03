@@ -3,7 +3,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { StatisticsService } from '../../services/statistics.service';
 import { StorageService } from '../../services/storage.service';
-import { Statistics, stringifiedNewBody, TodayStatistics, TodayStatisticsGame } from '../../models/statistics';
+import { Statistics, stringifiedNewBody, TodayStatistics, TodayStatisticsGame } from '../../models/statistics.model';
 import { isToday } from './../../utils/statistics';
 import { ChartDataset, ChartOptions } from 'chart.js';
 

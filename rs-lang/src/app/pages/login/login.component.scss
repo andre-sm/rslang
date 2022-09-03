@@ -1,3 +1,5 @@
+@import "../../shared/css/variables";
+
 .login-container {
   display: flex;
   flex-direction: column;
@@ -6,27 +8,24 @@
   gap: 2rem;
   .title {
     width: 100%;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    h1 {
-      margin: 0;
-      color: #22C55E;;
-      font-size: 2.5rem;
-      font-weight: 900;
-      margin-bottom: 10px;
-    }
-    span:first-of-type {
-      color: #2A3342;
+    h2 {
+      color: $color-black;
       font-size: 2rem;
       font-weight: 700;
-    }
-    span:last-of-type {
-      color: #556987;
-      font-size: 1.125rem;
-      font-weight: 500;
+      text-align: center;
+      margin: 2rem 0 1rem;
+      b {
+        font-family: "Raleway", sans-serif;
+        color: $color-violet-dark;
+        font-size: 2rem;
+        font-weight: 700;
+      }
     }
   }
   .form {
@@ -49,9 +48,9 @@
         border-radius: 8px;
       }
       .form-btn {
-        background: #22C55E;
+        background: $color-violet-btn;
         padding: 10px 0;
-        border: 2px solid #22C55E;
+        border: 2px solid $color-violet-btn;
         border-radius: 6px;
         box-shadow: 0px 1px 2px rgba(105, 81, 255, 0.05);
         color: #F0FDF4;
@@ -59,12 +58,12 @@
         font-size: 1.25em;
         &:hover {
           cursor: pointer;
-          border-color: #1eac52;
-          background: #1eac52;
+          border-color: $color-violet-btn-hover;
+          background: $color-violet-btn-hover;
         }
         &:active {
           color: #000;
-          border-color: #22C55E;
+          border-color: $color-violet-btn;
           background: transparent;
         }
       }
@@ -77,7 +76,7 @@
     display: flex;
     flex-direction: row;
     a {
-      color: #22C55E;
+      color: $color-violet-light;
       text-decoration: none;
       &:hover {
         text-decoration: underline;

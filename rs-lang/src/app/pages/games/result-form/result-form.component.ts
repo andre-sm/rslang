@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, AfterViewChecked } from '@angular/core';
 import { SprintGameService } from '../../../services/sprintgame.service';
-import { Word } from '../../../models/words';
+import { Word } from '../../../models/words.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
@@ -47,8 +47,8 @@ export class ResultFormComponent implements OnInit, AfterViewChecked {
     if (resultBtnsLength) {
       if (e.key === "ArrowRight" && activeBtnIndex < resultBtnsLength - 1 ) {
         (activeBtn?.nextElementSibling as HTMLElement).focus();
-      } 
-  
+      }
+
       if (e.key === "ArrowLeft" && activeBtnIndex > 0) {
         (activeBtn?.previousElementSibling as HTMLElement).focus();
       }

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 import { ToastrService } from 'ngx-toastr';
-import { UserTokenResponse, LoginUser } from './../../models/user';
+import { UserTokenResponse, LoginUser } from '../../models/user.model';
 
 @Component({
   selector: 'app-login',

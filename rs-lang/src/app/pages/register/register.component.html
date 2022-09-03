@@ -1,8 +1,7 @@
 <div class="register-container">
   <div class="title">
-    <h1>RSLang</h1>
-    <span>Join our community</span>
-    <span>Start your journey with our product</span>
+    <h2>Начни свой путь с <b>Learning English</b></h2>
+    <span>Изучай английский эффективно с нашим приложением!</span>
   </div>
   <form
     class="form"
@@ -13,7 +12,7 @@
     novalidate
   >
     <div class="form-group">
-      <label for="name">Username*</label>
+      <label for="name">Имя пользователя*</label>
       <input
         type="text"
         class="form-control"
@@ -24,12 +23,12 @@
         maxlength="20"
         #name="ngModel"
         [ngClass]="{ 'is-invalid': f.submitted && name.errors }"
-        placeholder="Username"
+        placeholder="Имя пользователя"
       />
       <div class="invalid-feedback" *ngIf="name.errors && f.submitted">
-        <div *ngIf="name.errors['required']">Username is required</div>
-        <div *ngIf="name.errors['minlength']">Username must be at least 3 characters</div>
-        <div *ngIf="name.errors['maxlength']">Username must be at most 20 characters</div>
+        <div *ngIf="name.errors['required']">Обязательное поле</div>
+        <div *ngIf="name.errors['minlength']">Длина поля должна быть не менее 3 символов</div>
+        <div *ngIf="name.errors['maxlength']">Длина поля должна быть не более 20 символов</div>
       </div>
     </div>
     <div class="form-group">
@@ -43,17 +42,17 @@
         email
         #email="ngModel"
         [ngClass]="{ 'is-invalid': f.submitted && email.errors }"
-        placeholder="Email address"
+        placeholder="Email адрес"
       />
       <div class="invalid-feedback" *ngIf="email.errors && f.submitted">
-        <div *ngIf="email.errors['required']">Email is required</div>
+        <div *ngIf="email.errors['required']">Обязательное поле</div>
         <div *ngIf="email.errors['email']">
-          Email must be a valid email address
+          Пожалуйста, введите корректный email-адрес
         </div>
       </div>
     </div>
     <div class="form-group">
-      <label for="password">Password*</label>
+      <label for="password">Пароль*</label>
       <input
         type="password"
         class="form-control"
@@ -63,20 +62,20 @@
         minlength="8"
         #password="ngModel"
         [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
-        placeholder="Password"
+        placeholder="Пароль"
       />
       <div *ngIf="password.errors && f.submitted" class="invalid-feedback">
-        <div *ngIf="password.errors['required']">Password is required</div>
+        <div *ngIf="password.errors['required']">Обязательное поле</div>
         <div *ngIf="password.errors['minlength']">
-          Password must be at least 8 characters
+          Длина пароля должна быть не менее 8 символов
         </div>
       </div>
     </div>
     <div class="form-group">
-      <button class="form-btn">Sign Up</button>
+      <button class="form-btn">Зарегистрироваться</button>
     </div>
   </form>
   <div class="bottom">
-    <span>Already have an account?&nbsp;</span><a routerLink="/login">Sign In</a>
+    <span>Уже зарегистрирован?&nbsp;</span><a routerLink="/login">Да, Войти</a>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Word } from '../models/words';
+import { Word } from '../models/words.model';
 import { UserAggregatedWord } from '../models/user-aggregated-word.model';
 import { UserWordResponse } from '../models/user-word-response.model';
 import { UserWord } from '../models/user-word.model';
