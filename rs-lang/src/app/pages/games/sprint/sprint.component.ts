@@ -15,6 +15,8 @@ import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 60;
+const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
+const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
 @Component({
   selector: 'app-sprint',
@@ -191,14 +193,19 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   checkAnswer(answer: string) {
     const currentWord = this.currentWord as UserAggregatedWord;
+
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
+        const sound = new Audio(rightAnswerSound);
+        sound.play();
         this.score += 10;
         this.results[this.results.length - 1].answer = true;
         this.isMistake = false;
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
       } else {
+        const sound = new Audio(wrongAnswerSound);
+        sound.play();
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.isMistake = true;
@@ -208,10 +215,14 @@ export class SprintComponent implements OnInit, OnDestroy {
       if (this.fakeTranslate) {
         this.score += 10;
         this.results[this.results.length - 1].answer = true;
+        const sound = new Audio(rightAnswerSound);
+        sound.play();
         this.isMistake = false;
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
       } else {
+        const sound = new Audio(wrongAnswerSound);
+        sound.play();
         this.isMistake = true;
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
