@@ -21,10 +21,9 @@ const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 @Component({
   selector: 'app-audio-call',
   templateUrl: './audio-call.component.html',
-  styleUrls: ['./audio-call.component.scss']
+  styleUrls: ['./audio-call.component.scss'],
 })
 export class AudioCallComponent implements OnInit, OnDestroy {
-
   difficulty = 0;
   time = GAME_TIME;
   results: (Word | UserAggregatedWord)[] = [];
@@ -35,12 +34,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   audio = '';
   life = 5;
   answer = 0;
-  answersText = {
-    firstAnswer: '',
-    secondAnswer: '',
-    thirdAnswer: '',
-    forthAnswer: '',
-  };
+  randomAnswers: Array<string> = [];
   gameTimer?: Subscription;
   isLogged: boolean = false;
   page = 0;
@@ -56,7 +50,6 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   correctSeries = 0;
   rightAnswers: UserAggregatedWord[] = [];
   wrongAnswers: UserAggregatedWord[] = [];
-  uniqueWords: Set<Word> = new Set();
   gameName = 'audioCall';
   score = 0;
   initialPage = 0;
@@ -108,7 +101,6 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   }
 
   async getWord() {
-
     let wordsPage;
     if (this.isFromTextbook) {
       wordsPage = this.page;
@@ -128,7 +120,6 @@ export class AudioCallComponent implements OnInit, OnDestroy {
         } else {
           this.words = wordsReaponse[0].paginatedResults;
         }
-
       } else {
         const queryParams = `?group=${this.difficulty}&page=${wordsPage}`;
         const url = `${BASE_URL}words${queryParams}`;
@@ -142,23 +133,37 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     const index = Math.floor(Math.random() * this.words.length);
     this.currentWord = this.words[index];
 
-    for (const property in this.answersText) {
-      let answer = '';
-
-      while (answer === this.words[index].wordTranslate || !answer) {
-        answer = await this.getWrongAnswer();
-      }
-
-      this.answersText[property as keyof typeof this.answersText] = answer;
-    }
-
-    this.answer = Math.floor(1 + Math.random() * (4 + 1 - 1));
-    const rightAnswerKey = Object.keys(this.answersText)[this.answer - 1];
-    this.answersText[rightAnswerKey as keyof typeof this.answersText] = this.words[index].wordTranslate;
+    const answersArray: string[] = await this.getWrongAnswer(wordsPage);
+    answersArray.push(this.currentWord.wordTranslate);
+    this.randomAnswers = this.randomWords(answersArray);
 
     this.getSound();
     this.words.splice(index, 1);
     return this.currentWord;
+  }
+
+  randomWords(words: string[]) {
+    return words
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+  }
+
+  async getWrongAnswer(currentPage: number) {
+    let newPage;
+    do {
+      newPage = Math.floor(Math.random() * 29);
+    } while (currentPage !== newPage);
+
+    const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${newPage}`);
+    const words = await lastValueFrom(data);
+
+    const wrongWords = new Set<string>();
+    while (wrongWords.size < 3) {
+      const index = Math.floor(Math.random() * 19);
+      wrongWords.add(words[index].wordTranslate);
+    }
+    return Array.from(wrongWords);
   }
 
   getSound() {
@@ -175,7 +180,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
       this.russianWord = word.wordTranslate;
       this.setGameTimer();
     } else {
-     this.gameOver();
+      this.gameOver();
     }
   }
 
@@ -201,21 +206,12 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     });
   }
 
-  async getWrongAnswer() {
-    const page = Math.floor(Math.random() * 29);
-    const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
-    const words = await lastValueFrom(data);
-    const word = Math.floor(Math.random() * 19);
-
-    return words[word].wordTranslate
-  }
-
-  checkAnswer(answer: number) {
+  checkAnswer(answer: string) {
     this.isAnswer = true;
-    setTimeout(() => this.isAnswer = false, 300);
+    setTimeout(() => (this.isAnswer = false), 300);
 
     const currentWord = this.currentWord as UserAggregatedWord;
-    if (answer !== this.answer) {
+    if (answer !== this.currentWord?.wordTranslate) {
       const sound = new Audio(wrongAnswerSound);
       sound.play();
       this.life--;
@@ -283,7 +279,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
       if (
         (currentStrike > 2 && currentWord.userWord?.difficulty !== 'hard') ||
         (currentStrike > 4 && currentWord.userWord?.difficulty === 'hard')
-        ) {
+      ) {
         this.requestBody = {
           ...currentWord.userWord,
           difficulty: 'easy',
@@ -311,7 +307,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
             strike: currentStrike,
           },
         };
-       }
+      }
 
       this.sprintGameService.updateUserWord(this.userId, currentWord._id, this.requestBody).subscribe();
     }
@@ -323,40 +319,25 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   }
 
   openDialog(): void {
-    this.dialog.open(ResultFormComponent, {
-      width: '700px',
-      maxHeight: '85vh',
-      data: { 
-        score: this.score, 
-        wrong: this.wrongAnswers.length,
-        right: this.rightAnswers.length
-      },
-      disableClose: true,
-      panelClass: 'audio-call-dialog'
-    } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
-      if(result) {
-        this.startGame();
-      }
-    });
-  }
-
-  checkKey(key: unknown) {
-    switch (key) {
-      case '1':
-        this.checkAnswer(1);
-        break;
-      case '2':
-        this.checkAnswer(2);
-        break;
-      case '3':
-        this.checkAnswer(3);
-        break;
-      case '4':
-        this.checkAnswer(4);
-        break;
-      default:
-        break;
-    }
+    this.dialog
+      .open(ResultFormComponent, {
+        width: '700px',
+        maxHeight: '85vh',
+        data: {
+          score: this.score,
+          wrong: this.wrongAnswers.length,
+          right: this.rightAnswers.length,
+        },
+        disableClose: true,
+        panelClass: 'audio-call-dialog',
+      } as MatDialogConfig)
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((result) => {
+        if (result) {
+          this.startGame();
+        }
+      });
   }
 
   gameOver() {
@@ -401,8 +382,10 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   handleKeyboardDown(event: KeyboardEvent) {
     if (!this.flag) {
       this.flag = true;
-      const key = event.key;
-      this.checkKey(key);
+      if (event.key === '1' || event.key === '2' || event.key === '3' || event.key === '4') {
+        const answerIndex = +event.key - 1;
+        this.checkAnswer(this.randomAnswers[answerIndex]);
+      }
     }
   }
 
@@ -410,5 +393,4 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   handleKeyboardUp(event: KeyboardEvent) {
     this.flag = false;
   }
-
 }
