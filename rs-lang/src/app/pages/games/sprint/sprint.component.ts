@@ -7,14 +7,21 @@ import { SprintGameService } from '../../../services/sprintgame.service';
 import { StorageService } from '../../../services/storage.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { ResultFormComponent } from '../result-form/result-form.component';
-import { Word } from '../../../models/words';
+import { Word } from '../../../models/words.model';
 import { UserWord } from '../../../models/user-word.model';
 import { UserAggregatedWord } from '../../../models/user-aggregated-word.model';
 import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word-response.model';
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 61;
+const GAME_TIME = 60;
+const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
+const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
+enum AnswerIcons { 
+  wrong = 'X', 
+  correct = 'V', 
+  question = '?' 
+};
 
 @Component({
   selector: 'app-sprint',
@@ -50,6 +57,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   wrongAnswers: UserAggregatedWord[] = [];
   timerSub?: Subscription;
   keyPressSub?: Subscription;
+  answerIcon = AnswerIcons.question;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -145,11 +153,18 @@ export class SprintComponent implements OnInit, OnDestroy {
     const fakeTranslate = Math.floor(Math.random() * 2);
 
     if (!fakeTranslate) {
-      const page = Math.floor(Math.random() * 29);
-      const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
-      const fakeWords = await lastValueFrom(data);
-      const fakeWord = Math.floor(Math.random() * 19);
-      this.words[index].fakeTranslate = fakeWords[fakeWord].wordTranslate;
+
+      let answer = '';
+
+      while (answer === this.currentWord.wordTranslate || !answer) {
+        const page = Math.floor(Math.random() * 29);
+        const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
+        const fakeWords = await lastValueFrom(data);
+        const fakeWord = Math.floor(Math.random() * 19);
+        answer = fakeWords[fakeWord].wordTranslate;
+        this.currentWord.fakeTranslate = answer;
+      }
+
     }
     this.words.splice(index, 1);
     return this.currentWord;
@@ -184,31 +199,69 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   checkAnswer(answer: string) {
     const currentWord = this.currentWord as UserAggregatedWord;
+
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
-        this.score += 10;
+        this.answerIcon = AnswerIcons.correct;
+        const sound = new Audio(rightAnswerSound);
+        sound.play();
+        
         this.results[this.results.length - 1].answer = true;
         this.isMistake = false;
+
+        if (this.correctSeries <= 2) {
+          this.score += 10;
+        } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
+          this.score += 30;
+        } else if (this.correctSeries > 4 && this.correctSeries <= 6) {
+          this.score += 50;
+        } else if (this.correctSeries > 6) {
+          this.score += 70;
+        }
+
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
+        this.answerIcon = AnswerIcons.wrong;
+        const sound = new Audio(wrongAnswerSound);
+        sound.play();
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.isMistake = true;
         this.wrongAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
-        this.score += 10;
+        this.answerIcon = AnswerIcons.correct;
+
+        if (this.correctSeries <= 2) {
+          this.score += 10;
+        } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
+          this.score += 30;
+        } else if (this.correctSeries > 4 && this.correctSeries <= 6) {
+          this.score += 50;
+        } else if (this.correctSeries > 6) {
+          this.score += 70;
+        }
+        
         this.results[this.results.length - 1].answer = true;
+        const sound = new Audio(rightAnswerSound);
+        sound.play();
         this.isMistake = false;
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
+        this.answerIcon = AnswerIcons.wrong;
+        const sound = new Audio(wrongAnswerSound);
+        sound.play();
         this.isMistake = true;
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.wrongAnswers.push(currentWord);
+        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     }
 
@@ -297,8 +350,13 @@ export class SprintComponent implements OnInit, OnDestroy {
     this.dialog.open(ResultFormComponent, {
       width: '700px',
       maxHeight: '85vh',
-      data: {score: this.score},
+      data: {
+        score: this.score,
+        wrong: this.wrongAnswers.length,
+        right: this.rightAnswers.length
+      },
       disableClose: true,
+      panelClass: 'results-dialog-class'
     } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
       if(result) {
         this.startGame();
@@ -315,6 +373,7 @@ export class SprintComponent implements OnInit, OnDestroy {
       this.wrongAnswers,
       bestSeries,
       successPercentage,
+      this.newWordCount,
       this.gameName
     );
   }

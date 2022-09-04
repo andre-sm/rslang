@@ -2,10 +2,10 @@ export type StatisticByDate = {
   date: Date,
   allWords: number,
   allNewWords: number,
+  allWordsLearned: number,
   allGamesRight: number,
   allGamesRightPercent: number,
   allGamesWrong: number,
-  wordsList: string[],
   games: {
     sprint: {
       right: number,
@@ -13,7 +13,6 @@ export type StatisticByDate = {
       wrong: number,
       bestStreak: number,
       newWords: number,
-      wordsList: string[]
     },
     audioCall: {
       right: number,
@@ -21,7 +20,6 @@ export type StatisticByDate = {
       wrong: number,
       bestStreak: number,
       newWords: number,
-      wordsList: string[]
     }
   }
 }
@@ -30,7 +28,6 @@ export interface Statistics {
   learnedWords: number,
   optional: {
     allStatisticsByDate: StatisticByDate[]
-    wordsList: string[]
   },
 }
 
@@ -38,10 +35,10 @@ export const defaultStatisticByDate: StatisticByDate = {
   date: new Date(),
   allWords: 0,
   allNewWords: 0,
+  allWordsLearned: 0,
   allGamesRight: 0,
   allGamesRightPercent: 0,
   allGamesWrong: 0,
-  wordsList: [],
   games: {
     sprint: {
       right: 0,
@@ -49,7 +46,6 @@ export const defaultStatisticByDate: StatisticByDate = {
       wrong: 0,
       bestStreak: 0,
       newWords: 0,
-      wordsList: []
     },
     audioCall: {
       right: 0,
@@ -57,7 +53,6 @@ export const defaultStatisticByDate: StatisticByDate = {
       wrong: 0,
       bestStreak: 0,
       newWords: 0,
-      wordsList: []
     }
   }
 }
@@ -66,7 +61,6 @@ export const defaultStatistics: Statistics = {
   learnedWords: 0,
   optional: {
     allStatisticsByDate: [defaultStatisticByDate],
-    wordsList: []
   }
 }
 
@@ -74,7 +68,6 @@ export interface stringifiedNewBody {
   learnedWords: number;
   optional: {
     allStatisticsByDate: string;
-    wordsList: string;
   }
 }
 
@@ -85,6 +78,7 @@ export enum GameNames {
 
 export interface TodayStatistics {
   allNewWords: number,
+  allWordsLearned: number,
   allGamesRightPercent: number,
 }
 
@@ -92,8 +86,4 @@ export interface TodayStatisticsGame {
   newWords: number,
   rightPercent: number,
   bestStreak: number,
-}
-
-export interface AllTimeStatistic {
-  
 }
