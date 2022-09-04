@@ -15,7 +15,8 @@ import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 1000;
-
+const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
+const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
 @Component({
   selector: 'app-audio-call',
@@ -211,12 +212,16 @@ export class AudioCallComponent implements OnInit, OnDestroy {
 
     const currentWord = this.currentWord as UserAggregatedWord;
     if (answer !== this.answer) {
+      const sound = new Audio(wrongAnswerSound);
+      sound.play();
       this.life--;
       this.isMistake = true;
       this.bestSeries.push(this.correctSeries);
       this.wrongAnswers.push(currentWord);
       this.correctSeries = 0;
     } else {
+      const sound = new Audio(rightAnswerSound);
+      sound.play();
       this.correctSeries++;
       this.score += 10;
       this.results[this.results.length - 1].answer = true;
