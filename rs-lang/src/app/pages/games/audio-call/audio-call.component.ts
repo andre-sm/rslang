@@ -14,7 +14,7 @@ import { UserWord } from '../../../models/user-word.model';
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 1000;
+const GAME_TIME = 10;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
@@ -99,7 +99,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.gameTimer?.unsubscribe();
-        this.footerService.show();
+    this.footerService.show();
   }
 
   startGame() {
@@ -183,6 +183,8 @@ export class AudioCallComponent implements OnInit, OnDestroy {
       if (this.time) {
         this.time--;
       } else {
+        const sound = new Audio(wrongAnswerSound);
+        sound.play();
         this.life--;
         this.gameTimer?.unsubscribe();
         this.bestSeries.push(this.correctSeries);
