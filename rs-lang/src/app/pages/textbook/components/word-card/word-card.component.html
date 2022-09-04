@@ -46,13 +46,18 @@
         ></button>
       </ng-template>
       <button
+      *ngIf="word?.userWord?.difficulty === 'easy'; else deleteLearnedWord"
         class="learned-btn btn"
         mat-stroked-button
-        [disabled]="word?.userWord?.difficulty === 'easy'"
-        [innerText]="word?.userWord?.difficulty === 'easy' ? 'Изученное' : 'Знаю!'"
         color="accent"
-        (click)="onLearnedWordBtnClick(word)"
-      ></button>
+        (click)="onLearnedWordDeleteClick(word)"
+      >Забыл</button>
+      <ng-template #deleteLearnedWord>
+        <button
+          class="learned-btn btn"
+          (click)="onLearnedWordAddClick(word)"
+        >Знаю!</button>
+      </ng-template>
     </div>
     <mat-card-content>
       <mat-card-subtitle class="word-card__meaning-title">Значение</mat-card-subtitle>

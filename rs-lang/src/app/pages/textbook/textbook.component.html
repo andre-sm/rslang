@@ -30,7 +30,8 @@
       (soundIconClick)="onSoundIconClick($event)"
       (hardWordClick)="addHardWord($event)"
       (hardWordDeleteClick)="deleteHardWord($event)"
-      (learnedWordClick)="addLearnedWord($event)"
+      (learnedWordDeleteClick)="deleteLearnedWord($event)"
+      (learnedWordAddClick)="addLearnedWord($event)"
     ></app-word-card>
   </div>
   <div class="pagination" *ngIf="!isHardWordsChecked">

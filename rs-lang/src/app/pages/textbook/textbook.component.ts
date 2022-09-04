@@ -171,8 +171,6 @@ export class TextbookComponent implements OnInit {
   }
 
   deleteHardWord(word: UserAggregatedWord): void {
-    // console.log(word);
-    // const currentOptional = { ...word.userWord?.optional, strike: 0 };
     this.requestBody = { optional: word.userWord?.optional, difficulty: 'normal' };
     this.wordService.updateUserWord(this.userId, word._id, this.requestBody).subscribe(() => {
       const wordsUpdated = this.words.filter((item: UserAggregatedWord) => item._id !== word._id);
@@ -180,10 +178,19 @@ export class TextbookComponent implements OnInit {
     });
   }
 
+  deleteLearnedWord(word: UserAggregatedWord): void {
+    this.requestBody = { optional: word.userWord?.optional, difficulty: 'normal' };
+    this.wordService.updateUserWord(this.userId, word._id, this.requestBody).subscribe((data) => {
+      this.updateCurrentWordList(word, data, 'normal');
+      this.calculateLearnedWords(this.words);
+    });
+  }
+
   updateCurrentWordList(word: UserAggregatedWord, data: UserWordResponse, difficulty: string) {
-    const currentWordNewData = { ...word, userWord: { difficulty } };
+    const updatedUserWord = { ...word.userWord, difficulty };
+    const updatedWord = { ...word, userWord: updatedUserWord };
     const wordsUpdated = this.words.map((word: UserAggregatedWord) => {
-      return word._id === data.wordId ? currentWordNewData : word;
+      return word._id === data.wordId ? updatedWord : word;
     });
     this.words = wordsUpdated;
   }
