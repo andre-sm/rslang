@@ -1,13 +1,48 @@
-main {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+@import "../../shared/css/variables";
+
+.games-previews {
   display: flex;
-  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+
+  &__title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    margin-top: 40px;
+  }
+
+  &__previews-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background: url(../../../assets/img/background-second.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 20px;
+    width: 100%;
+    min-height: 520px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    &__previews-wrapper {
+      flex-direction: column;
+      gap: 30px;
+      padding: 30px 0;
+    }
+  }
+
+  &__preview {
+    background-color: $color-white;
+    padding: 10px 10px 4px 10px;
+    border-radius: 18px;
+  }
 }
 
-.minigame-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+.audio-call-preview,
+.sprint-preview {
+  border-radius: 12px;
 }
+
