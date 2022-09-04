@@ -61,6 +61,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   score = 0;
   initialPage = 0;
   isAnswer = false;
+  flag = false;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -394,9 +395,17 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    const key = event.key;
-    this.checkKey(key);
+  handleKeyboardDown(event: KeyboardEvent) {
+    if (!this.flag) {
+      this.flag = true;
+      const key = event.key;
+      this.checkKey(key);
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardUp(event: KeyboardEvent) {
+    this.flag = false;
   }
 
 }
