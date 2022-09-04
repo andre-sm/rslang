@@ -7,12 +7,22 @@
         [selectedCategory]="category"
         (categoryChange)="onCategoryChanged($event)"
       ></app-categories>
-      <mat-slide-toggle color="primary" [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged">Сложные слова</mat-slide-toggle>
-    </div>  
+      <mat-slide-toggle color="primary" [checked]="isHardWordsChecked" (change)="showHardWords($event)" *ngIf="isLogged"
+        >Сложные слова</mat-slide-toggle
+      >
+    </div>
     <div class="buttons-wrapper-right">
-      <div class="games-buttons" *ngIf="!isHardWordsChecked" [ngClass]="{ 'disabled': cardsPerPage - learnedWords === 0 }">
-        <button class="sprint-btn btn" (click)="onSprintGameBtnClick()"><span class="sprint-btn-text">Спринт</span></button>
-        <button class="audio-call-btn btn" (click)="onAudioGameBtnClick()"><span class="audio-call-btn-text">Аудио вызов</span></button>
+      <div
+        class="games-buttons"
+        *ngIf="!isHardWordsChecked"
+        [ngClass]="{ disabled: cardsPerPage - learnedWords === 0 }"
+      >
+        <button class="sprint-btn btn" (click)="onSprintGameBtnClick()">
+          <span class="sprint-btn-text">Спринт</span>
+        </button>
+        <button class="audio-call-btn btn" (click)="onAudioGameBtnClick()">
+          <span class="audio-call-btn-text">Аудио вызов</span>
+        </button>
       </div>
       <p class="badge-container">
         <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
@@ -30,11 +40,20 @@
       (soundIconClick)="onSoundIconClick($event)"
       (hardWordClick)="addHardWord($event)"
       (hardWordDeleteClick)="deleteHardWord($event)"
-      (learnedWordClick)="addLearnedWord($event)"
+      (learnedWordDeleteClick)="deleteLearnedWord($event)"
+      (learnedWordAddClick)="addLearnedWord($event)"
     ></app-word-card>
   </div>
   <div class="pagination" *ngIf="!isHardWordsChecked">
-    <mat-paginator [pageIndex]="page" [length]="totalWords" [pageSize]="cardsPerPage" hidePageSize="true" (page)="onPageChanged($event)">
+    <span class="page-number">{{ page + 1}}</span>
+    <mat-paginator
+      [pageIndex]="page"
+      [length]="totalWords"
+      [pageSize]="cardsPerPage"
+      hidePageSize="true"
+      showFirstLastButtons="true"
+      (page)="onPageChanged($event)"
+    >
     </mat-paginator>
   </div>
 </div>

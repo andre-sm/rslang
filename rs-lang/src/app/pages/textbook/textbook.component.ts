@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from './models/category.model';
 import { Word } from './models/word.model';
@@ -8,7 +8,7 @@ import { UserWordResponse } from './models/user-word-response.model';
 import { CategoryService } from './services/category.service';
 import { WordService } from './services/word.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
@@ -16,7 +16,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
   templateUrl: './textbook.component.html',
   styleUrls: ['./textbook.component.scss'],
 })
-export class TextbookComponent implements OnInit {
+export class TextbookComponent implements OnInit, OnDestroy, AfterViewInit {
   categories?: Category[];
   words: (Word | UserAggregatedWord)[] = [];
   userWords: UserWord[] = [];
@@ -31,7 +31,10 @@ export class TextbookComponent implements OnInit {
   learnedWords: number = 0;
   isHardWordsChecked = localStorage.getItem('isHardWordsChecked') === 'true' || false;
   requestBody?: UserWord;
+  paginatorLabel?: HTMLElement;
   baseUrl = 'https://rss-rslang-be.herokuapp.com/';
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private categoryService: CategoryService,
@@ -53,6 +56,14 @@ export class TextbookComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.audio.pause();
+  }
+
+  ngAfterViewInit(): void {
+    const paginatorIntl = this.paginator._intl;
+    paginatorIntl.nextPageLabel = 'Следующая страница';
+    paginatorIntl.previousPageLabel = 'Предыдущая страница';
+    paginatorIntl.lastPageLabel = 'Последняя страница';
+    paginatorIntl.firstPageLabel = 'Первая страница';
   }
 
   getCategories(): void {
@@ -171,8 +182,6 @@ export class TextbookComponent implements OnInit {
   }
 
   deleteHardWord(word: UserAggregatedWord): void {
-    // console.log(word);
-    // const currentOptional = { ...word.userWord?.optional, strike: 0 };
     this.requestBody = { optional: word.userWord?.optional, difficulty: 'normal' };
     this.wordService.updateUserWord(this.userId, word._id, this.requestBody).subscribe(() => {
       const wordsUpdated = this.words.filter((item: UserAggregatedWord) => item._id !== word._id);
@@ -180,10 +189,19 @@ export class TextbookComponent implements OnInit {
     });
   }
 
+  deleteLearnedWord(word: UserAggregatedWord): void {
+    this.requestBody = { optional: word.userWord?.optional, difficulty: 'normal' };
+    this.wordService.updateUserWord(this.userId, word._id, this.requestBody).subscribe((data) => {
+      this.updateCurrentWordList(word, data, 'normal');
+      this.calculateLearnedWords(this.words);
+    });
+  }
+
   updateCurrentWordList(word: UserAggregatedWord, data: UserWordResponse, difficulty: string) {
-    const currentWordNewData = { ...word, userWord: { difficulty } };
+    const updatedUserWord = { ...word.userWord, difficulty };
+    const updatedWord = { ...word, userWord: updatedUserWord };
     const wordsUpdated = this.words.map((word: UserAggregatedWord) => {
-      return word._id === data.wordId ? currentWordNewData : word;
+      return word._id === data.wordId ? updatedWord : word;
     });
     this.words = wordsUpdated;
   }
