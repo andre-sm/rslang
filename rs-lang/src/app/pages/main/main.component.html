@@ -1,15 +1,9 @@
 <div class="main">
   <section class="welcom-section welcom">
     <div class="welcom__text-container">
-      <h2 class="welcom__title">
-        Эффективно изучай английский язык вместе с нами!
-      </h2>
-      <p class="welcom__text">
-        Всего 15 минут в день и спустя несколько недель вы будете знать все важные слова.
-      </p>
-      <p class="welcom__text">
-        Изучение английского языка еще никогда не было таким легким!
-      </p>
+      <h2 class="welcom__title">Эффективно изучай английский язык вместе с нами!</h2>
+      <p class="welcom__text">Всего 15 минут в день и спустя несколько недель вы будете знать все важные слова.</p>
+      <p class="welcom__text">Изучение английского языка еще никогда не было таким легким!</p>
       <button class="btn welcom-btn" routerLink="/textbook">Начать обучение!</button>
     </div>
     <div class="welcom__image-container"></div>
@@ -32,10 +26,14 @@
   </section>
   <section class="games-section games">
     <div class="games__game-preview">
-      <img src="../../../assets/img/preview-sprint.png" alt="Sprint game preview" class="sprint-game-preview">
+      <a routerLink="/games/sprint" class="preview-link"
+        ><img src="../../../assets/img/preview-sprint.png" alt="Sprint game preview" class="sprint-preview"
+      /></a>
     </div>
     <div class="games__game-preview">
-      <img src="../../../assets/img/preview-audio-call.png" alt="Audio call game preview" class="audio-call-preview">
+      <a routerLink="/games/audio-call" class="preview-link"
+        ><img src="../../../assets/img/preview-audio-call.png" alt="Audio call game preview" class="audio-call-preview"
+      /></a>
     </div>
   </section>
   <section class="about-us-section">
