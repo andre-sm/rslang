@@ -14,8 +14,9 @@ import { UserWord } from '../../../models/user-word.model';
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 1000;
-
+const GAME_TIME = 10;
+const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
+const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
 @Component({
   selector: 'app-audio-call',
@@ -60,6 +61,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   score = 0;
   initialPage = 0;
   isAnswer = false;
+  flag = false;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -97,7 +99,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.gameTimer?.unsubscribe();
-        this.footerService.show();
+    this.footerService.show();
   }
 
   startGame() {
@@ -181,6 +183,8 @@ export class AudioCallComponent implements OnInit, OnDestroy {
       if (this.time) {
         this.time--;
       } else {
+        const sound = new Audio(wrongAnswerSound);
+        sound.play();
         this.life--;
         this.gameTimer?.unsubscribe();
         this.bestSeries.push(this.correctSeries);
@@ -211,14 +215,28 @@ export class AudioCallComponent implements OnInit, OnDestroy {
 
     const currentWord = this.currentWord as UserAggregatedWord;
     if (answer !== this.answer) {
+      const sound = new Audio(wrongAnswerSound);
+      sound.play();
       this.life--;
       this.isMistake = true;
       this.bestSeries.push(this.correctSeries);
       this.wrongAnswers.push(currentWord);
       this.correctSeries = 0;
     } else {
+      const sound = new Audio(rightAnswerSound);
+      sound.play();
+
+      if (this.correctSeries <= 2) {
+        this.score += 10;
+      } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
+        this.score += 30;
+      } else if (this.correctSeries > 4 && this.correctSeries <= 6) {
+        this.score += 50;
+      } else if (this.correctSeries > 6) {
+        this.score += 70;
+      }
+
       this.correctSeries++;
-      this.score += 10;
       this.results[this.results.length - 1].answer = true;
       this.rightAnswers.push(currentWord);
       this.isMistake = false;
@@ -379,9 +397,17 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    const key = event.key;
-    this.checkKey(key);
+  handleKeyboardDown(event: KeyboardEvent) {
+    if (!this.flag) {
+      this.flag = true;
+      const key = event.key;
+      this.checkKey(key);
+    }
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardUp(event: KeyboardEvent) {
+    this.flag = false;
   }
 
 }
