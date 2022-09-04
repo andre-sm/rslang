@@ -14,7 +14,7 @@ import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 60;
+const GAME_TIME = 10;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
@@ -66,6 +66,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    window.scrollTo(0, 0);
     this.isLogged = this.storageService.isLoggedIn();
     this.userId = this.storageService.getUser()?.userId || '';
 
