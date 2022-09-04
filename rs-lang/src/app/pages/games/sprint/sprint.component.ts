@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -17,11 +17,6 @@ const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
 const GAME_TIME = 60;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
-enum AnswerIcons { 
-  wrong = 'X', 
-  correct = 'V', 
-  question = '?' 
-};
 
 @Component({
   selector: 'app-sprint',
@@ -57,7 +52,8 @@ export class SprintComponent implements OnInit, OnDestroy {
   wrongAnswers: UserAggregatedWord[] = [];
   timerSub?: Subscription;
   keyPressSub?: Subscription;
-  answerIcon = AnswerIcons.question;
+  flag = false;
+  isAnswer = false;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -108,14 +104,23 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   startKeyboardControl() {
     this.keyPressSub = fromEvent(document, 'keydown').subscribe((e) => {
-      if ((e as KeyboardEvent).key === "ArrowLeft") {
-        this.checkAnswer('No');
-      }
+      if (!this.flag) {
+        this.flag = true;
 
-      if ((e as KeyboardEvent).key === "ArrowRight") {
-        this.checkAnswer('Yes');
+        if ((e as KeyboardEvent).key === "ArrowLeft") {
+          this.checkAnswer('No');
+        }
+
+        if ((e as KeyboardEvent).key === "ArrowRight") {
+          this.checkAnswer('Yes');
+        }
       }
     });
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardUp(event: KeyboardEvent) {
+    this.flag = false;
   }
 
   async getWord() {
@@ -198,11 +203,13 @@ export class SprintComponent implements OnInit, OnDestroy {
   }
 
   checkAnswer(answer: string) {
+    this.isAnswer = true;
+    setTimeout(() => this.isAnswer = false, 300);
+    
     const currentWord = this.currentWord as UserAggregatedWord;
 
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
-        this.answerIcon = AnswerIcons.correct;
         const sound = new Audio(rightAnswerSound);
         sound.play();
         
@@ -221,21 +228,16 @@ export class SprintComponent implements OnInit, OnDestroy {
 
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
-        this.answerIcon = AnswerIcons.wrong;
         const sound = new Audio(wrongAnswerSound);
         sound.play();
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.isMistake = true;
         this.wrongAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
-        this.answerIcon = AnswerIcons.correct;
-
         if (this.correctSeries <= 2) {
           this.score += 10;
         } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
@@ -252,16 +254,13 @@ export class SprintComponent implements OnInit, OnDestroy {
         this.isMistake = false;
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
-        this.answerIcon = AnswerIcons.wrong;
         const sound = new Audio(wrongAnswerSound);
         sound.play();
         this.isMistake = true;
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.wrongAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     }
 
