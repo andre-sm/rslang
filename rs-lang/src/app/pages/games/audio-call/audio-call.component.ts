@@ -14,7 +14,7 @@ import { UserWord } from '../../../models/user-word.model';
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 10;
+const GAME_TIME = 1000;
 
 
 @Component({
@@ -59,6 +59,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   gameName = 'audioCall';
   score = 0;
   initialPage = 0;
+  isAnswer = false;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -152,13 +153,13 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     const rightAnswerKey = Object.keys(this.answersText)[this.answer - 1];
     this.answersText[rightAnswerKey as keyof typeof this.answersText] = this.words[index].wordTranslate;
 
-    this.getSound(this.words[index]);
+    this.getSound();
     this.words.splice(index, 1);
     return this.currentWord;
   }
 
-  getSound(word: Word | UserAggregatedWord) {
-    const sound = new Audio(`${BASE_URL}${word.audio}`);
+  getSound() {
+    const sound = new Audio(`${BASE_URL}${this.currentWord?.audio}`);
     sound.play();
   }
 
@@ -205,6 +206,9 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   }
 
   checkAnswer(answer: number) {
+    this.isAnswer = true;
+    setTimeout(() => this.isAnswer = false, 300);
+
     const currentWord = this.currentWord as UserAggregatedWord;
     if (answer !== this.answer) {
       this.life--;
@@ -309,6 +313,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
         right: this.rightAnswers.length
       },
       disableClose: true,
+      panelClass: 'audio-call-dialog'
     } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
       if(result) {
         this.startGame();

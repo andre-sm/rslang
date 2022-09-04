@@ -91,8 +91,8 @@
   padding: 0 15px 15px 15px;
   border-radius: 30px;
   background-color: $color-orange-light;
-  box-shadow: inset 0px -5px 10px rgb(224 164 0 / 30%), inset 0px 5px 10px rgb(255 241 203 / 80%),
-  inset 3px 0 7px rgb(224 164 0 / 30%), inset -3px 0 7px rgb(224 164 0 / 30%);
+  box-shadow: inset 0px -5px 10px rgb(213 177 114 / 30%), inset 0px 5px 10px rgb(255 241 203 / 80%),
+  inset 3px 0 7px rgb(213 177 114 / 30%), inset -3px 0 7px rgb(213 177 114 / 30%);
 }
 
 .col-1,
@@ -113,6 +113,16 @@
     border-radius: 40px;
     box-shadow: inset 0px -7px 10px rgba(152, 119, 248, 0.5), inset 0px 7px 10px rgba(225, 220, 255, 1),
     inset 5px 0 10px rgba(152, 119, 248, 0.3), inset -5px 0 10px rgba(152, 119, 248, 0.3);
+  }
+}
+
+::ng-deep .audio-call-dialog {
+  mat-dialog-container {
+    padding-top: 12px;
+    background-color: $color-blue;
+    border-radius: 40px;
+    box-shadow: inset 0px -7px 10px rgba(83, 143, 255, 0.5), inset 0px 7px 10px rgba(212, 227, 255, 1),
+    inset 5px 0 10px rgba(83, 143, 255, 0.3), inset -5px 0 10px rgba(83, 143, 255, 0.3);
   }
 }
 
