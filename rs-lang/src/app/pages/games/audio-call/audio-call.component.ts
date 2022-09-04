@@ -14,7 +14,7 @@ import { UserWord } from '../../../models/user-word.model';
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 10;
+const GAME_TIME = 1000;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
@@ -35,11 +35,13 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   life = 5;
   answer = 0;
   randomAnswers: Array<string> = [];
+  answerIndex = 0;
   gameTimer?: Subscription;
   isLogged: boolean = false;
   page = 0;
   userId: string = '';
   cardsPerPage = 20;
+  numberOfPages = 30;
   words: (Word | UserAggregatedWord)[] = [];
   isMistake = false;
   currentWord?: Word | UserAggregatedWord;
@@ -105,7 +107,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     if (this.isFromTextbook) {
       wordsPage = this.page;
     } else {
-      wordsPage = Math.floor(Math.random() * 29);
+      wordsPage = Math.floor(Math.random() * (this.numberOfPages - 1));
     }
 
     if (this.words.length === 0) {
@@ -136,6 +138,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     const answersArray: string[] = await this.getWrongAnswer(wordsPage);
     answersArray.push(this.currentWord.wordTranslate);
     this.randomAnswers = this.randomWords(answersArray);
+    this.answerIndex = this.randomAnswers.indexOf(this.currentWord.wordTranslate);
 
     this.getSound();
     this.words.splice(index, 1);
@@ -152,7 +155,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   async getWrongAnswer(currentPage: number) {
     let newPage;
     do {
-      newPage = Math.floor(Math.random() * 29);
+      newPage = Math.floor(Math.random() * (this.numberOfPages - 1));
     } while (currentPage !== newPage);
 
     const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${newPage}`);
@@ -160,7 +163,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
 
     const wrongWords = new Set<string>();
     while (wrongWords.size < 3) {
-      const index = Math.floor(Math.random() * 19);
+      const index = Math.floor(Math.random() * (this.cardsPerPage - 1));
       wrongWords.add(words[index].wordTranslate);
     }
     return Array.from(wrongWords);
@@ -208,7 +211,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
 
   checkAnswer(answer: string) {
     this.isAnswer = true;
-    setTimeout(() => (this.isAnswer = false), 300);
+    setTimeout(() => (this.isAnswer = false), 500);
 
     const currentWord = this.currentWord as UserAggregatedWord;
     if (answer !== this.currentWord?.wordTranslate) {
@@ -249,7 +252,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     if (this.page < 0 && this.words.length === 0 && this.isFromTextbook) {
       this.gameOver();
     } else {
-      this.showWord();
+      setTimeout(() => this.showWord(), 1000);
     }
   }
 

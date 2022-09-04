@@ -39,6 +39,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   initialPage = 0;
   page = 0;
   cardsPerPage = 20;
+  numberOfPages = 30;
   audio = '';
   results: (Word | UserAggregatedWord)[] = [];
   params?: { group?: string; page?: string };
@@ -129,7 +130,7 @@ export class SprintComponent implements OnInit, OnDestroy {
     if (this.isFromTextbook) {
       wordsPage = this.page;
     } else {
-      wordsPage = Math.floor(Math.random() * 29);
+      wordsPage = Math.floor(Math.random() * (this.numberOfPages - 1));
     }
 
     if (this.words.length === 0) {
@@ -163,10 +164,10 @@ export class SprintComponent implements OnInit, OnDestroy {
       let answer = '';
 
       while (answer === this.currentWord.wordTranslate || !answer) {
-        const page = Math.floor(Math.random() * 29);
+        const page = Math.floor(Math.random() * (this.numberOfPages - 1));
         const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
         const fakeWords = await lastValueFrom(data);
-        const fakeWord = Math.floor(Math.random() * 19);
+        const fakeWord = Math.floor(Math.random() * (this.cardsPerPage - 1));
         answer = fakeWords[fakeWord].wordTranslate;
         this.currentWord.fakeTranslate = answer;
       }
