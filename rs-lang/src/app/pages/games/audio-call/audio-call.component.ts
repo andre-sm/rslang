@@ -222,8 +222,18 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     } else {
       const sound = new Audio(rightAnswerSound);
       sound.play();
+
+      if (this.correctSeries <= 2) {
+        this.score += 10;
+      } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
+        this.score += 30;
+      } else if (this.correctSeries > 4 && this.correctSeries <= 6) {
+        this.score += 50;
+      } else if (this.correctSeries > 6) {
+        this.score += 70;
+      }
+
       this.correctSeries++;
-      this.score += 10;
       this.results[this.results.length - 1].answer = true;
       this.rightAnswers.push(currentWord);
       this.isMistake = false;
