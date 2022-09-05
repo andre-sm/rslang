@@ -1,0 +1,79 @@
+<mat-dialog-content class="mat-typography">
+  <div class="stats-table" *ngIf="results.length !== 0; else message">
+    <h2 class="stats-table__title">
+      Вы набрали <span class="stats-table__score">{{ data.score }}</span> баллов
+    </h2>
+    <div class="table-container">
+      <div class="stats-table__count">
+        <span class="stats-table__right-answers"
+          >Правильно <span class="stats-table__right-count">{{ data.right }}</span></span
+        >
+        <span class="stats-table__wrong-answers"
+          >Неправильно <span class="stats-table__wrong-count">{{ data.wrong }}</span></span
+        >
+      </div>
+      <ul class="stats-table__content">
+        <li class="stats-table__header">
+          <span class="col col-1"></span>
+          <span class="col col-2">Слово</span>
+          <span class="col col-3">Перевод</span>
+          <span class="col col-4">Результат</span>
+        </li>
+        <li class="stats-table__row" *ngFor="let result of results">
+          <span class="col col-1">
+            <button mat-icon-button color="primary" aria-label="Sound icon" (click)="playSound(result.audio)">
+              <mat-icon aria-hidden="false" aria-label="Volume icon" fontIcon="volume_up"></mat-icon>
+            </button>
+          </span>
+          <span class="col col-2">{{ result.word }}</span>
+          <span class="col col-3">{{ result.wordTranslate }}</span>
+          <span class="col col-4">
+            <mat-icon
+              class="stats-table__right-icon"
+              aria-hidden="false"
+              aria-label="Volume icon"
+              fontIcon="done"
+              *ngIf="result.answer"
+            ></mat-icon>
+            <mat-icon
+              class="stats-table__wrong-icon"
+              aria-hidden="false"
+              aria-label="Volume icon"
+              fontIcon="close"
+              *ngIf="!result.answer"
+            ></mat-icon>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <ng-template #message>
+    <p class="result-message">
+      {{ data.allDone ? "Все слова со страницы уже выучены..." : "Пожалуйста, попробуйте ещё раз..." }}
+    </p>
+  </ng-template>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="result-btns">
+    <button
+    mat-button
+    [matDialogClose]="true"
+    class="repeat-btn btn"
+    (keydown)="moveFocus($event)"
+    cdkFocusInitial
+    (click)="onRepeat()"
+  >
+    Повторить!
+  </button>
+  <button
+    mat-button
+    [matDialogClose]="true"
+    class="games-btn btn"
+    (keydown)="moveFocus($event)"
+    cdkFocusInitial
+    (click)="goToGames()"
+  >
+    К играм
+  </button>
+  </div>
+</mat-dialog-actions>

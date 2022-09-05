@@ -1,0 +1,274 @@
+@import "../../shared/css/variables";
+
+.welcom {
+  background: url(../../../assets/img/background.jpg);
+  background-position: center top;
+  background-repeat: no-repeat;
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 70px 60px;
+
+  &__text-container {
+    font-family: 'Raleway', sans-serif;
+    max-width: 495px;
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media screen and (max-width: 1024px) {
+    &__text-container {
+      max-width: 700px;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  &__image-container {
+    flex: 1;
+    background: url(../../../assets/img/main-image.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    width: 480px;
+    height: 420px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    &__image-container {
+      flex: 0 1 auto;
+      background-size: 100%;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    &__image-container {
+      display: none;
+    }
+  }
+
+  &__title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 40px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  &__text {
+    color: $color-black-light;
+    font-size: 20px;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .welcom {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+.btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background-color: $color-violet-light;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 32px;
+  box-shadow: inset 2px 2px 2px 0px rgb(255 255 255 / 50%);
+  outline: none;
+  position: relative;
+  display: inline-block;
+  transition: all .3s ease;
+  cursor: pointer;
+}
+
+.btn:hover { 
+  background-color: $color-violet-darker;
+}
+
+.btn:active {
+  top: 2px;
+}
+
+.welcom-btn {
+  margin-top: 15px;
+}
+
+.advantage-section,
+.about-us-section {
+  font-family: 'Raleway', sans-serif;
+  margin-top: 100px;
+
+  &__items {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 90px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    &__items {
+      gap: 50px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    &__items {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+  }
+
+}
+
+.advantage-item,
+.about-us-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 28px 20px 28px;
+  max-width: 260px;
+  min-height: 280px;
+  text-align: center;
+  border: 2px solid $color-violet-light;
+  border-radius: 16px;
+
+  &__title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  &__text {
+    font-size: 18px;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+}
+
+.about-us-item {
+  background: url(../../../assets/img/card-bg.png);
+  background-position: center top;
+  background-repeat: no-repeat;
+
+  &__avatar {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    border: 2px solid $color-violet-light;
+    margin-bottom: 15px;
+  }
+
+  &__team-lead {
+    margin-bottom: 10px;
+    color: $color-violet-light;
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  &__link {
+    font-size: 16px;
+    text-decoration: none;
+    color: $color-violet-light;
+    margin-bottom: 15px;
+    transition: all 0.35s ease;
+  }
+
+  &__link:hover {
+    color: $color-black;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .advantage-item,
+  .about-us-item {
+    max-width: 205px;
+    padding: 40px 20px 20px 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .advantage-item,
+  .about-us-item {
+    padding: 40px 30px 20px 30px;
+    max-width: 240px;
+  }
+}
+
+.avatar-one {
+  background-image: url(../../../assets/img/avatar-one.png);
+  background-position: 11px 12px;
+  background-size: 86%;
+  background-repeat: no-repeat;
+}
+
+.avatar-two {
+  background-image: url(../../../assets/img/avatar-two.png);
+  background-position: center;
+  background-size: 60%;
+  background-repeat: no-repeat;
+}
+
+.avatar-three {
+  background-image: url(../../../assets/img/avatar-three.jpg);
+  background-position: 60% 15%;
+  background-size: 120%;
+  background-repeat: no-repeat;
+}
+
+.games-section {
+  background: url(../../../assets/img/background-second.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 100%;
+  min-height: 460px;
+  border-radius: 20px;
+  margin-top: 100px;
+  padding: 40px;
+}
+
+.games {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+
+  &__game-preview {
+    background-color: $color-white;
+    padding: 10px 10px 4px 10px;
+    border-radius: 18px;
+  }
+}
+
+.audio-call-preview,
+.sprint-preview {
+  border-radius: 12px;
+}
+
+@media screen and (max-width: 1024px) {
+  .games {
+    gap: 50px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .games {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+}
+
+.about-us {
+  margin-top: 100px;
+}

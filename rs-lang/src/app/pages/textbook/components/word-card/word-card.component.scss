@@ -1,0 +1,176 @@
+@import "../../../../shared/css/variables";
+
+.word-card-container {
+  height: 100%;
+}
+
+.word-card {
+  border-radius: 8px;
+
+  &__image {
+    border-radius: 8px;
+    padding: 10px 10px 0 10px;
+  }
+
+  &__image img {
+    mask-image: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 15%, rgb(255, 255, 255) 30%);
+    -webkit-mask-image: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 15%, rgb(255, 255, 255) 30%);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 15px 0;
+  }
+
+  &__meaning-title,
+  &__example-title {
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+
+  &__meaning-translate {
+    margin-bottom: 15px;
+  }
+
+  &__meaning,
+  &__example {
+    margin-bottom: 3px;
+  }
+}
+
+.word-card.hard-word {
+  background-color: $color-pink-light;
+} 
+
+.word-card.learned-word {
+  background-color: $color-green-light;
+}
+
+.mat-card {
+  height: 100%;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.title-transcription {
+  font-weight: 500;
+}
+
+.mat-card-header {
+  display: inline-flex;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px 0 0 0;
+  top: -120px;
+}
+
+.btn {
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 24px;
+  box-shadow: inset 2px 2px 2px 0px rgb(255 255 255 / 50%);
+  outline: none;
+  position: relative;
+  display: inline-block;
+  transition: all .3s ease;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.btn:active {
+  top: 2px;
+}
+
+.learned-btn {
+  background-color: $color-violet-btn;
+}
+
+.learned-btn:hover { 
+  background-color: $color-violet-btn-hover;
+}
+
+.hard-word-btn {
+  background-color: $color-pink;
+}
+
+.hard-word-btn:hover { 
+  background-color: $color-pink-darker;
+}
+
+.learned-btn,
+.hard-word-btn {
+  min-width: 150px;
+}
+
+.hard-word-btn[disabled],
+.learned-btn[disabled] {
+  background-color: $color-grey;
+  cursor: default;
+  pointer-events: none;
+}
+
+.stats-table {
+  &__title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  &__header,
+  &__row {
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__header {
+    border-bottom: 1px solid $color-grey;
+  }
+
+  &__content {
+    margin: 0;
+    padding: 0;
+    border: 1px solid $color-violet-light;
+    border-radius: 8px;
+  }
+}
+
+.col:not(:last-child) {
+  border-right: 1px solid $color-grey;
+}
+
+.col-1,
+.col-2 {
+  flex-basis: 35%;
+}
+
+.col-3 {
+  flex-basis: 30%;
+}

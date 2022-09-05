@@ -1,0 +1,40 @@
+<div class="game-container">
+  <div class="game">
+    <difficulty-form *ngIf="!isFromTextbook"></difficulty-form>
+    <div class="game__time-board">
+      <span class="game__time">Time: {{ time }}</span>
+      <span class="game__score">Score: {{ score }}</span>
+    </div>
+    <div class="game__hearts">
+      <span class="game__heart heart-one" [ngClass]="{ disabled: life < 1 }"></span>
+      <span class="game__heart heart-two" [ngClass]="{ disabled: life < 2 }"></span>
+      <span class="game__heart heart-three" [ngClass]="{ disabled: life < 3 }"></span>
+      <span class="game__heart heart-four" [ngClass]="{ disabled: life < 4 }"></span>
+      <span class="game__heart heart-five" [ngClass]="{ disabled: life < 5 }"></span>
+    </div>
+    <div class="game__words" [ngClass]="{ right: isAnswer && !this.isMistake, wrong: isAnswer && this.isMistake }">
+      <div class="game__sound">
+        <button class="game__sound-button" mat-icon-button color="primary" aria-label="Sound icon" (click)="getSound()">
+          <mat-icon
+            class="game__sound-icon"
+            aria-hidden="false"
+            aria-label="Volume icon"
+            fontIcon="volume_up"
+          ></mat-icon>
+        </button>
+      </div>
+      <div class="game__answers">
+        <div class="btn-wrapper" *ngFor="let answer of randomAnswers; let i = index">
+          <button
+            class="answer-btn btn"
+            [ngClass]="{ 'right-answer' : isAnswer && i === answerIndex }"
+            (click)="checkAnswer(answer)"
+          >
+            {{ answer }}
+          </button>
+          <span class="key">{{ i + 1 }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

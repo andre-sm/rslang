@@ -1,0 +1,40 @@
+<div class="game-container">
+  <div class="game">
+    <difficulty-form *ngIf="!isFromTextbook"></difficulty-form>
+    <div class="game__time-board">
+      <span class="game__time">Time: {{ time }}</span>
+      <span class="game__score">Score: {{ score }}</span>
+    </div>
+    <div class="game__stars">
+      <span class="game__star star-one" [ngClass]="correctSeries > 2 ? 'active' : 'disabled'"></span>
+      <span class="game__star star-two" [ngClass]="correctSeries > 4 ? 'active' : 'disabled'"></span>
+      <span class="game__star star-three" [ngClass]="correctSeries > 6 ? 'active' : 'disabled'"></span>
+    </div>
+    <div class="game__words" [ngClass]="{ right: isAnswer && !this.isMistake, wrong: isAnswer && this.isMistake }">
+      <div class="game__sound">
+        <button
+          mat-icon-button
+          color="primary"
+          aria-label="Sound icon"
+          (click)="getSound()"
+        >
+        <mat-icon aria-hidden="false" aria-label="Volume icon" fontIcon="volume_up"></mat-icon>
+      </button>
+    </div>
+      <span class="game__word">{{ englishWord }}</span>
+      <span class="game__question">?</span>
+      <span class="game__translate">{{ russianWord }}</span>
+    </div>
+
+    <div class="game__answer-btns">
+      <div class="btn-wrapper">
+        <button class="wrong-answer-btn btn" (click)="checkAnswer('No')">Неправильно</button>
+        <mat-icon class="arrow-left" aria-hidden="false" aria-label="Arrow left" fontIcon="west"></mat-icon>
+      </div>
+      <div class="btn-wrapper"> 
+        <button class="right-answer-btn btn" (click)="checkAnswer('Yes')">Правильно</button>
+        <mat-icon class="arrow-right" aria-hidden="false" aria-label="Arrow right" fontIcon="east"></mat-icon>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<header class="header-container">
+  <app-header [isLoggedIn]="isLoggedIn" [userName]="username" (logoutClick)="logout()"></app-header>
+</header>
+<main class="main-container">
+  <router-outlet></router-outlet>
+</main>
+<footer class="footer-container">
+  <app-footer></app-footer>
+</footer>
