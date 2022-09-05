@@ -13,6 +13,7 @@ import { ChartDataset, ChartOptions } from 'chart.js';
   styleUrls: ['./statistics.component.scss']
 })
 export class StatisticsComponent implements OnInit {
+  isLoaded = false;
   userId: string | undefined = ''
   errorMessage = '';
   statisticsData: Statistics = {
@@ -104,7 +105,7 @@ export class StatisticsComponent implements OnInit {
               allStatisticsByDate: JSON.parse(data.optional.allStatisticsByDate),
             }
           };
-          console.log(this.statisticsData);
+          this.isLoaded = true;
           this.allTimeStatistics = structuredClone(this.statisticsData.optional.allStatisticsByDate.map((item) => {
             return {
               date: item.date,
@@ -144,6 +145,9 @@ export class StatisticsComponent implements OnInit {
           this.toastr.error(this.errorMessage);
         }
       })
+    }
+    if (!this.userId && !this.isLoaded) {
+      this.isLoaded = true;
     }
   }
 }

@@ -9,11 +9,11 @@ import { authInterceptorProviders } from './helpers/auth.interceptor';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { AudioCallComponent } from './pages/games/audio-call/audio-call.component';
-import { SprintComponent } from './pages/games/sprint/sprint.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ProfileEditComponent } from './pages/profile/profile-edit/profile-edit.component';
 import { HeaderComponent } from './pages/components/header/header.component';
 import { FooterComponent } from './pages/components/footer/footer.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -21,6 +21,7 @@ import { FooterComponent } from './pages/components/footer/footer.component';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
+    ProfileEditComponent,
     HeaderComponent,
     FooterComponent
   ],
@@ -30,7 +31,8 @@ import { FooterComponent } from './pages/components/footer/footer.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatProgressSpinnerModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

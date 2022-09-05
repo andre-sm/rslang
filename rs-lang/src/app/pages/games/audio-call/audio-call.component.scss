@@ -164,6 +164,11 @@
   min-width: 200px;
 }
 
+.answer-btn.right-answer {
+  background-color: $color-green-bright;
+}
+
+
 .btn-wrapper {
   display: flex;
   flex-direction: column;

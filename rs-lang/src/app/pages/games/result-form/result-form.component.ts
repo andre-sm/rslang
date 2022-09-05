@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, AfterViewChecked } from '@angular/core';
 import { SprintGameService } from '../../../services/sprintgame.service';
+import { Router } from '@angular/router';
 import { Word } from '../../../models/words.model';
 import { ResultData } from '../../../models/result-data.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -16,6 +17,7 @@ export class ResultFormComponent implements OnInit, AfterViewChecked {
   resultBtns?: NodeListOf<Element>;
 
   constructor(
+    private router: Router,
     private sprintGameService: SprintGameService,
     @Inject(MAT_DIALOG_DATA) public data: ResultData,
     private matDialogRef: MatDialogRef<ResultFormComponent>
@@ -38,6 +40,11 @@ export class ResultFormComponent implements OnInit, AfterViewChecked {
 
   onRepeat() {
     this.matDialogRef.close(true);
+  }
+
+  goToGames() {
+    this.matDialogRef.close();
+    this.router.navigateByUrl('/games');
   }
 
   moveFocus(e: KeyboardEvent) {

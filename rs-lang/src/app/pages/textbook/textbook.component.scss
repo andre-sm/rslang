@@ -111,12 +111,12 @@
 
 .btn {
   font-family: 'Raleway', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: #fff;
   border: none;
   border-radius: 30px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   box-shadow: inset 2px 2px 2px 0px rgb(255 255 255 / 50%);
   outline: none;
   position: relative;
@@ -158,4 +158,43 @@
 .sprint-btn:hover:before,
 .audio-call-btn:hover:before {
   content: "Играть!";
+}
+
+.pagination {
+  border: 2px solid $color-violet-light;
+  border-radius: 8px;
+  max-width: 240px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.mat-paginator {
+  border-radius: 8px;
+}
+
+::ng-deep.mat-paginator .mat-paginator-container {
+  justify-content: center;
+}
+
+::ng-deep.mat-paginator .mat-paginator-range-label {
+  display: none;
+}
+
+::ng-deep.mat-paginator .mat-paginator-navigation-previous {
+  margin-right: 15px;
+}
+
+::ng-deep.mat-paginator .mat-paginator-navigation-next {
+  margin-left: 15px;
+}
+
+.page-number {
+  font-family: 'Raleway', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: $color-black;
+  position: absolute;
+  left: 50%;
+  top: 17px;
+  transform: translateX(-50%);
 }

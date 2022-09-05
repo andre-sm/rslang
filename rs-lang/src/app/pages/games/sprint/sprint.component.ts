@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -14,14 +14,9 @@ import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 60;
+const GAME_TIME = 10;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
-enum AnswerIcons { 
-  wrong = 'X', 
-  correct = 'V', 
-  question = '?' 
-};
 
 @Component({
   selector: 'app-sprint',
@@ -44,6 +39,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   initialPage = 0;
   page = 0;
   cardsPerPage = 20;
+  numberOfPages = 30;
   audio = '';
   results: (Word | UserAggregatedWord)[] = [];
   params?: { group?: string; page?: string };
@@ -57,7 +53,8 @@ export class SprintComponent implements OnInit, OnDestroy {
   wrongAnswers: UserAggregatedWord[] = [];
   timerSub?: Subscription;
   keyPressSub?: Subscription;
-  answerIcon = AnswerIcons.question;
+  flag = false;
+  isAnswer = false;
 
   constructor(
     private sprintGameService: SprintGameService,
@@ -70,6 +67,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    window.scrollTo(0, 0);
     this.isLogged = this.storageService.isLoggedIn();
     this.userId = this.storageService.getUser()?.userId || '';
 
@@ -108,14 +106,23 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   startKeyboardControl() {
     this.keyPressSub = fromEvent(document, 'keydown').subscribe((e) => {
-      if ((e as KeyboardEvent).key === "ArrowLeft") {
-        this.checkAnswer('No');
-      }
+      if (!this.flag) {
+        this.flag = true;
 
-      if ((e as KeyboardEvent).key === "ArrowRight") {
-        this.checkAnswer('Yes');
+        if ((e as KeyboardEvent).key === "ArrowLeft") {
+          this.checkAnswer('No');
+        }
+
+        if ((e as KeyboardEvent).key === "ArrowRight") {
+          this.checkAnswer('Yes');
+        }
       }
     });
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  handleKeyboardUp(event: KeyboardEvent) {
+    this.flag = false;
   }
 
   async getWord() {
@@ -123,7 +130,7 @@ export class SprintComponent implements OnInit, OnDestroy {
     if (this.isFromTextbook) {
       wordsPage = this.page;
     } else {
-      wordsPage = Math.floor(Math.random() * 29);
+      wordsPage = Math.floor(Math.random() * (this.numberOfPages - 1));
     }
 
     if (this.words.length === 0) {
@@ -157,10 +164,10 @@ export class SprintComponent implements OnInit, OnDestroy {
       let answer = '';
 
       while (answer === this.currentWord.wordTranslate || !answer) {
-        const page = Math.floor(Math.random() * 29);
+        const page = Math.floor(Math.random() * (this.numberOfPages - 1));
         const data = this.http.get<Word[]>(`${BASE_URL}words?group=${this.difficulty}&page=${page}`);
         const fakeWords = await lastValueFrom(data);
-        const fakeWord = Math.floor(Math.random() * 19);
+        const fakeWord = Math.floor(Math.random() * (this.cardsPerPage - 1));
         answer = fakeWords[fakeWord].wordTranslate;
         this.currentWord.fakeTranslate = answer;
       }
@@ -198,11 +205,13 @@ export class SprintComponent implements OnInit, OnDestroy {
   }
 
   checkAnswer(answer: string) {
+    this.isAnswer = true;
+    setTimeout(() => this.isAnswer = false, 300);
+    
     const currentWord = this.currentWord as UserAggregatedWord;
 
     if (answer === 'Yes') {
       if (!this.fakeTranslate) {
-        this.answerIcon = AnswerIcons.correct;
         const sound = new Audio(rightAnswerSound);
         sound.play();
         
@@ -221,21 +230,16 @@ export class SprintComponent implements OnInit, OnDestroy {
 
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
-        this.answerIcon = AnswerIcons.wrong;
         const sound = new Audio(wrongAnswerSound);
         sound.play();
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.isMistake = true;
         this.wrongAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     } else if (answer === 'No') {
       if (this.fakeTranslate) {
-        this.answerIcon = AnswerIcons.correct;
-
         if (this.correctSeries <= 2) {
           this.score += 10;
         } else if (this.correctSeries > 2 && this.correctSeries <= 4) {
@@ -252,16 +256,13 @@ export class SprintComponent implements OnInit, OnDestroy {
         this.isMistake = false;
         this.correctSeries++;
         this.rightAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       } else {
-        this.answerIcon = AnswerIcons.wrong;
         const sound = new Audio(wrongAnswerSound);
         sound.play();
         this.isMistake = true;
         this.bestSeries.push(this.correctSeries);
         this.correctSeries = 0;
         this.wrongAnswers.push(currentWord);
-        setTimeout(() => this.answerIcon = AnswerIcons.question, 100);
       }
     }
 
