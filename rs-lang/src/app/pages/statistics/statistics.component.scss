@@ -12,7 +12,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
+  gap: 3rem;
   .today-statistics {
     position: relative;
     width: 100%;
@@ -20,11 +20,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4rem;
+    gap: 3rem;
     h1 {
-      color: $color-violet-darker;
-      font-size: 2.5rem;
-      font-weight: 900;
+      font-family: "Raleway", sans-serif;
+      color: $color-violet-light;
+      font-size: 2.4rem;
+      font-weight: 500;
       margin: 2rem 0;
     }
     .today-statistics-general {
@@ -50,6 +51,9 @@
         b {
           font-size: 3rem;
         }
+        span {
+          font-size: 3rem;
+        }
       }
     }
     .game-card-container {
@@ -61,25 +65,29 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 1rem;
+        gap: 1.2rem;
         background: url('../../../assets/img/card-bg.png');
         background-position: center top;
         background-repeat: no-repeat;
         outline: $color-violet-darker;
-        border-radius: 4px;
-        padding: 1rem;
+        border-radius: 16px;
+        padding: 20px;
         font-size: 1.125rem;
-        box-shadow: 1px 4px 10px 2px rgba(0, 0, 0, 0.05);
+        border: 2px solid $color-violet-light;
         h2 {
-          margin: 0;
-          font-size: 1.5rem;
-          font-weight: 900;
+          font-family: "Raleway", sans-serif;
+          font-weight: 500;
+          font-size: 1.7rem;
+          text-align: center;
+          margin: 0 0 10px 0;
         }
         .game-card-statistic {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 10px;
+          line-height: 1.2;
           .grade-icon {
+            color: $color-yellow-bright;
             width: 1.5em;
           }
         }
@@ -94,11 +102,12 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    h1 {
-      color: $color-violet-darker;
-      font-size: 2.5rem;
-      font-weight: 900;
-      margin: 2rem 0;
+    .all-time-statistics-title {
+      font-family: "Raleway", sans-serif;
+      color: $color-violet-light;
+      font-size: 2.4rem;
+      font-weight: 500;
+      margin: 40px 0 60px 0;
     }
     .charts {
       display: flex;
@@ -124,6 +133,9 @@
   }
 
   .today-statistics-warn, .all-time-statistics-warn {
+    font-family: "Raleway", sans-serif;
+    font-weight: 500;
+    font-size: 1.7rem;
     position: absolute;
     z-index: 10;
     top: 50%;
@@ -133,4 +145,12 @@
     text-align: center;
     color: $color-black;
   }
+}
+
+.books-icon {
+  color: $color-violet-darker;
+}
+
+.answers-icon {
+  color: $color-green;
 }

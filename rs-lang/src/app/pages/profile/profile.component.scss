@@ -14,6 +14,10 @@
   align-items: center;
   gap: 2rem;
   h1 {
+    font-family: "Raleway", sans-serif;
+    color: $color-violet-light;
+    font-size: 2rem;
+    font-weight: 500;
     width: 100%;
     max-width: 500px;
     display: flex;
@@ -22,9 +26,6 @@
     align-items: center;
     gap: 1rem;
     margin: 2rem 0;
-    color: $color-violet-darker;
-    font-size: 1.5rem;
-    font-weight: bold;
   }
   .profile {
     width: 100%;
@@ -74,14 +75,13 @@
         }
       }
       .profile-btn.delete-btn {
-        background: $color-red;
-        border-color: $color-red;
+        background: $color-burgundy;
+        border: none;
         &:hover {
-          border-color: $color-red-darker;
-          background: $color-red-darker;
+          background: $color-burgundy-darker;
         }
         &:active {
-          border-color: $color-red;
+          border: 1px solid $color-burgundy-darker;
           background: transparent;
         }
       }

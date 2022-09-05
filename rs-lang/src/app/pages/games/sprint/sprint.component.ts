@@ -14,7 +14,7 @@ import { UserAggregatedWordResponse } from '../../../models/user-aggregated-word
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 10;
+const GAME_TIME = 60;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
@@ -51,6 +51,7 @@ export class SprintComponent implements OnInit, OnDestroy {
   bestSeries: Array<number> = [];
   rightAnswers: UserAggregatedWord[] = [];
   wrongAnswers: UserAggregatedWord[] = [];
+  isAllWordsAreLearned = false;
   timerSub?: Subscription;
   keyPressSub?: Subscription;
   flag = false;
@@ -142,6 +143,10 @@ export class SprintComponent implements OnInit, OnDestroy {
 
         if (this.isFromTextbook) {
           this.words = wordsReaponse[0].paginatedResults.filter((word) => word.userWord?.difficulty !== 'easy');
+          if (this.words.length === 0 && this.isFromTextbook) {
+            this.isAllWordsAreLearned = true;
+            return;
+          }
         } else {
           this.words = wordsReaponse[0].paginatedResults;
         }
@@ -190,17 +195,21 @@ export class SprintComponent implements OnInit, OnDestroy {
 
   async showWord() {
     const word = await this.getWord();
-    this.results.push(word);
-    this.audio = `${BASE_URL}${word.audio}`;
 
-    this.englishWord = word.word;
-
-    if (word.fakeTranslate) {
-      this.russianWord = word.fakeTranslate;
-      this.fakeTranslate = true;
-    } else {
-      this.russianWord = word.wordTranslate;
-      this.fakeTranslate = false;
+    if (!word) {
+      this.gameOver();
+    } else { 
+      this.results.push(word);
+      this.audio = `${BASE_URL}${word.audio}`;
+      this.englishWord = word.word;
+  
+      if (word.fakeTranslate) {
+        this.russianWord = word.fakeTranslate;
+        this.fakeTranslate = true;
+      } else {
+        this.russianWord = word.wordTranslate;
+        this.fakeTranslate = false;
+      }
     }
   }
 
@@ -354,12 +363,14 @@ export class SprintComponent implements OnInit, OnDestroy {
       data: {
         score: this.score,
         wrong: this.wrongAnswers.length,
-        right: this.rightAnswers.length
+        right: this.rightAnswers.length,
+        allDone: this.isAllWordsAreLearned,
       },
       disableClose: true,
       panelClass: 'results-dialog-class'
     } as MatDialogConfig).afterClosed().pipe(take(1)).subscribe((result) => {
       if(result) {
+        this.resetData();
         this.startGame();
       }
     });
@@ -387,7 +398,6 @@ export class SprintComponent implements OnInit, OnDestroy {
     if (this.userId) {
       this.saveGameStats();
     }
-    this.resetData();
   }
 
   resetData() {
@@ -398,6 +408,7 @@ export class SprintComponent implements OnInit, OnDestroy {
     this.results = [];
     this.newWordCount = 0;
     this.correctSeries = 0;
+    this.isAllWordsAreLearned = false;
     this.bestSeries = [];
     this.rightAnswers = [];
     this.wrongAnswers = [];

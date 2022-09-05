@@ -49,7 +49,7 @@
   </div>
   <ng-template #message>
     <p class="result-message">
-      Пожалуйста, попробуйте ещё раз...
+      {{ data.allDone ? "Все слова со страницы уже выучены..." : "Пожалуйста, попробуйте ещё раз..." }}
     </p>
   </ng-template>
 </mat-dialog-content>

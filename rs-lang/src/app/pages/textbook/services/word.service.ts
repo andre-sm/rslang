@@ -39,7 +39,7 @@ export class WordService {
   }
 
   getUserAggregatedHardWords(userId: string): Observable<UserAggregatedWordResponse[]> {
-    const queryParams = `users/${userId}/aggregatedWords?filter={"userWord.difficulty":"hard"}`;
+    const queryParams = `users/${userId}/aggregatedWords?wordsPerPage=600&filter={"userWord.difficulty":"hard"}`;
     const url = `${this.BASE_URL}${queryParams}`;
     return this.http.get<UserAggregatedWordResponse[]>(url);
   }
