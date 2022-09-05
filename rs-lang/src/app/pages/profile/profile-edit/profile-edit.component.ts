@@ -41,7 +41,6 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
           this.userData = structuredClone(data);
           this.form.email = this.userData.email;
           this.isLoaded = true;
-          console.log(this.userData);
         },
         error: (err: HttpErrorResponse) => {
           this.errorMessage = err.message;

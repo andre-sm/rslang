@@ -35,7 +35,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         next: (data: UserProfile) => {
           this.userData = structuredClone(data);
           this.isLoaded = true;
-          console.log(this.userData);
         },
         error: (err: HttpErrorResponse) => {
           this.errorMessage = err.message;
