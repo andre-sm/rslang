@@ -24,7 +24,7 @@
           <span class="audio-call-btn-text">Аудио вызов</span>
         </button>
       </div>
-      <p class="badge-container">
+      <p class="badge-container" *ngIf="isLogged">
         <span matBadge="{{ cardsPerPage - learnedWords }}" matBadgeOverlap="false" *ngIf="!isHardWordsChecked">
           {{ cardsPerPage - learnedWords === 0 ? 'Страница выучена!' : 'Осталось выучить!' }}
         </span>
