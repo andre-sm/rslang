@@ -142,7 +142,12 @@ export class StatisticsComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.errorMessage = err.message;
-          this.toastr.error(this.errorMessage);
+          if (err.status === 404) {
+            this.toastr.info('Статистика отсутствует, пожалуйста сыграйте в игру');
+          } else {
+            this.toastr.error(this.errorMessage);
+          }
+          this.isLoaded = true;
         }
       })
     }
