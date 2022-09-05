@@ -111,7 +111,7 @@
     display: flex;
     justify-content: center;
     align-items: stretch;
-    gap: 100px;
+    gap: 90px;
   }
 
   @media screen and (max-width: 1024px) {
@@ -135,7 +135,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 30px 20px 30px;
+  padding: 40px 28px 20px 28px;
   max-width: 260px;
   min-height: 280px;
   text-align: center;
@@ -169,6 +169,13 @@
     margin-bottom: 15px;
   }
 
+  &__team-lead {
+    margin-bottom: 10px;
+    color: $color-violet-light;
+    font-weight: 500;
+    font-size: 16px;
+  }
+
   &__link {
     font-size: 16px;
     text-decoration: none;
@@ -196,6 +203,27 @@
     padding: 40px 30px 20px 30px;
     max-width: 240px;
   }
+}
+
+.avatar-one {
+  background-image: url(../../../assets/img/avatar-one.png);
+  background-position: 11px 12px;
+  background-size: 86%;
+  background-repeat: no-repeat;
+}
+
+.avatar-two {
+  background-image: url(../../../assets/img/avatar-two.png);
+  background-position: center;
+  background-size: 60%;
+  background-repeat: no-repeat;
+}
+
+.avatar-three {
+  background-image: url(../../../assets/img/avatar-three.jpg);
+  background-position: 60% 15%;
+  background-size: 120%;
+  background-repeat: no-repeat;
 }
 
 .games-section {
