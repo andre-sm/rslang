@@ -7,6 +7,12 @@ export interface User extends LoginUser {
   name: string
 }
 
+export interface UserProfile {
+  id: string,
+  name: string,
+  email: string
+}
+
 export interface UserTokenResponse {
   message: string,
   token: string,

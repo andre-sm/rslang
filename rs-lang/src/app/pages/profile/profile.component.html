@@ -1,1 +1,29 @@
-<p>profile works!</p>
+<div *ngIf="!isLoaded" class="progress-spinner-container">
+  <mat-progress-spinner
+    class="example-margin"
+    color="#9b59b6"
+    mode="indeterminate">
+  </mat-progress-spinner>
+</div>
+<div *ngIf="isLoaded" class="profile-container">
+  <h1 >С возвращением, {{ userData.name }}</h1>
+  <div class="profile">
+    <div class="profile-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        class="profile-email"
+        name="email"
+        [(ngModel)]="userData.email"
+        email
+        #email="ngModel"
+        placeholder="Email адрес"
+        disabled
+      />
+    </div>
+    <div class="btn-group">
+      <a routerLink="/profile/edit" class="profile-btn">Редактировать</a>
+      <button (click)="onDelete()" class="profile-btn delete-btn">Удалить профиль</button>
+    </div>
+  </div>
+</div>
