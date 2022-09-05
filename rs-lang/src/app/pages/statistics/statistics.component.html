@@ -11,24 +11,28 @@
     <h2 *ngIf="!userId" class="today-statistics-warn">Доступно только авторизованным пользователям</h2>
     <div class="today-statistics-general" [ngClass]="!userId ? 'statistics-blurred' : ''">
       <div class="new-words">
-        <h3><b>{{ todayStatistics.allNewWords}}</b> новых слов</h3>
+        <h3><span>{{ todayStatistics.allNewWords}}</span> новых слов</h3>
       </div>
       <div class="words-learned">
-        <h3><b>{{ todayStatistics.allWordsLearned }}</b> слов изучено</h3>
+        <h3><span>{{ todayStatistics.allWordsLearned }}</span> слов изучено</h3>
       </div>
       <div class="right-percent">
-        <h3><b>{{ todayStatistics.allGamesRightPercent }}%</b> правильных ответов</h3>
+        <h3><span>{{ todayStatistics.allGamesRightPercent }}%</span> правильных ответов</h3>
       </div>
     </div>
     <div class="game-card-container" [ngClass]="!userId ? 'statistics-blurred' : ''">
       <div class="game-card">
         <h2>Спринт</h2>
         <div class="game-card-statistic">
-          <mat-icon>library_books</mat-icon>
-          <span>Новых слов: {{ todayStatisticsSprint.newWords }}</span>
+          <mat-icon class="books-icon">library_books</mat-icon>
+          <span>Новых слов:
+            <span>
+              {{ todayStatisticsSprint.newWords }}
+            </span>
+          </span>
         </div>
         <div class="game-card-statistic">
-          <mat-icon>done_all</mat-icon>
+          <mat-icon class="answers-icon">done_all</mat-icon>
           <span>Правильных ответов: {{ todayStatisticsSprint.rightPercent }}%</span>
         </div>
         <div class="game-card-statistic">
@@ -39,11 +43,11 @@
       <div class="game-card">
         <h2>Аудиовызов</h2>
         <div class="game-card-statistic">
-          <mat-icon>library_books</mat-icon>
+          <mat-icon class="books-icon">library_books</mat-icon>
           <span>Новых слов: {{ todayStatisticsAudioCall.newWords }}</span>
         </div>
         <div class="game-card-statistic">
-          <mat-icon>done_all</mat-icon>
+          <mat-icon class="answers-icon">done_all</mat-icon>
           <span>Правильных ответов: {{ todayStatisticsAudioCall.rightPercent }}%</span>
         </div>
         <div class="game-card-statistic">
@@ -54,7 +58,7 @@
     </div>
   </div>
   <div class="all-time-statistics">
-    <h1>Статистика за всё время</h1>
+    <h2>Статистика за всё время</h2>
     <h2 *ngIf="!userId" class="all-time-statistics-warn">Доступно только авторизованным пользователям</h2>
     <div class="charts" [ngClass]="!userId ? 'statistics-blurred' : ''">
       <canvas baseChart
