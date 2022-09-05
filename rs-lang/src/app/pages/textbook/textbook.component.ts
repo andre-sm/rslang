@@ -59,11 +59,13 @@ export class TextbookComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const paginatorIntl = this.paginator._intl;
-    paginatorIntl.nextPageLabel = 'Следующая страница';
-    paginatorIntl.previousPageLabel = 'Предыдущая страница';
-    paginatorIntl.lastPageLabel = 'Последняя страница';
-    paginatorIntl.firstPageLabel = 'Первая страница';
+    if (!this.isHardWordsChecked) {
+      const paginatorIntl = this.paginator._intl;
+      paginatorIntl.nextPageLabel = 'Следующая страница';
+      paginatorIntl.previousPageLabel = 'Предыдущая страница';
+      paginatorIntl.lastPageLabel = 'Последняя страница';
+      paginatorIntl.firstPageLabel = 'Первая страница';
+    }
   }
 
   getCategories(): void {

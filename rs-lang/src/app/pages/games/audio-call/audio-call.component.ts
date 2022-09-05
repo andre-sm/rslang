@@ -14,7 +14,7 @@ import { UserWord } from '../../../models/user-word.model';
 import { FooterService } from '../../components/footer/footer.service';
 
 const BASE_URL = 'https://rss-rslang-be.herokuapp.com/';
-const GAME_TIME = 1000;
+const GAME_TIME = 10;
 const rightAnswerSound = '/assets/sounds/positive-beep.mp3';
 const wrongAnswerSound = '/assets/sounds/negative-beep.mp3';
 
@@ -53,6 +53,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   rightAnswers: UserAggregatedWord[] = [];
   wrongAnswers: UserAggregatedWord[] = [];
   gameName = 'audioCall';
+  isAllWordsAreLearned = false;
   score = 0;
   initialPage = 0;
   isAnswer = false;
@@ -119,6 +120,10 @@ export class AudioCallComponent implements OnInit, OnDestroy {
 
         if (this.isFromTextbook) {
           this.words = wordsReaponse[0].paginatedResults.filter((word) => word.userWord?.difficulty !== 'easy');
+          if (this.words.length === 0 && this.isFromTextbook) {
+            this.isAllWordsAreLearned = true;
+            return;
+          }
         } else {
           this.words = wordsReaponse[0].paginatedResults;
         }
@@ -177,11 +182,15 @@ export class AudioCallComponent implements OnInit, OnDestroy {
   async showWord() {
     if (this.life) {
       const word = await this.getWord();
-      this.results.push(word);
-      this.audio = `${BASE_URL}${word.audio}`;
-      this.englishWord = word.word;
-      this.russianWord = word.wordTranslate;
-      this.setGameTimer();
+      if (!word) {
+        this.gameOver();
+      } else {
+        this.results.push(word);
+        this.audio = `${BASE_URL}${word.audio}`;
+        this.englishWord = word.word;
+        this.russianWord = word.wordTranslate;
+        this.setGameTimer();
+      }
     } else {
       this.gameOver();
     }
@@ -330,6 +339,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
           score: this.score,
           wrong: this.wrongAnswers.length,
           right: this.rightAnswers.length,
+          allDone: this.isAllWordsAreLearned,
         },
         disableClose: true,
         panelClass: 'audio-call-dialog',
@@ -376,6 +386,7 @@ export class AudioCallComponent implements OnInit, OnDestroy {
     this.results = [];
     this.newWordCount = 0;
     this.correctSeries = 0;
+    this.isAllWordsAreLearned = false;
     this.bestSeries = [];
     this.rightAnswers = [];
     this.wrongAnswers = [];

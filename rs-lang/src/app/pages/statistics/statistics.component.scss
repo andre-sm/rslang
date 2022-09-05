@@ -102,7 +102,7 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    h2 {
+    .all-time-statistics-title {
       font-family: "Raleway", sans-serif;
       color: $color-violet-light;
       font-size: 2.4rem;
@@ -133,6 +133,9 @@
   }
 
   .today-statistics-warn, .all-time-statistics-warn {
+    font-family: "Raleway", sans-serif;
+    font-weight: 500;
+    font-size: 1.7rem;
     position: absolute;
     z-index: 10;
     top: 50%;

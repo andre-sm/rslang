@@ -27,8 +27,14 @@
     </div>
 
     <div class="game__answer-btns">
-      <button class="wrong-answer-btn btn" (click)="checkAnswer('No')">Неправильно</button>
-      <button class="right-answer-btn btn" (click)="checkAnswer('Yes')">Правильно</button>
+      <div class="btn-wrapper">
+        <button class="wrong-answer-btn btn" (click)="checkAnswer('No')">Неправильно</button>
+        <mat-icon class="arrow-left" aria-hidden="false" aria-label="Arrow left" fontIcon="west"></mat-icon>
+      </div>
+      <div class="btn-wrapper"> 
+        <button class="right-answer-btn btn" (click)="checkAnswer('Yes')">Правильно</button>
+        <mat-icon class="arrow-right" aria-hidden="false" aria-label="Arrow right" fontIcon="east"></mat-icon>
+      </div>
     </div>
   </div>
 </div>

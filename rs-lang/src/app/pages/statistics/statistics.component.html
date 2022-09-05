@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="all-time-statistics">
-    <h2>Статистика за всё время</h2>
+    <h2 class="all-time-statistics-title">Статистика за всё время</h2>
     <h2 *ngIf="!userId" class="all-time-statistics-warn">Доступно только авторизованным пользователям</h2>
     <div class="charts" [ngClass]="!userId ? 'statistics-blurred' : ''">
       <canvas baseChart
