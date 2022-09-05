@@ -156,6 +156,11 @@
   background-color: $color-pink-bright;
 }
 
+.answer-btn.right-answer {
+  background-color: $color-green-bright;
+}
+
+
 .btn-wrapper {
   display: flex;
   flex-direction: column;

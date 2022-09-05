@@ -71,7 +71,7 @@
     class="games-btn btn"
     (keydown)="moveFocus($event)"
     cdkFocusInitial
-    routerLink="/games"
+    (click)="goToGames()"
   >
     К играм
   </button>
