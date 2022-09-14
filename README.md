@@ -1,6 +1,11 @@
-# RS School Final Task
-Одностраничное приложение для изучения английских слов с мини-играми. Проект разрабатывался в команде из трех участников. 
-#### Ссылка на задание: https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-2/rs-lang/rslang.md
+## RS School 2022 Q1 Final Task
+Одностраничное приложение для изучения английских слов с мини-играми. Проект разрабатывался в команде из трех участников:
+- [Andrei Smolich (Team Lead)](https://github.com/andre-sm)
+- [Maksat Batyrov](https://github.com/maxthegrandmagus)
+- [Mikhail Darozhka](https://github.com/dominickmikka)
+#### Задание: [RS Lang](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-2/rs-lang/rslang.md)
+#### RACI Матрица: [RACI](https://drive.google.com/file/d/1LRLMwQMef-ijWckXmOSLtlnaX6uGaapb/view?usp=sharing)
+***
 ### Используемые технологии:
 
 #### 1. Angular
@@ -56,8 +61,8 @@
 Недостатки:
 1. При росте формы, шаблоны представления загромождаются, что затрудняет чтение кода, его становится сложнее поддерживать, что приводит к менее масштабируемому подходу.
 2. Написать сложный код проверки прямо в шаблоне непросто. Это усложняет использование настраиваемых валидаторов для полей ввода, поскольку требует создания настраиваемых директив для настраиваемого валидатора.
-
-## Установка:
+***
+### Установка:
 - Клонируйте репозиторий
 - Установите зависимости: `npm install`
 - Запуск проекта: `npm start`
