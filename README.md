@@ -4,6 +4,7 @@
 - [Maksat Batyrov](https://github.com/maxthegrandmagus)
 - [Mikhail Darozhka](https://github.com/dominickmikka)
 #### Задание: [RS Lang](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-2/rs-lang/rslang.md)
+#### Deploy: [RS Lang](https://rslang-andre-sm.netlify.app/)
 #### RACI Матрица: [RACI](https://drive.google.com/file/d/1LRLMwQMef-ijWckXmOSLtlnaX6uGaapb/view?usp=sharing)
 ***
 ### Используемые технологии:
