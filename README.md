@@ -1,4 +1,4 @@
-## RS School 2022 Q1 Final Task
+## The Rolling Scopes School 2022Q1 "Learning English" Final Task
 Одностраничное приложение для изучения английских слов с мини-играми. Проект разрабатывался в команде из трех участников:
 - [Andrei Smolich (Team Lead)](https://github.com/andre-sm)
 - [Maksat Batyrov](https://github.com/maxthegrandmagus)
