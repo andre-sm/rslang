@@ -4,10 +4,12 @@
 - [Maksat Batyrov](https://github.com/maxthegrandmagus)
 - [Mikhail Darozhka](https://github.com/dominickmikka)
 #### Task: [RS Lang](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-2/rs-lang/rslang.md)
-#### Deploy: [RS Lang](https://rslang-andre-sm.netlify.app/)
+#### Deploy: [RS Lang](https://stirring-dusk-56e6f5.netlify.app/)
 #### RACI Матрица: [RACI](https://drive.google.com/file/d/1LRLMwQMef-ijWckXmOSLtlnaX6uGaapb/view?usp=sharing)
 ***
 ![rslang](https://user-images.githubusercontent.com/93344252/188512769-2f33bb72-a874-4120-8488-1385b389ff8b.png)
+![rs-lang-game](https://user-images.githubusercontent.com/93344252/231276609-6e8c8f55-6384-4c07-9947-80d47af0f341.jpg)
+
 Done 05.09.2022 / deadline 06.09.2022
 
 #### 1. Главная страница приложения. Вёрстка, дизайн, UI 40/40
